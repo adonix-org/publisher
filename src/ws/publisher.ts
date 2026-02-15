@@ -1,0 +1,43 @@
+import { Agent } from "../agent";
+import { ActiveWebSocket } from "./active";
+import { EventSession } from "./event";
+import { EventMessage, OnlineMessage } from "../interfaces";
+
+const WSS_URL = process.env.LIVEIMAGE_WSS_PUBLISH!;
+const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY!;
+
+class PublisherWebSocket extends ActiveWebSocket {
+    public static readonly Factory = () => new this();
+
+    constructor() {
+        super(new URL(WSS_URL), {
+            headers: { Authorization: "Bearer " + ADMIN_KEY },
+        });
+    }
+
+    public override toString(): string {
+        return `${super.toString()}[PublisherWebSocket-${this.id}]`;
+    }
+}
+
+export class PublisherSession extends EventSession {
+    constructor(private readonly agent: Agent) {
+        super(PublisherWebSocket.Factory);
+    }
+
+    protected override async handle(msg: EventMessage): Promise<void> {
+        console.debug(this.toString(), msg);
+        switch (msg.event) {
+            case "online":
+                const online = msg as OnlineMessage;
+                if (online.active > 0) this.agent.start();
+                else await this.agent.stop();
+                break;
+        }
+    }
+
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+        await this.agent.stop();
+    }
+}
