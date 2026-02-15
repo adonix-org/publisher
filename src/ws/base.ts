@@ -2,6 +2,7 @@ import WebSocket from "ws";
 
 export class BaseWebSocket extends WebSocket {
     private static counter = 0;
+
     private readonly _id = BaseWebSocket.counter++;
 
     public get id(): number {
@@ -9,6 +10,6 @@ export class BaseWebSocket extends WebSocket {
     }
 
     public override toString(): string {
-        return "[BaseWebSocket]";
+        return `[BaseWebSocket-${this.id}]`;
     }
 }
