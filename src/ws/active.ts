@@ -26,7 +26,7 @@ export abstract class ActiveWebSocket extends BaseWebSocket {
             console.info(this.toString(), "closed", code, reason.toString());
         });
 
-        this.on("error", (error: ErrorEvent) => {
+        this.once("error", (error: ErrorEvent) => {
             console.error(this.toString(), error);
         });
     }
