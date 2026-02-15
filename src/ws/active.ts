@@ -7,7 +7,7 @@ import { BaseWebSocket } from "./base";
 export abstract class ActiveWebSocket extends BaseWebSocket {
     private static readonly CLOSE_TIMEOUT = 5_000;
 
-    private heartbeat: Heartbeat;
+    private readonly heartbeat: Heartbeat;
 
     constructor(url: URL, args: ClientRequestArgs, options?: HeartbeatOptions) {
         super(url, args);
