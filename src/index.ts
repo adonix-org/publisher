@@ -22,9 +22,9 @@ const c121: Source = {
 const stream = new RtspStream(c121);
 const publisher = new LiveImage(c121.id);
 const agent = new Agent(stream, publisher);
-const dispatcher = new PublisherSession(agent);
+const session = new PublisherSession(agent);
 
-const daemon = new Daemon(dispatcher);
+const daemon = new Daemon(session);
 daemon.start();
 
 process.on("SIGTERM", async () => await daemon.stop());
