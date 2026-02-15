@@ -17,8 +17,8 @@ export abstract class ActiveWebSocket extends BaseWebSocket {
         console.info(this.toString(), "connecting...");
 
         this.once("open", () => {
-            this.heartbeat.start();
             console.info(this.toString(), "connected");
+            this.heartbeat.start();
         });
 
         this.once("close", (code: number, reason: Buffer) => {
