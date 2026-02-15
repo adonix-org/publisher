@@ -1,7 +1,7 @@
 {
     "name": "publisher",
     "version": "1.0.0",
-    "description": "",
+    "description": "Capture and upload image snapshots to subscribers.",
     "main": "index.js",
     "scripts": {
         "start": "tsx src/index.ts",
@@ -19,6 +19,7 @@
     "devDependencies": {
         "@types/node": "^25.2.3",
         "@types/ws": "^8.18.1",
+        "tsx": "^4.21.0",
         "typescript": "^5.9.3"
     }
 }
