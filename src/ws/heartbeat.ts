@@ -1,7 +1,8 @@
 import { WebSocket } from "ws";
 import { HeartbeatOptions } from "../interfaces";
+import { Lifecycle } from "../lifecycle";
 
-export class Heartbeat {
+export class Heartbeat extends Lifecycle {
     public static readonly DEFAULT_PULSE = 10_000;
     public static readonly DEFAULT_TIMEOUT = 5_000;
 
@@ -15,28 +16,27 @@ export class Heartbeat {
             pulse: Heartbeat.DEFAULT_PULSE,
             timeout: Heartbeat.DEFAULT_TIMEOUT,
         },
-    ) {}
+    ) {
+        super();
+    }
 
-    public start(): void {
-        this.stop();
+    protected override async onstart(): Promise<void> {
+        await super.onstart();
 
         this.pulse = setInterval(() => {
             this.ping();
         }, this.options.pulse);
     }
 
-    public stop(): void {
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
         if (this.pulse) clearInterval(this.pulse);
         if (this.timeout) clearTimeout(this.timeout);
 
         this.pulse = undefined;
         this.timeout = undefined;
     }
-
-    private pong = (): void => {
-        if (this.timeout) clearTimeout(this.timeout);
-        this.timeout = undefined;
-    };
 
     private ping(): void {
         if (this.websocket.readyState !== WebSocket.OPEN) return;
@@ -54,7 +54,12 @@ export class Heartbeat {
         this.websocket.ping();
     }
 
-    public toString(): string {
-        return `[Heartbeat]${this.websocket.toString()}`;
+    private pong = (): void => {
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = undefined;
+    };
+
+    public override toString(): string {
+        return `${super.toString()}[Heartbeat]${this.websocket.toString()}`;
     }
 }
