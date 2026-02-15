@@ -31,7 +31,7 @@ export class PublisherSession extends EventSession {
             case "online":
                 const online = msg as OnlineMessage;
                 if (online.active > 0) this.agent.start();
-                else await this.agent.stop();
+                else this.agent.stop();
                 break;
         }
     }
