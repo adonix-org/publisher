@@ -1,16 +1,20 @@
 import { Lifecycle } from "./lifecycle";
 
 export class Daemon extends Lifecycle {
-    constructor(protected readonly session: Lifecycle) {
+    constructor(protected readonly runnable: Lifecycle) {
         super();
     }
 
     protected override async onstart(): Promise<void> {
-        await this.session.start();
+        super.onstart();
+
+        await this.runnable.start();
     }
 
     protected override async onstop(): Promise<void> {
-        await this.session.stop();
+        await super.onstop();
+
+        await this.runnable.stop();
     }
 
     public override async stop(): Promise<void> {
