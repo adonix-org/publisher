@@ -27,6 +27,7 @@ export abstract class WebSocketSession extends Lifecycle {
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
+
         this.connect();
     }
 
