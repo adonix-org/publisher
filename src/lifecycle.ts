@@ -11,7 +11,8 @@ export class Lifecycle {
 
     public async start(): Promise<void> {
         return this.schedule(async () => {
-            if (this._running) return;
+            if (this.running) return;
+
             console.info(this.toString(), "starting...");
             await this.onstart();
             this._running = true;
@@ -21,7 +22,8 @@ export class Lifecycle {
 
     public async stop(): Promise<void> {
         return this.schedule(async () => {
-            if (!this._running) return;
+            if (!this.running) return;
+
             console.info(this.toString(), "stopping...");
             await this.onstop();
             this._running = false;
