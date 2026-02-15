@@ -1,8 +1,7 @@
 import { Lifecycle } from "./lifecycle";
-import { WebSocketSession } from "./ws/session";
 
 export class Daemon extends Lifecycle {
-    constructor(protected readonly session: WebSocketSession) {
+    constructor(protected readonly session: Lifecycle) {
         super();
     }
 
