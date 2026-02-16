@@ -11,7 +11,7 @@ export class Heartbeat extends Lifecycle {
 
     constructor(
         private readonly websocket: WebSocket,
-        private readonly onTimeout: () => Promise<void>,
+        private readonly onTimeout: () => void | Promise<void>,
         private readonly options: HeartbeatOptions = {
             pulse: Heartbeat.DEFAULT_PULSE,
             timeout: Heartbeat.DEFAULT_TIMEOUT,
@@ -55,7 +55,8 @@ export class Heartbeat extends Lifecycle {
     }
 
     private pong = (): void => {
-        if (this.timeout) clearTimeout(this.timeout);
+        if (!this.timeout) return;
+        clearTimeout(this.timeout);
         this.timeout = undefined;
     };
 

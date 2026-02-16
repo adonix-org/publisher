@@ -41,7 +41,7 @@ export abstract class WebSocketSession extends Lifecycle {
 
         if (this.websocket) {
             this.websocket.removeListener("close", this.reconnect);
-            await this.websocket.close();
+            this.websocket.close();
             this.websocket = null;
         }
     }

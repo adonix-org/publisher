@@ -5,8 +5,6 @@ import { HeartbeatOptions } from "../interfaces";
 import { BaseWebSocket } from "./base";
 
 export class ActiveWebSocket extends BaseWebSocket {
-    private static readonly CLOSE_TIMEOUT = 5_000;
-
     private readonly heartbeat: Heartbeat;
 
     constructor(
@@ -35,24 +33,10 @@ export class ActiveWebSocket extends BaseWebSocket {
         });
     }
 
-    public override async close(code?: number, reason?: string): Promise<void> {
-        if (this.readyState !== WebSocket.OPEN) return;
-
-        await this.heartbeat.stop();
-
-        return new Promise<void>((resolve) => {
-            const timeout = setTimeout(() => {
-                console.warn(this.toString(), "terminated");
-                this.terminate();
-            }, ActiveWebSocket.CLOSE_TIMEOUT);
-
-            this.once("close", () => {
-                clearTimeout(timeout);
-                resolve();
-            });
-
-            super.close(code, reason);
-        });
+    public override close(code?: number, data?: string | Buffer): void {
+        console.info(this.toString(), "closing...");
+        this.heartbeat.stop();
+        super.close(code, data);
     }
 
     public override toString(): string {
