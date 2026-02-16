@@ -1,12 +1,8 @@
 import { Lifecycle } from "./lifecycle";
 
 export class Daemon extends Lifecycle {
-    private readonly runnable: Lifecycle[];
-
-    constructor(...runnable: Lifecycle[]) {
-        super();
-
-        this.runnable = runnable;
+    constructor(...children: Lifecycle[]) {
+        super(...children);
 
         process.on("SIGTERM", () => void this.stop());
         process.on("SIGINT", () => void this.stop());
@@ -36,18 +32,6 @@ export class Daemon extends Lifecycle {
                 }
             });
         }
-    }
-
-    protected override async onstart(): Promise<void> {
-        await super.onstart();
-
-        await Promise.all(this.runnable.map((r) => r.start()));
-    }
-
-    protected override async onstop(): Promise<void> {
-        await super.onstop();
-
-        await Promise.all(this.runnable.map((r) => r.stop()));
     }
 
     public override async stop(): Promise<void> {

@@ -7,22 +7,11 @@ export class Agent extends Lifecycle {
         private readonly stream: RtspStream,
         private readonly publisher: Publisher,
     ) {
-        super();
+        super(stream);
+
         this.stream.onframe = async (frame) => {
             await this.publisher.publish(frame);
         };
-    }
-
-    protected override async onstart(): Promise<void> {
-        await super.onstart();
-
-        await this.stream.start();
-    }
-
-    protected override async onstop(): Promise<void> {
-        await super.onstop();
-
-        await this.stream.stop();
     }
 
     public override toString(): string {

@@ -1,13 +1,23 @@
 export class Lifecycle {
+    private readonly runnable: Lifecycle[];
     private transition: Promise<void> | null = null;
     private _running = false;
+
+    constructor(...children: Lifecycle[]) {
+        this.runnable = children;
+    }
 
     public get running(): boolean {
         return this._running;
     }
 
-    protected async onstart(): Promise<void> {}
-    protected async onstop(): Promise<void> {}
+    protected async onstart(): Promise<void> {
+        await Promise.all(this.runnable.map((r) => r.start()));
+    }
+
+    protected async onstop(): Promise<void> {
+        await Promise.all(this.runnable.map((r) => r.stop()));
+    }
 
     public async start(): Promise<void> {
         return this.schedule(async () => {
