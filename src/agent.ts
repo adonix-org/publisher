@@ -14,10 +14,14 @@ export class Agent extends Lifecycle {
     }
 
     protected override async onstart(): Promise<void> {
+        await super.onstart();
+
         await this.stream.start();
     }
 
     protected override async onstop(): Promise<void> {
+        await super.onstop();
+
         await this.stream.stop();
     }
 
