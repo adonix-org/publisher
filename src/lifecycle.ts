@@ -54,9 +54,7 @@ export class Lifecycle {
             await fn();
         };
 
-        const promise = this.transition
-            ? this.transition.then(run, run)
-            : run();
+        const promise = this.transition ? this.transition.then(run) : run();
 
         this.transition = promise.finally(() => {
             if (this.transition === promise) {
