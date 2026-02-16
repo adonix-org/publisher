@@ -35,7 +35,7 @@ export class RtspStream extends Lifecycle {
                     this.source.rtsp.url,
                 ).capture();
                 if (this.onframe) {
-                    this.onframe(frame);
+                    void this.onframe(frame).catch(() => {});
                 }
                 await this.timer.sleep(signal);
             } catch (err) {
