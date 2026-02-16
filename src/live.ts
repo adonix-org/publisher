@@ -18,7 +18,7 @@ export class LiveImage implements Publisher {
             });
 
             if (!response.ok) {
-                throw new Error(await response.json());
+                throw new Error(await response.text());
             }
 
             console.info(this.toString(), `image published (${frame.length})`);
