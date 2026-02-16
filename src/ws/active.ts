@@ -9,10 +9,14 @@ export abstract class ActiveWebSocket extends BaseWebSocket {
 
     private readonly heartbeat: Heartbeat;
 
-    constructor(url: URL, args: ClientRequestArgs, options?: HeartbeatOptions) {
-        super(url, args);
+    constructor(
+        address: string | URL,
+        options?: WebSocket.ClientOptions | ClientRequestArgs,
+        heartbeat?: HeartbeatOptions,
+    ) {
+        super(address, options);
 
-        this.heartbeat = new Heartbeat(this, () => this.close(), options);
+        this.heartbeat = new Heartbeat(this, () => this.close(), heartbeat);
 
         console.info(this.toString(), "connecting...");
 
