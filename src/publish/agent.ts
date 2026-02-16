@@ -1,6 +1,6 @@
-import { Publisher } from "./interfaces";
-import { Lifecycle } from "./lifecycle";
-import { RtspStream } from "./stream";
+import { Lifecycle } from "../lifecycle";
+import { RtspStream } from "../capture/rtsp-stream";
+import { Publisher } from "./publisher";
 
 export class Agent extends Lifecycle {
     constructor(

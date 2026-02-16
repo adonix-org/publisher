@@ -1,4 +1,4 @@
-import { Publisher } from "./interfaces";
+import { Publisher } from "./publisher";
 
 const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
 const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY;

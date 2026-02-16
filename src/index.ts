@@ -1,12 +1,12 @@
 import "dotenv/config";
 import "./logging";
 
-import { Agent } from "./agent";
-import { LiveImage } from "./live";
-import { RtspStream } from "./stream";
+import { Agent } from "./publish/agent";
+import { LiveImage } from "./publish/live-image";
 import { Source } from "./interfaces";
 import { Daemon } from "./daemon";
 import { PublisherSession } from "./ws/publisher";
+import { RtspStream } from "./capture/rtsp-stream";
 
 const url = process.env.LIVEIMAGE_RTSP_URL;
 if (!url) throw new Error("Missing env variable LIVEIMAGE_RTSP_URL");

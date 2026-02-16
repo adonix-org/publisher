@@ -1,4 +1,4 @@
-import { Agent } from "../agent";
+import { Agent } from "../publish/agent";
 import { ActiveWebSocket } from "./active";
 import { EventSession } from "./event";
 import { EventMessage, OnlineMessage } from "../interfaces";
