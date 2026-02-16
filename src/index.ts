@@ -19,9 +19,9 @@ const c121: Source = {
     },
 };
 
-const stream = new RtspStream(c121);
+const provider = new RtspStream(c121);
 const publisher = new LiveImage(c121.id);
-const agent = new Agent(stream, publisher);
+const agent = new Agent(provider, publisher);
 const session = new PublisherSession(agent);
 
 new Daemon(session).start();

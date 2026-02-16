@@ -1,16 +1,16 @@
-import { Source } from "../interfaces";
+import { DataProvider, Source } from "../interfaces";
 import { Lifecycle } from "../lifecycle";
 import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./sleep-timer";
 
-export class RtspStream extends Lifecycle {
+export class RtspStream extends Lifecycle implements DataProvider {
     private promise: Promise<void> | null = null;
     private timer: SleepTimer = new SleepTimer(
         this.source.rtsp.intervalSeconds,
     );
     private controller: AbortController | null = null;
 
-    public onframe?: (frame: Buffer) => Promise<void>;
+    public onData?: (frame: Buffer) => Promise<void>;
 
     constructor(private readonly source: Source) {
         super();
@@ -38,7 +38,7 @@ export class RtspStream extends Lifecycle {
                     this.source.rtsp.url,
                 ).capture();
 
-                this.callback(this.onframe, frame);
+                this.callback(this.onData, frame);
 
                 await this.timer.sleep(signal);
             } catch (err) {

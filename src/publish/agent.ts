@@ -1,16 +1,16 @@
 import { Lifecycle } from "../lifecycle";
-import { RtspStream } from "../capture/rtsp-stream";
 import { Publisher } from "./publisher";
+import { DataProvider } from "../interfaces";
 
-export class Agent extends Lifecycle {
+export class Agent<T extends Lifecycle & DataProvider> extends Lifecycle {
     constructor(
-        private readonly stream: RtspStream,
+        private readonly provider: T,
         private readonly publisher: Publisher,
     ) {
-        super(stream);
+        super(provider);
 
-        this.stream.onframe = async (frame) => {
-            await this.publisher.publish(frame);
+        this.provider.onData = async (data) => {
+            await this.publisher.publish(data);
         };
     }
 

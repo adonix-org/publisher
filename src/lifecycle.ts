@@ -1,4 +1,4 @@
-export class Lifecycle {
+export abstract class Lifecycle {
     private readonly children: Lifecycle[];
     private transition: Promise<void> | null = null;
     private _running = false;

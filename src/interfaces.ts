@@ -1,7 +1,10 @@
-
 export interface Source {
     id: string;
     rtsp: RtspConfig;
+}
+
+export interface DataProvider {
+    onData?: (frame: Buffer) => Promise<void>;
 }
 
 export interface RtspConfig {
