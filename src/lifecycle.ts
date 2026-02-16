@@ -11,14 +11,6 @@ export class Lifecycle {
         return this._running;
     }
 
-    protected async onstart(): Promise<void> {
-        await Promise.all(this.children.map((r) => r.start()));
-    }
-
-    protected async onstop(): Promise<void> {
-        await Promise.all(this.children.map((r) => r.stop()));
-    }
-
     public async start(): Promise<void> {
         return this.schedule(async () => {
             if (this.running) return;
@@ -39,6 +31,14 @@ export class Lifecycle {
             this._running = false;
             console.debug(this.toString(), "stopped");
         });
+    }
+
+    protected async onstart(): Promise<void> {
+        await Promise.all(this.children.map((r) => r.start()));
+    }
+
+    protected async onstop(): Promise<void> {
+        await Promise.all(this.children.map((r) => r.stop()));
     }
 
     protected callback<T extends unknown[]>(
