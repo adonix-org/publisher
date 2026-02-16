@@ -2,6 +2,7 @@ import { Lifecycle } from "./lifecycle";
 
 export class Daemon extends Lifecycle {
     private readonly runnable: Lifecycle[];
+
     constructor(...runnable: Lifecycle[]) {
         super();
 
