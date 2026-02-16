@@ -35,6 +35,7 @@ export class ActiveWebSocket extends BaseWebSocket {
 
     public override close(code?: number, data?: string | Buffer): void {
         console.debug(this.toString(), "closing...");
+
         this.heartbeat.stop();
         super.close(code, data);
     }
