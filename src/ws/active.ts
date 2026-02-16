@@ -20,13 +20,13 @@ export abstract class ActiveWebSocket extends BaseWebSocket {
 
         console.info(this.toString(), "connecting...");
 
-        this.once("open", () => {
+        this.once("open", async () => {
             console.info(this.toString(), "connected");
-            this.heartbeat.start();
+            await this.heartbeat.start();
         });
 
-        this.once("close", (code: number, reason: Buffer) => {
-            this.heartbeat.stop();
+        this.once("close", async (code: number, reason: Buffer) => {
+            await this.heartbeat.stop();
             console.info(this.toString(), "closed", code, reason.toString());
         });
 
@@ -38,7 +38,7 @@ export abstract class ActiveWebSocket extends BaseWebSocket {
     public override async close(code?: number, reason?: string): Promise<void> {
         if (this.readyState !== WebSocket.OPEN) return;
 
-        this.heartbeat.stop();
+        await this.heartbeat.stop();
 
         return new Promise<void>((resolve) => {
             const timeout = setTimeout(() => {
