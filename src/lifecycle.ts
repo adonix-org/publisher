@@ -1,10 +1,10 @@
 export class Lifecycle {
-    private readonly runnable: Lifecycle[];
+    private readonly children: Lifecycle[];
     private transition: Promise<void> | null = null;
     private _running = false;
 
     constructor(...children: Lifecycle[]) {
-        this.runnable = children;
+        this.children = children;
     }
 
     public get running(): boolean {
@@ -12,11 +12,11 @@ export class Lifecycle {
     }
 
     protected async onstart(): Promise<void> {
-        await Promise.all(this.runnable.map((r) => r.start()));
+        await Promise.all(this.children.map((r) => r.start()));
     }
 
     protected async onstop(): Promise<void> {
-        await Promise.all(this.runnable.map((r) => r.stop()));
+        await Promise.all(this.children.map((r) => r.stop()));
     }
 
     public async start(): Promise<void> {
