@@ -4,7 +4,7 @@ import { ClientRequestArgs } from "node:http";
 import { HeartbeatOptions } from "../interfaces";
 import { BaseWebSocket } from "./base";
 
-export abstract class ActiveWebSocket extends BaseWebSocket {
+export class ActiveWebSocket extends BaseWebSocket {
     private static readonly CLOSE_TIMEOUT = 5_000;
 
     private readonly heartbeat: Heartbeat;
