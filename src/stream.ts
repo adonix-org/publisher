@@ -34,9 +34,9 @@ export class RtspStream extends Lifecycle {
                 const frame = await new FfmpegProcess(
                     this.source.rtsp.url,
                 ).capture();
-                if (this.onframe) {
-                    void this.onframe(frame).catch(() => {});
-                }
+
+                this.callback(this.onframe, frame);
+
                 await this.timer.sleep(signal);
             } catch (err) {
                 if (!(err instanceof Error && err.name === "AbortError"))

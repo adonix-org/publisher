@@ -21,7 +21,7 @@ export class LiveImage implements Publisher {
                 throw new Error(await response.text());
             }
 
-            console.info(this.toString(), `image published (${frame.length})`);
+            console.debug(this.toString(), `image published (${frame.length})`);
         } catch (err) {
             console.error(this.toString(), "upload failed", err);
         }

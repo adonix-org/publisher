@@ -13,10 +13,10 @@ export class Lifecycle {
         return this.schedule(async () => {
             if (this.running) return;
 
-            console.info(this.toString(), "starting...");
+            console.debug(this.toString(), "starting...");
             await this.onstart();
             this._running = true;
-            console.info(this.toString(), "started");
+            console.debug(this.toString(), "started");
         });
     }
 
@@ -24,11 +24,19 @@ export class Lifecycle {
         return this.schedule(async () => {
             if (!this.running) return;
 
-            console.info(this.toString(), "stopping...");
+            console.debug(this.toString(), "stopping...");
             await this.onstop();
             this._running = false;
-            console.info(this.toString(), "stopped");
+            console.debug(this.toString(), "stopped");
         });
+    }
+
+    protected callback<T extends unknown[]>(
+        fn: ((...args: T) => void) | undefined,
+        ...args: T
+    ): void {
+        if (!fn) return;
+        setImmediate(() => void fn(...args));
     }
 
     private schedule(fn: () => Promise<void>): Promise<void> {

@@ -47,7 +47,7 @@ export class Heartbeat extends Lifecycle {
             this.websocket.removeListener("pong", this.pong);
 
             console.warn(this.toString(), "timeout");
-            this.onTimeout();
+            this.callback(this.onTimeout);
         }, this.options.timeout);
 
         this.websocket.once("pong", this.pong);

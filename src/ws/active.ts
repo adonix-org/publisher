@@ -16,16 +16,16 @@ export class ActiveWebSocket extends BaseWebSocket {
 
         this.heartbeat = new Heartbeat(this, () => this.close(), heartbeat);
 
-        console.info(this.toString(), "connecting...");
+        console.debug(this.toString(), "connecting...");
 
         this.once("open", async () => {
-            console.info(this.toString(), "connected");
+            console.debug(this.toString(), "connected");
             await this.heartbeat.start();
         });
 
         this.once("close", async (code: number, reason: Buffer) => {
             await this.heartbeat.stop();
-            console.info(this.toString(), "closed", code, reason.toString());
+            console.debug(this.toString(), "closed", code, reason.toString());
         });
 
         this.once("error", (error: ErrorEvent) => {
@@ -34,7 +34,7 @@ export class ActiveWebSocket extends BaseWebSocket {
     }
 
     public override close(code?: number, data?: string | Buffer): void {
-        console.info(this.toString(), "closing...");
+        console.debug(this.toString(), "closing...");
         this.heartbeat.stop();
         super.close(code, data);
     }
