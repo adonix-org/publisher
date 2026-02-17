@@ -10,8 +10,8 @@ export class Watermark implements ImageTask {
 
     public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
         const meta = await sharp(image.buffer).metadata();
-        const width = meta.width ?? 1000; // fallback width
-        const height = meta.height ?? 1000; // fallback height
+        const width = meta.width;
+        const height = meta.height;
         const padding = 30;
 
         const svg = `
@@ -30,17 +30,9 @@ export class Watermark implements ImageTask {
 `;
 
         const overlay = Buffer.from(svg);
-
         const buffer = await sharp(image.buffer)
             .composite([{ input: overlay }])
             .toBuffer();
-
-        console.info(
-            "source:",
-            image.buffer.byteLength,
-            "watermarked:",
-            buffer.byteLength,
-        );
 
         return { buffer, contentType: image.contentType };
     }
