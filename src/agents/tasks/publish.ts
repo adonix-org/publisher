@@ -3,7 +3,7 @@ import { ImageBuffer, ImageTask } from "../interfaces";
 const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
 const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY;
 
-export class Publisher implements ImageTask {
+export class Publish implements ImageTask {
     constructor(private readonly sourceId: string) {}
 
     public async process(
@@ -28,6 +28,6 @@ export class Publisher implements ImageTask {
     }
 
     public toString(): string {
-        return "[Publisher]";
+        return "[Publish]";
     }
 }

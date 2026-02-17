@@ -1,6 +1,6 @@
 import { Agent } from "./agent";
 import { LogError } from "./errors/log";
-import { Publisher } from "./tasks/publisher";
+import { Publish } from "./tasks/publish";
 import { C121 } from "./sources/c121";
 
 export class LiveImage extends Agent {
@@ -9,12 +9,12 @@ export class LiveImage extends Agent {
     constructor() {
         super(new C121());
 
-        this.addImageTask(new Publisher(this.camera.getID()));
+        this.addImageTask(new Publish(this.camera.getID()));
 
         this.addErrorTask(new LogError());
     }
 
     public override toString(): string {
-        return `${super.toString()}[CameraAgent]`;
+        return `${super.toString()}[LiveImage]`;
     }
 }

@@ -3,6 +3,8 @@ import { SleepTimer } from "./timer";
 import { ImageBuffer, ImageSource } from "../interfaces";
 
 export abstract class Camera implements ImageSource {
+    protected static readonly DEFAULT_INTERVAL_SECONDS = 30;
+
     private readonly timer: SleepTimer;
 
     constructor() {
@@ -11,7 +13,9 @@ export abstract class Camera implements ImageSource {
 
     public abstract getID(): string;
     protected abstract getUrl(): string;
-    protected abstract getIntervalSeconds(): number;
+    protected getIntervalSeconds(): number {
+        return Camera.DEFAULT_INTERVAL_SECONDS;
+    }
 
     public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
         await this.timer.sleep(signal);
@@ -30,6 +34,6 @@ export abstract class Camera implements ImageSource {
     }
 
     public toString(): string {
-        return `[Camera]`;
+        return `[Camera-${this.getID()}]`;
     }
 }
