@@ -1,5 +1,5 @@
-import { Lifecycle } from "../../lifecycle";
-import { ErrorTask, ImageBuffer, ImageSource, ImageTask } from "../interfaces";
+import { Lifecycle } from "../lifecycle";
+import { ErrorTask, ImageBuffer, ImageSource, ImageTask } from "./interfaces";
 
 export abstract class Agent extends Lifecycle {
     private readonly imageTasks: ImageTask[] = [];
