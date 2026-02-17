@@ -15,7 +15,7 @@ export class LiveImage extends Agent {
         this.addImageTask(new Publish(camera.getID()));
 
         this.addErrorTask(new LogError());
-        this.addErrorTask(new MaxErrors(3));
+        this.addErrorTask(new MaxErrors());
     }
 
     public override toString(): string {
