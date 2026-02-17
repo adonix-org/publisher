@@ -1,7 +1,10 @@
-.vscode
+# Editor and OS files
+.vscode/
 .DS_Store
 
+# Dependencies and build output
 node_modules/
 dist/
 
+# Local environment variables
 .env
