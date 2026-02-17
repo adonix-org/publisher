@@ -4,13 +4,13 @@ const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
 const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN;
 
 export class Publish implements ImageTask {
-    constructor(private readonly sourceId: string) {}
+    constructor(private readonly endpoint: string) {}
 
     public async process(
         image: ImageBuffer,
         signal: AbortSignal,
     ): Promise<ImageBuffer | null> {
-        const response = await fetch(`${POST_URL_BASE}/${this.sourceId}`, {
+        const response = await fetch(`${POST_URL_BASE}/${this.endpoint}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${BEARER_TOKEN}`,

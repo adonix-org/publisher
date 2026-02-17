@@ -11,7 +11,7 @@ export abstract class Camera implements ImageSource {
         this.timer = new SleepTimer(this.getIntervalSeconds());
     }
 
-    public abstract getID(): string;
+    public abstract getName(): string;
     protected abstract getUrl(): string;
     protected getIntervalSeconds(): number {
         return Camera.DEFAULT_INTERVAL_SECONDS;
@@ -28,6 +28,6 @@ export abstract class Camera implements ImageSource {
     }
 
     public toString(): string {
-        return `[Camera-${this.getID()}]`;
+        return `[Camera-${this.getName()}]`;
     }
 }

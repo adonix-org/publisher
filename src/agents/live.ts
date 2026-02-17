@@ -12,7 +12,7 @@ export class LiveImage extends Agent {
         super(camera);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new Publish(camera.getID()));
+        this.addImageTask(new Publish(camera.getName()));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());
