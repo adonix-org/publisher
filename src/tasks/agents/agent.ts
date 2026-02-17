@@ -1,7 +1,7 @@
-import { Lifecycle } from "../lifecycle";
-import { ErrorTask, ImageBuffer, ImageSource, ImageTask } from "./interfaces";
+import { Lifecycle } from "../../lifecycle";
+import { ErrorTask, ImageBuffer, ImageSource, ImageTask } from "../interfaces";
 
-export abstract class TaskAgent extends Lifecycle {
+export abstract class Agent extends Lifecycle {
     private readonly imageTasks: ImageTask[] = [];
     private readonly errorTasks: ErrorTask[] = [];
 
@@ -90,6 +90,6 @@ export abstract class TaskAgent extends Lifecycle {
     }
 
     public override toString(): string {
-        return "[TaskAgent]";
+        return "[Agent]";
     }
 }

@@ -1,10 +1,10 @@
-import { Source } from "../interfaces";
-import { TaskAgent } from "./agent";
-import { RtspSource } from "./rtsp";
-import { LogError } from "./errors";
-import { Publisher } from "./publisher";
+import { Source } from "../../interfaces";
+import { Agent } from "./agent";
+import { RtspSource } from "../sources/rtsp";
+import { LogError } from "../errors/log-error";
+import { Publisher } from "../tasks/publisher";
 
-export class RtspAgent extends TaskAgent {
+export class RtspAgent extends Agent {
     constructor(source: Source) {
         super(new RtspSource(source));
 

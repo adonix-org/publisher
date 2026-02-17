@@ -1,7 +1,7 @@
-import { FfmpegProcess } from "../capture/ffmpeg";
+import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./sleep";
-import { Source } from "../interfaces";
-import { ImageBuffer, ImageSource } from "./interfaces";
+import { Source } from "../../interfaces";
+import { ImageBuffer, ImageSource } from "../interfaces";
 
 export class RtspSource implements ImageSource {
     private readonly timer: SleepTimer;

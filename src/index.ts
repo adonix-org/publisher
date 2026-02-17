@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "./logging";
 import { Daemon } from "./daemon";
-import { RtspAgent } from "./tasks/rtsp-agent";
+import { RtspAgent } from "./tasks/agents/rtsp";
 import { Source } from "./interfaces";
 
 const url = process.env.LIVEIMAGE_RTSP_URL;
