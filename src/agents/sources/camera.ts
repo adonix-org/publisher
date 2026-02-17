@@ -29,7 +29,6 @@ export abstract class Camera implements ImageSource {
 
         const buf = await new FfmpegProcess(this.getUrl()).capture();
         console.debug(`${this.toString()} captured image ${buf.length} bytes`);
-
         return { buffer: buf, contentType: "image/jpeg" };
     }
 

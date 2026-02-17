@@ -27,7 +27,7 @@ export abstract class Agent extends Lifecycle {
         this.loopPromise = this.loop(this.shutdown.signal);
     }
 
-    public override async onstop(): Promise<void> {
+    protected override async onstop(): Promise<void> {
         await super.onstop();
 
         this.shutdown?.abort();
