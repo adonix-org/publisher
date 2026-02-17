@@ -1,7 +1,7 @@
 import { FfmpegProcess } from "../capture/ffmpeg";
 import { SleepTimer } from "./sleep";
 import { Source } from "../interfaces";
-import { ImageBuffer, ImageSource } from "./tasks";
+import { ImageBuffer, ImageSource } from "./interfaces";
 
 export class RtspSource implements ImageSource {
     private readonly timer: SleepTimer;
@@ -24,7 +24,7 @@ export class RtspSource implements ImageSource {
         this.timer.start();
 
         const buf = await new FfmpegProcess(this.source.rtsp.url).capture();
-        console.debug(`${this.toString()} captured frame ${buf.length} bytes`);
+        console.debug(`${this.toString()} captured image ${buf.length} bytes`);
 
         return { buffer: buf, contentType: "image/jpeg" };
     }
