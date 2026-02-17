@@ -3,7 +3,7 @@ import { EventMessage, EventSession } from "./event";
 import { Lifecycle } from "../lifecycle";
 
 const WSS_URL = process.env.LIVEIMAGE_WSS_PUBLISH!;
-const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY!;
+const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN!;
 
 export interface OnlineMessage extends EventMessage {
     active: number;
@@ -17,7 +17,7 @@ class PublisherWebSocket extends ActiveWebSocket {
 
     constructor() {
         super(new URL(WSS_URL), {
-            headers: { Authorization: "Bearer " + ADMIN_KEY },
+            headers: { Authorization: "Bearer " + BEARER_TOKEN },
         });
     }
 

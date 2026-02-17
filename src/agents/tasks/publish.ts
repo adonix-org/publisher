@@ -1,7 +1,7 @@
 import { ImageBuffer, ImageTask } from "../interfaces";
 
 const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
-const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY;
+const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN;
 
 export class Publish implements ImageTask {
     constructor(private readonly sourceId: string) {}
@@ -13,7 +13,7 @@ export class Publish implements ImageTask {
         const response = await fetch(`${POST_URL_BASE}/${this.sourceId}`, {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${ADMIN_KEY}`,
+                Authorization: `Bearer ${BEARER_TOKEN}`,
                 "Content-Type": image.contentType,
             },
             body: new Uint8Array(image.buffer),
