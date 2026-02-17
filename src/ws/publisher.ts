@@ -1,7 +1,7 @@
-import { Agent } from "../publish/agent";
 import { ActiveWebSocket } from "./active";
 import { EventSession } from "./event";
 import { EventMessage, OnlineMessage } from "../interfaces";
+import { Lifecycle } from "../lifecycle";
 
 const WSS_URL = process.env.LIVEIMAGE_WSS_PUBLISH!;
 const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY!;
@@ -21,7 +21,7 @@ class PublisherWebSocket extends ActiveWebSocket {
 }
 
 export class PublisherSession extends EventSession {
-    constructor(private readonly agent: Agent) {
+    constructor(private readonly agent: Lifecycle) {
         super(PublisherWebSocket.Factory);
     }
 
