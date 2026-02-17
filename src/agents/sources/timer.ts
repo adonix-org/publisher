@@ -2,6 +2,8 @@ import { setTimeout as sleep } from "timers/promises";
 
 export class SleepTimer {
     private static readonly MAX_SAMPLE_SIZE = 100;
+    private static readonly MIN_SLEEP_MS = 500;
+
     private durations: number[] = [];
     private _start = 0;
 
@@ -26,7 +28,10 @@ export class SleepTimer {
             this.durations.shift();
         }
 
-        const sleepMs = this.seconds * 1000 - this.median();
+        const sleepMs = Math.max(
+            SleepTimer.MIN_SLEEP_MS,
+            this.seconds * 1000 - this.median(),
+        );
         await sleep(sleepMs, undefined, { signal });
     }
 
