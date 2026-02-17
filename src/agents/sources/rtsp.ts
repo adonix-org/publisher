@@ -1,5 +1,5 @@
 import { FfmpegProcess } from "./ffmpeg";
-import { SleepTimer } from "./sleep";
+import { SleepTimer } from "./timer";
 import { Source } from "../../interfaces";
 import { ImageBuffer, ImageSource } from "../interfaces";
 
