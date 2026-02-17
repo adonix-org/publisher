@@ -10,8 +10,7 @@ export class LiveImage extends Agent {
 
     constructor() {
         super(new C121());
-
-        //this.addImageTask(new ConvertToPng());
+        
         this.addImageTask(new Watermark());
         this.addImageTask(
             new Convert({ type: "image/jpeg", options: { quality: 70 } }),
