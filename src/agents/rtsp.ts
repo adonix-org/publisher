@@ -1,7 +1,7 @@
 import { Source } from "../interfaces";
 import { Agent } from "./agent";
 import { RtspSource } from "./sources/rtsp";
-import { LogError } from "./errors/log-error";
+import { LogError } from "./errors/log";
 import { Publisher } from "./tasks/publisher";
 
 export class RtspAgent extends Agent {
