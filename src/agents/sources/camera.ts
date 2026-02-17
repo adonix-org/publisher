@@ -22,9 +22,11 @@ export abstract class Camera implements ImageSource {
 
         this.timer.start();
 
-        const buf = await new FfmpegProcess(this.getUrl()).capture();
-        console.debug(`${this.toString()} captured image ${buf.length} bytes`);
-        return { buffer: buf, contentType: "image/jpeg" };
+        const buffer = await new FfmpegProcess(this.getUrl()).capture();
+        console.debug(
+            `${this.toString()} captured image ${buffer.length} bytes`,
+        );
+        return { buffer, contentType: "image/jpeg" };
     }
 
     public toString(): string {

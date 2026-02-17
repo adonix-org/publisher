@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "../interfaces";
+import { ImageBuffer, ImageTask } from "../../interfaces";
 
 export class Watermark implements ImageTask {
     constructor(
