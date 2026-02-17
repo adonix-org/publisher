@@ -20,8 +20,6 @@ export class Publisher implements ImageTask {
             signal,
         });
 
-        console.debug(this.toString(), await response.text());
-
         if (!response.ok) {
             throw new Error(await response.text());
         }

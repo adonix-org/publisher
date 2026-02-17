@@ -8,7 +8,7 @@ export abstract class Agent extends Lifecycle {
     private shutdown: AbortController | null = null;
     private loopPromise: Promise<void> | null = null;
 
-    protected constructor(private readonly imageSource: ImageSource) {
+    protected constructor(private readonly source: ImageSource) {
         super();
     }
 
@@ -37,17 +37,18 @@ export abstract class Agent extends Lifecycle {
     private async loop(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
             const image = await this.next(signal);
-            if (!image) continue;
-
-            void this.onimage(image, signal);
+            if (image) {
+                void this.onimage(image, signal);
+            }
+            await new Promise((res) => setImmediate(res));
         }
     }
 
     private async next(signal: AbortSignal): Promise<ImageBuffer | null> {
         try {
-            return await this.imageSource.next(signal);
+            return await this.source.next(signal);
         } catch (err) {
-            void this.onerror(this.imageSource, err, signal);
+            void this.onerror(this.source, err, signal);
             return null;
         }
     }
