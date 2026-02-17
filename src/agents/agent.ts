@@ -6,7 +6,7 @@ export abstract class Agent extends Lifecycle {
     private readonly errorTasks: ErrorTask[] = [];
 
     private shutdown: AbortController | null = null;
-    private loopPromise: Promise<void> | null = null;
+    private finished: Promise<void> | null = null;
 
     protected constructor(private readonly source: ImageSource) {
         super();
@@ -24,17 +24,17 @@ export abstract class Agent extends Lifecycle {
         await super.onstart();
 
         this.shutdown = new AbortController();
-        this.loopPromise = this.loop(this.shutdown.signal);
+        this.finished = this.run(this.shutdown.signal);
     }
 
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
         this.shutdown?.abort();
-        await this.loopPromise;
+        await this.finished;
     }
 
-    private async loop(signal: AbortSignal): Promise<void> {
+    private async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
             const image = await this.next(signal);
             if (image) {
