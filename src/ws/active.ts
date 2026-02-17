@@ -13,7 +13,7 @@ export class ActiveWebSocket extends BaseWebSocket {
     ) {
         super(address, options);
 
-        this.heartbeat = new Heartbeat(this, () => this.close(), heartbeat);
+        this.heartbeat = new Heartbeat(this, () => this.terminate(), heartbeat);
 
         console.debug(this.toString(), "connecting...");
 
