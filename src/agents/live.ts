@@ -4,6 +4,7 @@ import { Publish } from "./tasks/image/publish";
 import { C121 } from "./sources/c121";
 import { Watermark } from "./tasks/image/watermark";
 import { MaxErrors } from "./tasks/error/max";
+import { Profiler } from "./tasks/image/profiler";
 
 export class LiveImage extends Agent {
     constructor() {
@@ -11,8 +12,8 @@ export class LiveImage extends Agent {
 
         super(camera);
 
-        this.addImageTask(new Watermark());
-        this.addImageTask(new Publish(camera.getName()));
+        this.addImageTask(new Profiler(new Watermark()));
+        this.addImageTask(new Profiler(new Publish(camera.getName())));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());

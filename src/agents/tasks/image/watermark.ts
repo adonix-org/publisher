@@ -5,7 +5,7 @@ export class Watermark implements ImageTask {
     constructor(
         private readonly text: string = "LiveImage",
         private readonly fontSize: number = 100, // px
-        private readonly opacity: number = 0.8, // 0–1
+        private readonly opacity: number = 0.5, // 0–1
     ) {}
 
     public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
@@ -20,7 +20,7 @@ export class Watermark implements ImageTask {
     x="${width - padding}"
     y="${height - padding}"
     font-size="${this.fontSize}"
-    fill="white"
+    fill="black"
     fill-opacity="${this.opacity}"
     font-family="sans-serif"
     text-anchor="end"
