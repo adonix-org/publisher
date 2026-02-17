@@ -11,7 +11,7 @@ const c121: Source = {
     id: "c121",
     rtsp: {
         url,
-        intervalSeconds: 5,
+        intervalSeconds: 10,
     },
 };
 

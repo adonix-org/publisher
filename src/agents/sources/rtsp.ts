@@ -6,11 +6,8 @@ import { ImageBuffer, ImageSource } from "../interfaces";
 export class RtspSource implements ImageSource {
     private readonly timer: SleepTimer;
 
-    constructor(
-        private readonly source: Source,
-        intervalSeconds: number = 5,
-    ) {
-        this.timer = new SleepTimer(intervalSeconds);
+    constructor(private readonly source: Source) {
+        this.timer = new SleepTimer(source.rtsp.intervalSeconds);
     }
 
     public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
