@@ -1,4 +1,4 @@
-import { ErrorTask, ImageError } from "../interfaces";
+import { ErrorTask, ImageError } from "../../interfaces";
 
 export class MaxErrors implements ErrorTask {
     private count = 0;

@@ -1,4 +1,4 @@
-import { ImageBuffer, ImageTask } from "../interfaces";
+import { ImageBuffer, ImageTask } from "../../interfaces";
 
 const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
 const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN;
