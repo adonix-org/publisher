@@ -1,14 +1,17 @@
 import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./timer";
-import { Source } from "../../interfaces";
 import { ImageBuffer, ImageSource } from "../interfaces";
 
-export class RtspSource implements ImageSource {
+export abstract class Camera implements ImageSource {
     private readonly timer: SleepTimer;
 
-    constructor(private readonly source: Source) {
-        this.timer = new SleepTimer(source.rtsp.intervalSeconds);
+    constructor() {
+        this.timer = new SleepTimer(this.getIntervalSeconds());
     }
+
+    public abstract getID(): string;
+    protected abstract getUrl(): string;
+    protected abstract getIntervalSeconds(): number;
 
     public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
         await this.timer.sleep(signal);
@@ -20,13 +23,13 @@ export class RtspSource implements ImageSource {
 
         this.timer.start();
 
-        const buf = await new FfmpegProcess(this.source.rtsp.url).capture();
+        const buf = await new FfmpegProcess(this.getUrl()).capture();
         console.debug(`${this.toString()} captured image ${buf.length} bytes`);
 
         return { buffer: buf, contentType: "image/jpeg" };
     }
 
     public toString(): string {
-        return `[RtspSource]`;
+        return `[Camera]`;
     }
 }

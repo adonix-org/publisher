@@ -1,6 +1,10 @@
 import { WebSocket } from "ws";
-import { HeartbeatOptions } from "../interfaces";
 import { Lifecycle } from "../lifecycle";
+
+export interface HeartbeatOptions {
+    pulse: number;
+    timeout: number;
+}
 
 export class Heartbeat extends Lifecycle {
     public static readonly DEFAULT_PULSE = 10_000;

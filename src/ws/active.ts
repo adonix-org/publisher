@@ -1,7 +1,6 @@
 import WebSocket from "ws";
-import { Heartbeat } from "./heartbeat";
+import { Heartbeat, HeartbeatOptions } from "./heartbeat";
 import { ClientRequestArgs } from "node:http";
-import { HeartbeatOptions } from "../interfaces";
 import { BaseWebSocket } from "./base";
 
 export class ActiveWebSocket extends BaseWebSocket {

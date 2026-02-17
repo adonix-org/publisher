@@ -1,10 +1,16 @@
 import { ActiveWebSocket } from "./active";
-import { EventSession } from "./event";
-import { EventMessage, OnlineMessage } from "../interfaces";
+import { EventMessage, EventSession } from "./event";
 import { Lifecycle } from "../lifecycle";
 
 const WSS_URL = process.env.LIVEIMAGE_WSS_PUBLISH!;
 const ADMIN_KEY = process.env.LIVEIMAGE_ADMIN_KEY!;
+
+export interface OnlineMessage extends EventMessage {
+    active: number;
+    zombies: number;
+    subscribers: number;
+    publishers: number;
+}
 
 class PublisherWebSocket extends ActiveWebSocket {
     public static readonly Factory = () => new this();

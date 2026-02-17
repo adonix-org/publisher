@@ -1,6 +1,9 @@
 import WebSocket from "ws";
-import { EventMessage } from "../interfaces";
 import { WebSocketSession } from "./session";
+
+export interface EventMessage {
+    event: string;
+}
 
 export abstract class EventSession extends WebSocketSession {
     protected abstract handle(msg: EventMessage): void | Promise<void>;
