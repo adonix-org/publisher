@@ -1,5 +1,5 @@
 import { Source } from "../interfaces";
-import { TaskAgent } from "./tasks";
+import { TaskAgent } from "./agent";
 import { RtspSource } from "./rtsp";
 import { LogError } from "./errors";
 import { Publisher } from "./publisher";
