@@ -13,10 +13,6 @@ export class SleepTimer {
         this._start = Date.now();
     }
 
-    public reset(): void {
-        this._start = 0;
-    }
-
     public async sleep(signal?: AbortSignal): Promise<void> {
         if (this._start === 0) {
             return;
@@ -32,7 +28,13 @@ export class SleepTimer {
             SleepTimer.MIN_SLEEP_MS,
             this.seconds * 1000 - this.median(),
         );
-        await sleep(sleepMs, undefined, { signal });
+
+        try {
+            await sleep(sleepMs, undefined, { signal });
+        } catch (err) {
+            this._start = 0;
+            throw err;
+        }
     }
 
     private median(): number {

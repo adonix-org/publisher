@@ -20,11 +20,6 @@ export abstract class Camera implements ImageSource {
     public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
         await this.timer.sleep(signal);
 
-        if (signal.aborted) {
-            this.timer.reset();
-            return null;
-        }
-
         this.timer.start();
 
         const buf = await new FfmpegProcess(this.getUrl()).capture();
