@@ -71,6 +71,6 @@ export abstract class WebSocketSession extends Lifecycle {
     };
 
     public override toString(): string {
-        return `${super.toString()}[WebSocketSession]${this.websocket?.toString() ?? ""}`;
+        return `${super.toString()}[WebSocketSession]`;
     }
 }

@@ -46,4 +46,8 @@ export class PublisherSession extends EventSession {
         await super.onstop();
         await this.agent.stop();
     }
+
+    public override toString(): string {
+        return `${super.toString()}[PublisherSession]`;
+    }
 }
