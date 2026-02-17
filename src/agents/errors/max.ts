@@ -14,7 +14,7 @@ export class MaxErrors implements ErrorTask {
 
         console.error(
             this.toString(),
-            `max errors (${this.max}) exceeded, shutting down`,
+            `max errors (${this.max}) exceeded, shutting down...`,
         );
         process.kill(process.pid, "SIGTERM");
     }
