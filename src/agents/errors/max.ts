@@ -1,0 +1,22 @@
+import { ErrorTask, ImageError } from "../interfaces";
+
+export class MaxErrors implements ErrorTask {
+    private count = 0;
+
+    constructor(private readonly max: number = 10) {}
+
+    public async handle(_error: ImageError): Promise<void> {
+        this.count++;
+        if (this.count >= this.max) {
+            console.error(
+                this.toString(),
+                `max errors (${this.max}) exceeded, shutting down`,
+            );
+            process.kill(process.pid, "SIGTERM");
+        }
+    }
+
+    public toString(): string {
+        return "[MaxErrors]";
+    }
+}
