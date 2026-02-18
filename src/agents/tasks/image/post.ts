@@ -1,21 +1,21 @@
 import { ImageBuffer, ImageTask } from "../../interfaces";
 
-export class Publish implements ImageTask {
+export class Post implements ImageTask {
     constructor(
         private readonly url: URL,
-        private readonly token: string,
+        private readonly headers: Headers,
     ) {}
 
     public async process(
         image: ImageBuffer,
         signal: AbortSignal,
     ): Promise<ImageBuffer | null> {
+        const headers = new Headers(this.headers);
+        headers.set("Content-Type", image.contentType);
+
         const response = await fetch(this.url, {
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${this.token}`,
-                "Content-Type": image.contentType,
-            },
+            headers,
             body: new Uint8Array(image.buffer),
             signal,
         });
@@ -28,6 +28,6 @@ export class Publish implements ImageTask {
     }
 
     public toString(): string {
-        return "[Publish]";
+        return "[Post]";
     }
 }
