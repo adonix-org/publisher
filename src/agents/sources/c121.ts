@@ -3,7 +3,7 @@ import { Camera } from "./camera";
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 export class C121 extends Camera {
-    private static readonly REFRESH_INTERVAL_SECONDS = 30;
+    private static readonly REFRESH_INTERVAL_SECONDS = 5;
 
     public override getName(): string {
         return "c121";
