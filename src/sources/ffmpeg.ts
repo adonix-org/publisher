@@ -1,4 +1,4 @@
-import { spawn, ChildProcessWithoutNullStreams } from "child_process";
+import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
 
 export class FfmpegProcess {
     constructor(private readonly url: string) {}

@@ -5,9 +5,9 @@ export class Watermark implements ImageTask {
     private cachedOverlay?: Buffer;
 
     constructor(
-        private text: string = "LiveImage",
-        private fontSize: number = 80,
-        private position: sharp.Gravity = "southeast",
+        private readonly text: string = "LiveImage",
+        private readonly fontSize: number = 80,
+        private readonly position: sharp.Gravity = "southeast",
     ) {}
 
     private async getOverlay(): Promise<Buffer> {

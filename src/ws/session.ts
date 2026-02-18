@@ -46,10 +46,10 @@ export abstract class WebSocketSession extends Lifecycle {
         }
     }
 
-    protected async onmessage(
-        _data: WebSocket.RawData,
-        _isBinary: boolean,
-    ): Promise<void> {}
+    protected abstract onmessage(
+        data: WebSocket.RawData,
+        isBinary: boolean,
+    ): Promise<void>;
 
     private connect(): void {
         this.websocket = this.factory();
@@ -57,7 +57,7 @@ export abstract class WebSocketSession extends Lifecycle {
         this.websocket.on("message", this._onmessage);
     }
 
-    private reconnect = (): void => {
+    private readonly reconnect = (): void => {
         if (!this.running) return;
         if (this.reconnectTimer) return;
 

@@ -1,10 +1,10 @@
-import { setTimeout as sleep } from "timers/promises";
+import { setTimeout as sleep } from "node:timers/promises";
 
 export class SleepTimer {
     private static readonly MAX_SAMPLE_SIZE = 100;
     private static readonly MIN_SLEEP_MS = 500;
 
-    private durations: number[] = [];
+    private readonly durations: number[] = [];
     private _start = 0;
 
     constructor(private readonly seconds: number) {}

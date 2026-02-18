@@ -58,7 +58,7 @@ export class Heartbeat extends Lifecycle {
         this.websocket.ping();
     }
 
-    private pong = (): void => {
+    private readonly pong = (): void => {
         if (!this.timeout) return;
         clearTimeout(this.timeout);
         this.timeout = undefined;

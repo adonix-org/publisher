@@ -6,5 +6,3 @@ import { LiveImage } from "./agents/live";
 import { PublisherSession } from "./ws/publisher";
 
 new Daemon(new PublisherSession(new LiveImage())).start();
-
-// new Daemon(new LiveImage()).start();

@@ -46,7 +46,7 @@ export abstract class Lifecycle {
         ...args: T
     ): void {
         if (!fn) return;
-        setImmediate(() => void fn(...args));
+        setImmediate(() => fn(...args));
     }
 
     private schedule(fn: () => Promise<void>): Promise<void> {
