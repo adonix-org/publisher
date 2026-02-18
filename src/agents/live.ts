@@ -5,7 +5,6 @@ import { Watermark } from "./tasks/transform/watermark";
 import { MaxErrors } from "./tasks/error/max";
 import { Profiler } from "./tasks/profile/profiler";
 import { Publish } from "./tasks/transfer/publish";
-import { LocalSave } from "./tasks/transfer/local";
 
 export class LiveImage extends Agent {
     constructor() {
@@ -14,7 +13,6 @@ export class LiveImage extends Agent {
         super(camera);
 
         this.addImageTask(new Profiler(new Watermark()));
-        this.addImageTask(new Profiler(new LocalSave(camera)));
         this.addImageTask(new Profiler(new Publish(camera.getName())));
 
         this.addErrorTask(new LogError());

@@ -24,15 +24,18 @@ export class Save implements ImageTask {
         const min = String(now.getMinutes()).padStart(2, "0");
         const ss = String(now.getSeconds()).padStart(2, "0");
 
-        return `${yyyy}-${mm}-${dd}_${hh}-${min}-${ss}`;
+        return `${yyyy}${mm}${dd}_${hh}${min}${ss}`;
     }
 
     public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
         const ext = mimeToExt[image.contentType] ?? "bin";
         const filename = `${this.prefix}_${this.getTimestamp()}.${ext}`;
         const filepath = `${this.directory}/${filename}`;
+        const tempPath = `${this.directory}/${Date.now()}.filepart`;
 
-        await fs.writeFile(filepath, image.buffer);
+        await fs.writeFile(tempPath, image.buffer);
+        await fs.rename(tempPath, filepath);
+
         return image;
     }
 
