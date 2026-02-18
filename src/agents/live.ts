@@ -1,10 +1,10 @@
 import { Agent } from "./agent";
 import { LogError } from "./tasks/error/log";
-import { Post } from "./tasks/image/post";
 import { C121 } from "./sources/c121";
-import { Watermark } from "./tasks/image/watermark";
+import { Watermark } from "./tasks/transform/watermark";
 import { MaxErrors } from "./tasks/error/max";
-import { Profiler } from "./tasks/image/profiler";
+import { Profiler } from "./tasks/profile/profiler";
+import { Publish } from "./tasks/transfer/publish";
 
 export class LiveImage extends Agent {
     constructor() {
@@ -21,22 +21,5 @@ export class LiveImage extends Agent {
 
     public override toString(): string {
         return `${super.toString()}[LiveImage]`;
-    }
-}
-
-class Publish extends Post {
-    constructor(name: string) {
-        const POST_URL_BASE = process.env.LIVEIMAGE_BASE!;
-        const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN!;
-
-        const url = new URL(`live/${name}`, POST_URL_BASE);
-        const headers = new Headers({
-            Authorization: `Bearer ${BEARER_TOKEN}`,
-        });
-        super(url, headers);
-    }
-
-    public override toString(): string {
-        return `${super.toString()}[Publish]`;
     }
 }
