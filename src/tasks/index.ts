@@ -8,6 +8,8 @@ export interface ImageTask {
         image: ImageBuffer,
         signal: AbortSignal,
     ): Promise<ImageBuffer | null>;
+
+    toString(): string;
 }
 
 export interface ImageError {
@@ -18,4 +20,6 @@ export interface ImageError {
 
 export interface ErrorTask {
     handle(error: ImageError, signal?: AbortSignal): Promise<void>;
+
+    toString(): string;
 }
