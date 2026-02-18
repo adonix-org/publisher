@@ -37,6 +37,10 @@ export class Profiler implements ImageTask {
 
         return result;
     }
+
+    public toString(): string {
+        return `[Profiler]${this.task.toString()}`;
+    }
 }
 
 export class Total implements ImageTask {
