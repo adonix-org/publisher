@@ -1,4 +1,4 @@
-import { ErrorTask, ImageError } from "../../agents/interfaces";
+import { ErrorTask, ImageError } from "..";
 
 export class LogError implements ErrorTask {
     public async handle(err: ImageError): Promise<void> {

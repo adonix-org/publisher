@@ -3,10 +3,6 @@ export interface ImageBuffer {
     buffer: Buffer;
 }
 
-export interface ImageSource {
-    next(signal: AbortSignal): Promise<ImageBuffer | null>;
-}
-
 export interface ImageTask {
     process(
         image: ImageBuffer,

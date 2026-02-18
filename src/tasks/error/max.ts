@@ -1,4 +1,4 @@
-import { ErrorTask, ImageError } from "../../agents/interfaces";
+import { ErrorTask, ImageError } from "..";
 
 export class MaxErrors implements ErrorTask {
     private count = 0;

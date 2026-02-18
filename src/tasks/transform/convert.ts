@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "../../agents/interfaces";
+import { ImageBuffer, ImageTask } from "..";
 
 export type ConvertTarget =
     | {

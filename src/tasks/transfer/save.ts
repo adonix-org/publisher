@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import { ImageBuffer, ImageTask } from "../../agents/interfaces";
+import { ImageBuffer, ImageTask } from "..";
 
 const mimeToExt: Record<string, string> = {
     "image/jpeg": "jpg",

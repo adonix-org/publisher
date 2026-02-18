@@ -1,4 +1,4 @@
-import { ImageBuffer, ImageTask } from "../../agents/interfaces";
+import { ImageBuffer, ImageTask } from "..";
 
 export class Post implements ImageTask {
     constructor(

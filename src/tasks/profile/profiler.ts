@@ -1,4 +1,4 @@
-import { ImageBuffer, ImageTask } from "../../agents/interfaces";
+import { ImageBuffer, ImageTask } from "..";
 
 export class Profiler implements ImageTask {
     constructor(private readonly task: ImageTask) {}
