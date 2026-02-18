@@ -1,19 +1,19 @@
 import { ImageBuffer, ImageTask } from "../../interfaces";
 
-const POST_URL_BASE = process.env.LIVEIMAGE_BASE;
-const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN;
-
 export class Publish implements ImageTask {
-    constructor(private readonly endpoint: string) {}
+    constructor(
+        private readonly url: URL,
+        private readonly token: string,
+    ) {}
 
     public async process(
         image: ImageBuffer,
         signal: AbortSignal,
     ): Promise<ImageBuffer | null> {
-        const response = await fetch(`${POST_URL_BASE}/${this.endpoint}`, {
+        const response = await fetch(this.url, {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${BEARER_TOKEN}`,
+                Authorization: `Bearer ${this.token}`,
                 "Content-Type": image.contentType,
             },
             body: new Uint8Array(image.buffer),
