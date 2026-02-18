@@ -27,7 +27,7 @@ export class FfmpegProcess {
                 "pipe:1",
             ];
             const ffmpeg: ChildProcessWithoutNullStreams = spawn(
-                "ffmpeg",
+                "/opt/homebrew/bin/ffmpeg",
                 args,
             );
 
