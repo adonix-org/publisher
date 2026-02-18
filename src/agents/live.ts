@@ -18,7 +18,6 @@ export class LiveImage extends Agent {
         this.addImageTask(new Profiler(new Watermark()));
 
         const url = new URL(`live/${camera.getName()}`, POST_URL_BASE);
-        console.info(url);
         this.addImageTask(new Profiler(new Publish(url, BEARER_TOKEN)));
 
         this.addErrorTask(new LogError());
