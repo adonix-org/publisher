@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "../../interfaces";
+import { ImageBuffer, ImageTask } from "../../agents/interfaces";
 
 export class ColorOverlay implements ImageTask {
     constructor(private readonly color: string | sharp.Color = "black") {}

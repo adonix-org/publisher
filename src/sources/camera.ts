@@ -1,6 +1,6 @@
 import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./timer";
-import { ImageBuffer, ImageSource } from "../interfaces";
+import { ImageBuffer, ImageSource } from "../agents/interfaces";
 
 export abstract class Camera implements ImageSource {
     protected static readonly DEFAULT_INTERVAL_SECONDS = 30;
