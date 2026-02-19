@@ -3,7 +3,7 @@ import { ErrorTask, ImageError } from "..";
 export class MaxErrors implements ErrorTask {
     private count = 0;
 
-    constructor(private readonly max: number = 10) {}
+    constructor(private readonly max: number = 3) {}
 
     public async handle(_error: ImageError): Promise<void> {
         this.count++;
