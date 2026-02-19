@@ -15,6 +15,7 @@ export class TimeLapse extends Agent {
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Profiler(new FetchTask("passthrough")));
+        this.addImageTask(new Profiler(new FetchTask("grayscale")));
         this.addImageTask(new LocalFile(camera.getName()));
 
         this.addErrorTask(new LogError());
