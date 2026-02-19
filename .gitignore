@@ -5,8 +5,8 @@
 # Dependencies and build output
 node_modules/
 dist/
-venv/
-__pycache__/
+python/.venv/
+python/__pycache__/
 *.pyc
 
 # Local environment variables
