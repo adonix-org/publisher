@@ -1,3 +1,4 @@
+import path from "node:path";
 import { promises as fs } from "node:fs";
 import { ImageBuffer, ImageTask } from "..";
 
@@ -30,11 +31,11 @@ export class Save implements ImageTask {
     public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
         const ext = mimeToExt[image.contentType] ?? "bin";
         const filename = `${this.prefix}_${this.getTimestamp()}.${ext}`;
-        const filepath = `${this.directory}/${filename}`;
-        const tempPath = `${this.directory}/${Date.now()}.filepart`;
+        const filepath = path.join(this.directory, filename);
+        const tempfile = path.join(this.directory, `${Date.now()}.filepart`);
 
-        await fs.writeFile(tempPath, image.buffer);
-        await fs.rename(tempPath, filepath);
+        await fs.writeFile(tempfile, image.buffer);
+        await fs.rename(tempfile, filepath);
 
         return image;
     }
