@@ -7,9 +7,13 @@ export class Python extends Lifecycle {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.process = spawn("python/.venv/bin/python", ["python/server.py"], {
-            stdio: "inherit",
-        });
+        this.process = spawn(
+            "python/.venv/bin/python",
+            ["python/app/server.py"],
+            {
+                stdio: "inherit",
+            },
+        );
 
         this.process.once("exit", () => {
             this.process = null;
