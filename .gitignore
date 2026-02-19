@@ -6,6 +6,8 @@
 node_modules/
 dist/
 venv/
+__pycache__/
+*.pyc
 
 # Local environment variables
 .env
