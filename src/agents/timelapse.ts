@@ -19,6 +19,6 @@ export class TimeLapse extends Agent {
     }
 
     public override toString(): string {
-        return `${super.toString()}[LiveImage]`;
+        return `${super.toString()}[TimeLapse]`;
     }
 }

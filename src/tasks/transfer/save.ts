@@ -36,8 +36,8 @@ export class Save implements ImageTask {
 
     private getPrefix(): string {
         return this.name
-            .replace(/[\x00-\x1f]/g, "")
-            .replace(/[/\\?%*:|"<>]/g, "_")
+            .replaceAll(/[^ -~]/g, "_")
+            .replaceAll(/[/\\?%*:|"<>]/g, "_")
             .trim();
     }
 
