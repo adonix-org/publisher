@@ -60,6 +60,7 @@ export abstract class Agent extends Lifecycle {
     ): Promise<void> {
         let current: ImageBuffer | null = image;
         for (const task of this.imageTasks) {
+            if (signal.aborted) return;
             try {
                 current = await task.process(current, signal);
             } catch (err) {
