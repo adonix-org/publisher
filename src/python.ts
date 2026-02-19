@@ -1,8 +1,5 @@
-import path from "node:path";
 import { spawn, ChildProcess } from "node:child_process";
 import { Lifecycle } from "./lifecycle";
-
-const pythonExe = path.resolve("venv", "bin", "python");
 
 export class Python extends Lifecycle {
     private process: ChildProcess | null = null;
@@ -10,9 +7,13 @@ export class Python extends Lifecycle {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.process = spawn(pythonExe, ["src/tasks/python/server.py"], {
-            stdio: "inherit",
-        });
+        this.process = spawn(
+            "venv/bin/python",
+            ["src/tasks/python/server.py"],
+            {
+                stdio: "inherit",
+            },
+        );
 
         this.process.once("exit", () => {
             this.process = null;
@@ -22,16 +23,17 @@ export class Python extends Lifecycle {
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
-        if (this.process === null) {
-            return;
-        }
-
         await new Promise<void>((resolve) => {
-            this.process?.once("exit", (code) => {
-                console.debug(this.toString(), `exited with code ${code}`);
+            if (this.process === null || this.process.killed) {
                 resolve();
-            });
-            this.process!.kill("SIGINT");
+                return;
+            }
+
+            const cleanup = () => resolve();
+            this.process.once("exit", cleanup);
+            this.process.once("error", cleanup);
+
+            this.process.kill("SIGINT");
         });
     }
 

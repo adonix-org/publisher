@@ -2,7 +2,7 @@ import "dotenv/config";
 import "./logging";
 
 import { Daemon } from "./daemon";
-//import { TimeLapse } from "./agents/timelapse";
 import { Python } from "./python";
+import { TimeLapse } from "./agents/timelapse";
 
-new Daemon(new Python()).start();
+new Daemon(new TimeLapse(), new Python()).start();
