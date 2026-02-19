@@ -3,17 +3,16 @@ import { LogError } from "../tasks/error/log";
 import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
-import { Profiler } from "../tasks/profile/profiler";
-import { Publish } from "../tasks/transfer/publish";
+import { LocalFile } from "../tasks/transfer/local";
 
-export class LiveImage extends Agent {
+export class TimeLapse extends Agent {
     constructor() {
         const camera = new C121(10);
 
         super(camera);
 
-        this.addImageTask(new Profiler(new Watermark()));
-        this.addImageTask(new Profiler(new Publish(camera.getName())));
+        this.addImageTask(new Watermark());
+        this.addImageTask(new LocalFile(camera.getName()));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());

@@ -1,11 +1,10 @@
 import path from "node:path";
-import { Camera } from "../../sources/camera";
 import { Save } from "./save";
 
-export class LocalFolder extends Save {
-    constructor(camera: Camera) {
+export class LocalFile extends Save {
+    constructor(name: string) {
         const IMAGE_FOLDER = process.env.LOCAL_IMAGE_FOLDER!;
-        super(path.join(IMAGE_FOLDER, camera.getName()), camera.getName());
+        super(path.join(IMAGE_FOLDER, name), name);
     }
 
     public override toString(): string {

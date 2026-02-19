@@ -1,5 +1,6 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
+import { randomBytes } from "node:crypto";
 import { ImageBuffer, ImageTask } from "..";
 
 const mimeToExt: Record<string, string> = {
@@ -13,7 +14,7 @@ const mimeToExt: Record<string, string> = {
 export class Save implements ImageTask {
     constructor(
         private readonly directory: string,
-        private readonly prefix: string = "image",
+        private readonly name: string = "image",
     ) {}
 
     private getTimestamp(): string {
@@ -24,15 +25,32 @@ export class Save implements ImageTask {
         const hh = String(now.getHours()).padStart(2, "0");
         const min = String(now.getMinutes()).padStart(2, "0");
         const ss = String(now.getSeconds()).padStart(2, "0");
+        const ms = String(now.getMilliseconds()).padStart(3, "0");
 
-        return `${yyyy}${mm}${dd}_${hh}${min}${ss}`;
+        return `${yyyy}${mm}${dd}_${hh}${min}${ss}_${ms}`;
+    }
+
+    private getSuffix(): string {
+        return randomBytes(4).toString("hex");
+    }
+
+    private getPrefix(): string {
+        return this.name
+            .replace(/[\x00-\x1f]/g, "")
+            .replace(/[/\\?%*:|"<>]/g, "_")
+            .trim();
     }
 
     public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
         const ext = mimeToExt[image.contentType] ?? "bin";
-        const filename = `${this.prefix}_${this.getTimestamp()}.${ext}`;
-        const filepath = path.join(this.directory, filename);
-        const tempfile = path.join(this.directory, `${Date.now()}.filepart`);
+
+        const timestamp = this.getTimestamp();
+        const suffix = this.getSuffix();
+        const prefix = this.getPrefix();
+
+        const filename = `${prefix}_${timestamp}_${suffix}`;
+        const filepath = path.join(this.directory, `${filename}.${ext}`);
+        const tempfile = path.join(this.directory, `${filename}.filepart`);
 
         await fs.writeFile(tempfile, image.buffer);
         await fs.rename(tempfile, filepath);

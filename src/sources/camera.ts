@@ -8,15 +8,12 @@ export abstract class Camera implements ImageSource {
 
     private readonly timer: SleepTimer;
 
-    constructor() {
-        this.timer = new SleepTimer(this.getIntervalSeconds());
+    constructor(intervalSeconds: number = Camera.DEFAULT_INTERVAL_SECONDS) {
+        this.timer = new SleepTimer(intervalSeconds);
     }
 
     public abstract getName(): string;
     protected abstract getUrl(): string;
-    protected getIntervalSeconds(): number {
-        return Camera.DEFAULT_INTERVAL_SECONDS;
-    }
 
     public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
         await this.timer.sleep(signal);
