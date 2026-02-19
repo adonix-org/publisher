@@ -1,0 +1,40 @@
+import { ImageTask, ImageBuffer } from "..";
+import fetch from "node-fetch";
+import http from "http";
+
+const agent = new http.Agent({ keepAlive: true });
+
+export class FetchTask implements ImageTask {
+    private readonly url: URL;
+
+    constructor(path: string, port: number = 8120, host: string = "127.0.0.1") {
+        this.url = new URL(path, `http://${host}:${port}`);
+    }
+
+    async process(
+        image: ImageBuffer,
+        signal: AbortSignal,
+    ): Promise<ImageBuffer | null> {
+        const response = await fetch(this.url, {
+            method: "POST",
+            body: image.buffer,
+            headers: { "Content-Type": image.contentType },
+            signal,
+            agent,
+        });
+
+        if (!response.ok) {
+            throw new Error(`${response.status} ${await response.text()}`);
+        }
+
+        const buffer = Buffer.from(await response.arrayBuffer());
+        const contentType =
+            response.headers.get("content-type") || "application/octet-stream";
+
+        return { buffer, contentType };
+    }
+
+    toString(): string {
+        return `[FetchTask: ${this.url}]`;
+    }
+}
