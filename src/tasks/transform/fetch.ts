@@ -4,7 +4,7 @@ import http from "http";
 
 const agent = new http.Agent({ keepAlive: true });
 
-export class FetchTask implements ImageTask {
+export class Fetch implements ImageTask {
     private readonly url: URL;
 
     constructor(path: string, port: number = 8120, host: string = "127.0.0.1") {
@@ -23,6 +23,10 @@ export class FetchTask implements ImageTask {
             agent,
         });
 
+        if (response.status === 204) {
+            return null;
+        }
+
         if (!response.ok) {
             throw new Error(`${response.status} ${await response.text()}`);
         }
@@ -35,6 +39,6 @@ export class FetchTask implements ImageTask {
     }
 
     toString(): string {
-        return `[FetchTask: ${this.url}]`;
+        return `[Fetch: ${this.url}]`;
     }
 }

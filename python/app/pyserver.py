@@ -3,31 +3,29 @@ import sys
 import importlib.util
 from fastapi import FastAPI
 
-app = FastAPI(title="Pythonic Worker")
+app = FastAPI(title="PyServer")
 
-# Get the directory where server.py actually lives
+# Directory of server.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Add that folder to sys.path so imports work
-sys.path.insert(0, BASE_DIR)
+# Routes folder
+ROUTES_DIR = os.path.join(BASE_DIR, "routes")
+sys.path.insert(0, ROUTES_DIR)
 
-# Loop over all .py files in that folder except server.py and __init__.py
-for filename in os.listdir(BASE_DIR):
-    if filename.endswith(".py") and filename not in ("pyserver.py", "__init__.py"):
-        module_name = filename[:-3]
-        module_path = os.path.join(BASE_DIR, filename)
+# Dynamically import each Python file in routes
+for filename in os.listdir(ROUTES_DIR):
+    if not filename.endswith(".py") or filename.startswith("_"):
+        continue
 
-        spec = importlib.util.spec_from_file_location(module_name, module_path)
-        if spec and spec.loader:
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            if hasattr(module, "router"):
-                app.include_router(module.router)
-                print(f"Mounted router from {filename}")
-            else:
-                print(f"No router found in {filename}")
-        else:
-            print(f"Failed to load module {filename}")
+    module_name = filename[:-3]  # strip .py
+    module_path = os.path.join(ROUTES_DIR, filename)
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)  # type: ignore
+
+    # Include router if present
+    if hasattr(module, "router"):
+        app.include_router(module.router)
 
 if __name__ == "__main__":
     import uvicorn

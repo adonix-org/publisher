@@ -4,7 +4,7 @@ import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
 import { LocalFile } from "../tasks/transfer/local";
-import { FetchTask } from "../tasks/transform/fetch";
+import { Fetch } from "../tasks/transform/fetch";
 import { Profiler } from "../tasks/observe/profiler";
 
 export class TimeLapse extends Agent {
@@ -14,8 +14,8 @@ export class TimeLapse extends Agent {
         super(camera);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new Profiler(new FetchTask("passthrough")));
-        this.addImageTask(new Profiler(new FetchTask("grayscale")));
+        this.addImageTask(new Profiler(new Fetch("passthrough")));
+        this.addImageTask(new Profiler(new Fetch("grayscale")));
         this.addImageTask(new LocalFile(camera.getName()));
 
         this.addErrorTask(new LogError());
