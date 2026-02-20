@@ -1,7 +1,7 @@
 import { spawn, ChildProcess } from "node:child_process";
 import { Lifecycle } from "./lifecycle";
 
-export class Python extends Lifecycle {
+export class PyServer extends Lifecycle {
     private process: ChildProcess | null = null;
 
     protected override async onstart(): Promise<void> {
@@ -9,7 +9,7 @@ export class Python extends Lifecycle {
 
         this.process = spawn(
             "python/.venv/bin/python",
-            ["python/app/server.py"],
+            ["python/app/pyserver.py"],
             {
                 stdio: "inherit",
             },
@@ -38,6 +38,6 @@ export class Python extends Lifecycle {
     }
 
     public override toString(): string {
-        return `${super.toString()}[Python]`;
+        return `${super.toString()}[PyServer]`;
     }
 }

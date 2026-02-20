@@ -13,7 +13,7 @@ sys.path.insert(0, BASE_DIR)
 
 # Loop over all .py files in that folder except server.py and __init__.py
 for filename in os.listdir(BASE_DIR):
-    if filename.endswith(".py") and filename not in ("server.py", "__init__.py"):
+    if filename.endswith(".py") and filename not in ("pyserver.py", "__init__.py"):
         module_name = filename[:-3]
         module_path = os.path.join(BASE_DIR, filename)
 
