@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 export class Watermark implements ImageTask {
     private cachedOverlay?: Buffer;
@@ -43,14 +43,20 @@ export class Watermark implements ImageTask {
         return this.cachedOverlay;
     }
 
-    public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const overlay = await this.getOverlay();
 
-        const buffer = await sharp(image.buffer)
+        const buffer = await sharp(frame.image.buffer)
             .composite([{ input: overlay, gravity: this.position }])
             .toBuffer();
 
-        return { buffer, contentType: image.contentType };
+        return {
+            ...frame,
+            image: {
+                ...frame.image,
+                buffer,
+            },
+        };
     }
 
     public toString(): string {

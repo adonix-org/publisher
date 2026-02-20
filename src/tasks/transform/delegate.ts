@@ -1,4 +1,4 @@
-import { ImageTask, ImageBuffer } from "..";
+import { ImageTask, ImageFrame, JsonImageFrame } from "..";
 import fetch from "node-fetch";
 import http from "node:http";
 
@@ -12,33 +12,78 @@ export class Delegate implements ImageTask {
     }
 
     public async process(
-        image: ImageBuffer,
+        frame: ImageFrame,
         signal: AbortSignal,
-    ): Promise<ImageBuffer | null> {
+    ): Promise<ImageFrame | null> {
         const response = await fetch(this.url, {
             method: "POST",
-            body: image.buffer,
-            headers: { "Content-Type": image.contentType },
+            body: JSON.stringify(frameToJson(frame)),
+            headers: { "Content-Type": "application/json" },
             signal,
             agent,
         });
 
-        if (response.status === 204) {
-            return null;
-        }
+        if (response.status === 204) return null;
 
         if (!response.ok) {
             throw new Error(`${response.status} ${await response.text()}`);
         }
 
-        const buffer = Buffer.from(await response.arrayBuffer());
-        const contentType =
-            response.headers.get("content-type") || "application/octet-stream";
+        const result = await response.json();
+        assertJsonImageFrame(result);
 
-        return { buffer, contentType };
+        return jsonToFrame(result);
     }
 
     public toString(): string {
         return `[Delegate: ${this.url}]`;
+    }
+}
+
+export function jsonToFrame(json: JsonImageFrame): ImageFrame {
+    return {
+        version: json.version,
+        image: {
+            contentType: json.image.contentType,
+            buffer: Buffer.from(json.image.base64, "base64"),
+        },
+        annotations: json.annotations,
+    };
+}
+
+function frameToJson(frame: ImageFrame): JsonImageFrame {
+    return {
+        version: frame.version,
+        image: {
+            contentType: frame.image.contentType,
+            base64: frame.image.buffer.toString("base64"),
+        },
+        annotations: frame.annotations,
+    };
+}
+
+function assertJsonImageFrame(value: unknown): asserts value is JsonImageFrame {
+    if (typeof value !== "object" || value === null) {
+        throw new Error("Invalid JSON response: not an object");
+    }
+
+    const obj = value as Record<string, unknown>;
+
+    if (
+        typeof obj.version !== "number" ||
+        typeof obj.image !== "object" ||
+        obj.image === null
+    ) {
+        throw new Error("Invalid JSON response: missing image or version");
+    }
+
+    const img = obj.image as Record<string, unknown>;
+
+    if (
+        typeof img.base64 !== "string" ||
+        typeof img.contentType !== "string" ||
+        !Array.isArray(obj.annotations)
+    ) {
+        throw new Error("Invalid JSON response: bad image or annotations");
     }
 }

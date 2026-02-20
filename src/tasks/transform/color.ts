@@ -1,11 +1,11 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 export class ColorOverlay implements ImageTask {
     constructor(private readonly color: string | sharp.Color = "black") {}
 
-    public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
-        const meta = await sharp(image.buffer).metadata();
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        const meta = await sharp(frame.image.buffer).metadata();
         const width = meta.width;
         const height = meta.height;
 
@@ -20,7 +20,7 @@ export class ColorOverlay implements ImageTask {
             .png()
             .toBuffer();
 
-        const buffer = await sharp(image.buffer)
+        const buffer = await sharp(frame.image.buffer)
             .composite([
                 {
                     input: colorOverlay,
@@ -29,7 +29,13 @@ export class ColorOverlay implements ImageTask {
             ])
             .toBuffer();
 
-        return { buffer, contentType: image.contentType };
+        return {
+            ...frame,
+            image: {
+                ...frame.image,
+                buffer,
+            },
+        };
     }
 
     public toString(): string {

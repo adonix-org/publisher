@@ -1,4 +1,4 @@
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 export class Post implements ImageTask {
     constructor(
@@ -7,16 +7,16 @@ export class Post implements ImageTask {
     ) {}
 
     public async process(
-        image: ImageBuffer,
+        frame: ImageFrame,
         signal: AbortSignal,
-    ): Promise<ImageBuffer | null> {
+    ): Promise<ImageFrame | null> {
         const headers = new Headers(this.headers);
-        headers.set("Content-Type", image.contentType);
+        headers.set("Content-Type", frame.image.contentType);
 
         const response = await fetch(this.url, {
             method: "POST",
             headers,
-            body: new Uint8Array(image.buffer),
+            body: new Uint8Array(frame.image.buffer),
             signal,
         });
 
@@ -24,7 +24,7 @@ export class Post implements ImageTask {
             throw new Error(await response.text());
         }
 
-        return image;
+        return frame;
     }
 
     public toString(): string {

@@ -1,4 +1,4 @@
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 type MaxSizeMode = "drop" | "error";
 
@@ -10,10 +10,10 @@ export class MaxSize implements ImageTask {
         private readonly mode: MaxSizeMode = "error",
     ) {}
 
-    public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
-        const size = image.buffer.byteLength;
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        const size = frame.image.buffer.byteLength;
         if (size <= this.maxSize) {
-            return image;
+            return frame;
         }
 
         const msg = `[MaxSize] image size ${Math.round(size / 1024)} K exceeds maximum ${Math.round(this.maxSize / 1024)} K`;

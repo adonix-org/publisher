@@ -1,7 +1,7 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { randomBytes } from "node:crypto";
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 const mimeToExt: Record<string, string> = {
     "image/jpeg": "jpg",
@@ -41,8 +41,8 @@ export class Save implements ImageTask {
             .trim();
     }
 
-    public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
-        const ext = mimeToExt[image.contentType] ?? "bin";
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        const ext = mimeToExt[frame.image.contentType] ?? "bin";
 
         const timestamp = this.getTimestamp();
         const suffix = this.getSuffix();
@@ -52,10 +52,10 @@ export class Save implements ImageTask {
         const filepath = path.join(this.directory, `${filename}.${ext}`);
         const tempfile = path.join(this.directory, `${filename}.filepart`);
 
-        await fs.writeFile(tempfile, image.buffer);
+        await fs.writeFile(tempfile, frame.image.buffer);
         await fs.rename(tempfile, filepath);
 
-        return image;
+        return frame;
     }
 
     public toString(): string {

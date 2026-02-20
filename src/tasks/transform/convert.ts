@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 export type ConvertTarget =
     | {
@@ -22,9 +22,8 @@ export type ConvertTarget =
 export class Convert implements ImageTask {
     constructor(private readonly target: ConvertTarget) {}
 
-    public async process(image: ImageBuffer): Promise<ImageBuffer | null> {
-        const source = sharp(image.buffer);
-
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        const source = sharp(frame.image.buffer);
         let buffer: Buffer;
         switch (this.target.type) {
             case "image/jpeg":
@@ -41,7 +40,13 @@ export class Convert implements ImageTask {
                 break;
         }
 
-        return { buffer, contentType: this.target.type };
+        return {
+            ...frame,
+            image: {
+                contentType: this.target.type,
+                buffer,
+            },
+        };
     }
 
     public toString(): string {

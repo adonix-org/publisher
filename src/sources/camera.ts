@@ -1,7 +1,7 @@
 import { ImageSource } from ".";
 import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./timer";
-import { ImageBuffer } from "../tasks";
+import { Annotation, ImageFrame } from "../tasks";
 
 export abstract class Camera implements ImageSource {
     protected static readonly DEFAULT_INTERVAL_SECONDS = 30;
@@ -15,7 +15,7 @@ export abstract class Camera implements ImageSource {
     public abstract getName(): string;
     protected abstract getUrl(): string;
 
-    public async next(signal: AbortSignal): Promise<ImageBuffer | null> {
+    public async next(signal: AbortSignal): Promise<ImageFrame | null> {
         await this.timer.sleep(signal);
 
         this.timer.start();
@@ -24,7 +24,12 @@ export abstract class Camera implements ImageSource {
         console.debug(
             `${this.toString()} captured image ${buffer.length} bytes`,
         );
-        return { buffer, contentType: "image/jpeg" };
+
+        return {
+            image: { buffer, contentType: "image/jpeg" },
+            annotations: new Array<Annotation>(),
+            version: 1,
+        };
     }
 
     public toString(): string {

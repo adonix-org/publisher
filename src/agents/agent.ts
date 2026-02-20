@@ -1,6 +1,6 @@
 import { Lifecycle } from "../lifecycle";
 import { ImageSource } from "../sources";
-import { ErrorTask, ImageBuffer, ImageTask } from "../tasks";
+import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
 
 export abstract class Agent extends Lifecycle {
     private readonly imageTasks: ImageTask[] = [];
@@ -45,7 +45,7 @@ export abstract class Agent extends Lifecycle {
         }
     }
 
-    private async next(signal: AbortSignal): Promise<ImageBuffer | null> {
+    private async next(signal: AbortSignal): Promise<ImageFrame | null> {
         try {
             return await this.source.next(signal);
         } catch (err) {
@@ -55,10 +55,10 @@ export abstract class Agent extends Lifecycle {
     }
 
     private async onimage(
-        image: ImageBuffer,
+        image: ImageFrame,
         signal: AbortSignal,
     ): Promise<void> {
-        let current: ImageBuffer | null = image;
+        let current: ImageFrame | null = image;
         for (const task of this.imageTasks) {
             if (signal.aborted) return;
             try {

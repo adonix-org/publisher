@@ -1,19 +1,19 @@
-import { ImageBuffer, ImageTask } from "..";
+import { ImageFrame, ImageTask } from "..";
 
 export class Profiler implements ImageTask {
     constructor(private readonly task: ImageTask) {}
 
     public async process(
-        image: ImageBuffer,
+        frame: ImageFrame,
         signal: AbortSignal,
-    ): Promise<ImageBuffer | null> {
+    ): Promise<ImageFrame | null> {
         const start = performance.now();
-        const result = await this.task.process(image, signal);
+        const result = await this.task.process(frame, signal);
         const end = performance.now();
 
         if (result) {
-            const before = image.buffer.byteLength;
-            const after = result.buffer.byteLength;
+            const before = frame.image.buffer.byteLength;
+            const after = result.image.buffer.byteLength;
             const percentChange = ((after - before) / before) * 100;
 
             console.debug(
