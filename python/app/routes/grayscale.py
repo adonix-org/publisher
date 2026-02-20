@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import APIRouter, Body, Response
 import io
 from PIL import Image
@@ -5,7 +6,7 @@ from PIL import Image
 router = APIRouter()
 
 @router.post("/grayscale")
-async def grayscale(file: bytes = Body(...)):
+async def grayscale(file: Annotated[bytes, Body(...)]):
     img = Image.open(io.BytesIO(file)).convert("L")
     out_bytes = io.BytesIO()
     img.save(out_bytes, format="JPEG")

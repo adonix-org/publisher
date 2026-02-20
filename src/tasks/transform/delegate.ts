@@ -1,6 +1,6 @@
 import { ImageTask, ImageBuffer } from "..";
 import fetch from "node-fetch";
-import http from "http";
+import http from "node:http";
 
 const agent = new http.Agent({ keepAlive: true });
 
