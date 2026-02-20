@@ -93,6 +93,6 @@ export abstract class Agent extends Lifecycle {
     }
 
     public override toString(): string {
-        return "[Agent]";
+        return `${super.toString()}[Agent]`;
     }
 }
