@@ -4,14 +4,14 @@ import http from "http";
 
 const agent = new http.Agent({ keepAlive: true });
 
-export class Fetch implements ImageTask {
+export class Delegate implements ImageTask {
     private readonly url: URL;
 
     constructor(path: string, port: number = 8120, host: string = "127.0.0.1") {
         this.url = new URL(path, `http://${host}:${port}`);
     }
 
-    async process(
+    public async process(
         image: ImageBuffer,
         signal: AbortSignal,
     ): Promise<ImageBuffer | null> {
@@ -38,7 +38,7 @@ export class Fetch implements ImageTask {
         return { buffer, contentType };
     }
 
-    toString(): string {
+    public toString(): string {
         return `[Fetch: ${this.url}]`;
     }
 }

@@ -8,6 +8,6 @@ export class LocalFile extends Save {
     }
 
     public override toString(): string {
-        return `${super.toString()}[LocalFolder]`;
+        return `${super.toString()}[LocalFile]`;
     }
 }
