@@ -1,4 +1,4 @@
-import { ImageTask, ImageFrame, JsonImageFrame } from "..";
+import { ImageTask, ImageFrame, Base64 } from "..";
 import fetch from "node-fetch";
 import http from "node:http";
 
@@ -17,7 +17,7 @@ export class Delegate implements ImageTask {
     ): Promise<ImageFrame | null> {
         const response = await fetch(this.url, {
             method: "POST",
-            body: JSON.stringify(frameToJson(frame)),
+            body: JSON.stringify(encode(frame)),
             headers: { "Content-Type": "application/json" },
             signal,
             agent,
@@ -30,9 +30,9 @@ export class Delegate implements ImageTask {
         }
 
         const result = await response.json();
-        assertJsonImageFrame(result);
+        assertImageFrame(result);
 
-        return jsonToFrame(result);
+        return decode(result);
     }
 
     public toString(): string {
@@ -40,29 +40,27 @@ export class Delegate implements ImageTask {
     }
 }
 
-export function jsonToFrame(json: JsonImageFrame): ImageFrame {
+export function decode(frame: ImageFrame<Base64>): ImageFrame {
     return {
-        version: json.version,
+        ...frame,
         image: {
-            contentType: json.image.contentType,
-            buffer: Buffer.from(json.image.base64, "base64"),
+            buffer: Buffer.from(frame.image.buffer, "base64"),
+            contentType: frame.image.contentType,
         },
-        annotations: json.annotations,
     };
 }
 
-function frameToJson(frame: ImageFrame): JsonImageFrame {
+function encode(frame: ImageFrame): ImageFrame<Base64> {
     return {
-        version: frame.version,
+        ...frame,
         image: {
             contentType: frame.image.contentType,
-            base64: frame.image.buffer.toString("base64"),
+            buffer: frame.image.buffer.toString("base64"),
         },
-        annotations: frame.annotations,
     };
 }
 
-function assertJsonImageFrame(value: unknown): asserts value is JsonImageFrame {
+function assertImageFrame(value: unknown): asserts value is ImageFrame<Base64> {
     if (typeof value !== "object" || value === null) {
         throw new Error("Invalid JSON response: not an object");
     }
@@ -80,7 +78,7 @@ function assertJsonImageFrame(value: unknown): asserts value is JsonImageFrame {
     const img = obj.image as Record<string, unknown>;
 
     if (
-        typeof img.base64 !== "string" ||
+        typeof img.buffer !== "string" ||
         typeof img.contentType !== "string" ||
         !Array.isArray(obj.annotations)
     ) {

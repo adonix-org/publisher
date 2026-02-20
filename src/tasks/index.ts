@@ -1,3 +1,7 @@
+type IMAGE_FRAME_SCHEMA_VERSION = 1;
+
+export type Base64 = string;
+
 export interface Annotation {
     tag: string;
     x: number;
@@ -7,26 +11,15 @@ export interface Annotation {
     confidence?: number;
 }
 
-export interface ImageBuffer {
+export interface ImageBuffer<T extends Buffer | Base64 = Buffer> {
     contentType: string;
-    buffer: Buffer;
+    buffer: T;
 }
 
-type IMAGE_FRAME_SCHEMA_VERSION = 1;
-
-export interface ImageFrame {
-    image: ImageBuffer;
+export interface ImageFrame<T extends Buffer | Base64 = Buffer> {
+    image: ImageBuffer<T>;
     readonly version: IMAGE_FRAME_SCHEMA_VERSION;
     readonly annotations: Annotation[];
-}
-
-export interface JsonImageFrame {
-    version: IMAGE_FRAME_SCHEMA_VERSION;
-    image: {
-        contentType: string;
-        base64: string;
-    };
-    annotations: Annotation[];
 }
 
 export interface ImageTask {

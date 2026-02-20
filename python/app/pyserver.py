@@ -1,9 +1,21 @@
 import os
 import sys
 import importlib.util
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 app = FastAPI(title="PyServer")
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "message": "Request validation failed",
+            "errors": exc.errors(),
+        },
+    )
 
 # Directory of server.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
