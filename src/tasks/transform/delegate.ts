@@ -39,6 +39,6 @@ export class Delegate implements ImageTask {
     }
 
     public toString(): string {
-        return `[Fetch: ${this.url}]`;
+        return `[Delegate: ${this.url}]`;
     }
 }

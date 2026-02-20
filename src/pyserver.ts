@@ -8,8 +8,8 @@ export class PyServer extends Lifecycle {
         await super.onstart();
 
         this.process = spawn(
-            "python/.venv/bin/python",
-            ["python/app/pyserver.py"],
+            `${process.cwd()}/python/.venv/bin/python`,
+            [`${process.cwd()}/python/app/pyserver.py`],
             {
                 stdio: "inherit",
             },
