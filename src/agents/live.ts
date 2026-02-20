@@ -1,21 +1,20 @@
-import { Agent } from "./agent";
 import { LogError } from "../tasks/error/log";
 import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
-import { Profiler } from "../tasks/observe/profiler";
 import { Publish } from "../tasks/transfer/publish";
 import { MaxSize } from "../tasks/observe/maxsize";
+import { ProfileAgent } from "./profile";
 
-export class LiveImage extends Agent {
+export class LiveImage extends ProfileAgent {
     constructor() {
         const camera = new C121(10);
 
         super(camera);
 
-        this.addImageTask(new Profiler(new Watermark()));
-        this.addImageTask(new Profiler(new MaxSize()));
-        this.addImageTask(new Profiler(new Publish(camera.getName())));
+        this.addImageTask(new Watermark());
+        this.addImageTask(new MaxSize());
+        this.addImageTask(new Publish(camera.getName()));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());
