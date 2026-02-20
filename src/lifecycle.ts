@@ -34,11 +34,15 @@ export abstract class Lifecycle {
     }
 
     protected async onstart(): Promise<void> {
-        await Promise.all(this.children.map((r) => r.start()));
+        for (const child of this.children) {
+            await child.start();
+        }
     }
 
     protected async onstop(): Promise<void> {
-        await Promise.all(this.children.map((r) => r.stop()));
+        for (const child of [...this.children].reverse()) {
+            await child.stop();
+        }
     }
 
     protected callback<T extends unknown[]>(
