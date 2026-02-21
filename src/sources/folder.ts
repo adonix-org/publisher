@@ -6,59 +6,82 @@ import { Annotation, ImageFrame } from "../tasks";
 import { Lifecycle } from "../lifecycle";
 
 export class Folder extends Lifecycle implements ImageSource {
-    private files: string[] = [];
-    private index = 0;
+    private readonly files: string[] = [];
 
     constructor(private readonly folder: string) {
         super();
     }
 
-    private async loadFiles(): Promise<void> {
-        if (this.files.length === 0) {
-            const entries = await fs.readdir(this.folder, {
-                withFileTypes: true,
-            });
+    protected override async onstop(): Promise<void> {
+        this.files.length = 0;
+    }
 
-            const imageExts = [
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp",
-                ".gif",
-                ".tiff",
-                ".avif",
-                ".svg",
-            ];
+    protected override async onstart(): Promise<void> {
+        const entries = await fs.readdir(this.folder, {
+            withFileTypes: true,
+        });
 
-            this.files = entries
+        const imageExts = [
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif",
+            ".tiff",
+            ".avif",
+            ".svg",
+        ];
+
+        this.files.push(
+            ...entries
                 .filter(
                     (e) =>
                         e.isFile() &&
                         imageExts.includes(path.extname(e.name).toLowerCase()),
                 )
                 .map((e) => path.join(this.folder, e.name))
-                .sort();
-        }
+                .sort(),
+        );
     }
 
     public async next(signal: AbortSignal): Promise<ImageFrame | null> {
         if (signal.aborted) return null;
 
-        await this.loadFiles();
-
-        if (this.index >= this.files.length) {
+        if (this.files.length === 0) {
             await sleep(1000);
+            return null;
         }
 
-        const filePath = this.files[this.index++];
+        const filePath = this.files.shift();
         if (!filePath) return null;
 
         const buffer = await fs.readFile(filePath);
         return {
-            image: { buffer, contentType: "image/jpeg" },
+            image: { buffer, contentType: this.contentTypeFromExt(filePath) },
             annotations: new Array<Annotation>(),
             version: 1,
         };
+    }
+
+    private contentTypeFromExt(file: string): string {
+        const ext = path.extname(file).toLowerCase();
+
+        switch (ext) {
+            case ".png":
+                return "image/png";
+            case ".webp":
+                return "image/webp";
+            case ".gif":
+                return "image/gif";
+            case ".tiff":
+                return "image/tiff";
+            case ".avif":
+                return "image/avif";
+            case ".svg":
+                return "image/svg+xml";
+            default:
+                return "image/jpeg";
+        }
     }
 
     public override toString(): string {
