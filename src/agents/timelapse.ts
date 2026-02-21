@@ -10,12 +10,12 @@ import { Confidence } from "../tasks/filter/confidence";
 export class TimeLapse extends ProfileAgent {
     constructor() {
         const folder = new SourceFolder("/Users/tybusby/Desktop/source");
-
         super(folder);
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Delegate("yolo"));
         this.addImageTask(new Confidence(0.2));
+
         this.addImageTask(new Delegate("outline"));
         this.addImageTask(new LocalFile("yolo"));
 

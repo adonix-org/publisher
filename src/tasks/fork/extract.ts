@@ -5,14 +5,12 @@ import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
 import { Delegate } from "../delegate/delegate";
 
-export class ExtractFaces extends ForkAgent {
-    constructor() {
+export class Extract extends ForkAgent {
+    constructor(folder: string) {
         super();
 
         this.addImageTask(new Delegate("grayscale"));
-        this.addImageTask(
-            new Save("/Users/tybusby/Desktop/faces/extracted", "face"),
-        );
+        this.addImageTask(new Save(folder));
 
         this.addErrorTask(new LogError());
     }
@@ -21,8 +19,7 @@ export class ExtractFaces extends ForkAgent {
         const image = sharp(frame.image.buffer);
 
         for (const annotation of frame.annotations) {
-            const { label, x, y, width, height } = annotation;
-            if (label !== "face") continue;
+            const { x, y, width, height } = annotation;
             if (width < 5 || height < 5) continue;
 
             const face = await image
@@ -44,6 +41,6 @@ export class ExtractFaces extends ForkAgent {
     }
 
     public override toString(): string {
-        return `${super.toString()}[FacesTask]`;
+        return `${super.toString()}[Extract]`;
     }
 }
