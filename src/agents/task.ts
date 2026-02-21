@@ -23,6 +23,6 @@ export class TaskAgent extends Agent implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[AgentTask]`;
+        return `${super.toString()}[TaskAgent]`;
     }
 }
