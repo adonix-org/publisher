@@ -1,6 +1,6 @@
 import { ImageFrame, ImageTask } from "..";
 
-export class Post implements ImageTask {
+export class Upload implements ImageTask {
     constructor(
         private readonly url: URL,
         private readonly headers: Headers,

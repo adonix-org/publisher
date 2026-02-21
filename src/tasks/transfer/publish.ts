@@ -1,6 +1,6 @@
-import { Post } from "./post";
+import { Upload } from "./upload";
 
-export class Publish extends Post {
+export class Publish extends Upload {
     constructor(name: string) {
         const POST_URL_BASE = process.env.LIVEIMAGE_BASE!;
         const BEARER_TOKEN = process.env.LIVEIMAGE_ADMIN_TOKEN!;

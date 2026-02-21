@@ -5,7 +5,8 @@ import { LocalFile } from "../tasks/transfer/local";
 import { Delegate } from "../tasks/delegate/delegate";
 import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
-import { FacesTask as ExtractFaces } from "./task";
+import {} from "./task";
+import { ExtractFaces } from "../tasks/delegate/faces";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
