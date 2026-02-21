@@ -35,6 +35,6 @@ export abstract class Camera extends Lifecycle implements ImageSource {
     }
 
     public override toString(): string {
-        return `[Camera-${this.getName()}]`;
+        return `${super.toString()}[Camera-${this.getName()}]`;
     }
 }
