@@ -1,7 +1,6 @@
 import { LogError } from "../tasks/error/log";
 import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
-import { MaxErrors } from "../tasks/error/max";
 import { Publish } from "../tasks/transfer/publish";
 import { MaxSize } from "../tasks/observe/maxsize";
 import { ProfileAgent } from "./profile";
@@ -17,7 +16,6 @@ export class LiveImage extends ProfileAgent {
         this.addImageTask(new Publish(camera.getName()));
 
         this.addErrorTask(new LogError());
-        this.addErrorTask(new MaxErrors());
     }
 
     public override toString(): string {
