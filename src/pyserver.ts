@@ -20,7 +20,10 @@ export class PyServer extends Lifecycle {
         });
 
         this.process.stdout?.on("data", (data) => {
-            console.debug(data.toString());
+            const msg = data.toString().trim();
+            if (!msg) return;
+
+            console.debug(`[🐍 \x1b[32mPyServer\x1b[0m] ${msg}`);
         });
 
         await new Promise<void>((resolve, reject) => {
