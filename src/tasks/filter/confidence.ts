@@ -8,9 +8,9 @@ export class Confidence implements ImageTask {
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const filtered = frame.annotations.filter(
-            (ann) =>
-                (!this.label || ann.label === this.label) &&
-                (ann.confidence ?? 0) >= this.threshold,
+            (annotation) =>
+                (!this.label || annotation.label === this.label) &&
+                (annotation.confidence ?? 0) >= this.threshold,
         );
         return {
             ...frame,
