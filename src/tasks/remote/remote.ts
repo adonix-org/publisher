@@ -5,7 +5,7 @@ import { assertImageFrame, decode, encode } from "./utils";
 
 const agent = new http.Agent({ keepAlive: true });
 
-export class Delegate implements ImageTask {
+export class Remote implements ImageTask {
     private readonly url: URL;
 
     constructor(path: string, port: number = 8120, host: string = "127.0.0.1") {

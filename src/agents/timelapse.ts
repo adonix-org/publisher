@@ -2,7 +2,7 @@ import { LogError } from "../tasks/error/log";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
 import { LocalFile } from "../tasks/transfer/local";
-import { Delegate } from "../tasks/delegate/delegate";
+import { Remote } from "../tasks/remote/remote";
 import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
 import { Confidence } from "../tasks/filter/confidence";
@@ -13,11 +13,11 @@ export class TimeLapse extends ProfileAgent {
         super(folder);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new Delegate("yolo"));
+        this.addImageTask(new Remote("yolo"));
         this.addImageTask(new Confidence(0.2));
 
-        this.addImageTask(new Delegate("outline"));
-        this.addImageTask(new Delegate("label"));
+        this.addImageTask(new Remote("outline"));
+        this.addImageTask(new Remote("label"));
         this.addImageTask(new LocalFile("yolo"));
 
         this.addErrorTask(new LogError());

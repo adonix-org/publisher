@@ -3,13 +3,13 @@ import { ImageFrame } from "..";
 import { ForkAgent } from "../../agents/fork";
 import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
-import { Delegate } from "../delegate/delegate";
+import { Remote } from "../remote/remote";
 
 export class Extract extends ForkAgent {
     constructor(folder: string) {
         super();
 
-        this.addImageTask(new Delegate("grayscale"));
+        this.addImageTask(new Remote("grayscale"));
         this.addImageTask(new Save(folder));
 
         this.addErrorTask(new LogError());
