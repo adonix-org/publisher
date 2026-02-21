@@ -6,7 +6,7 @@
 node_modules/
 dist/
 python/.venv/
-python/__pycache__/
+__pycache__/
 python/app/models/
 *.pyc
 
