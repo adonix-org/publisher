@@ -16,12 +16,12 @@ export class TimeLapse extends ProfileAgent {
         super(folder, extract);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new Delegate("detect_faces"));
-        this.addImageTask(new Confidence(0.8, "face"));
+        this.addImageTask(new Delegate("yolo"));
+        this.addImageTask(new Confidence(0.1));
         this.addImageTask(extract);
 
-        this.addImageTask(new Delegate("outline_faces"));
-        this.addImageTask(new LocalFile("faces"));
+        this.addImageTask(new Delegate("outline"));
+        this.addImageTask(new LocalFile("yolo"));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());
