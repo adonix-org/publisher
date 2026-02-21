@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="PyServer", lifespan=lifespan)
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def validation_exception_handler(_: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=422,
         content={
