@@ -26,7 +26,7 @@ async def validation_exception_handler(_: Request, exc: RequestValidationError):
         },
     )
 
-# Directory of server.py
+# Directory of pyserver.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Routes folder
@@ -38,13 +38,12 @@ for filename in os.listdir(ROUTES_DIR):
     if not filename.endswith(".py") or filename.startswith("_"):
         continue
 
-    module_name = filename[:-3]  # strip .py
+    module_name = filename[:-3]
     module_path = os.path.join(ROUTES_DIR, filename)
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)  # type: ignore
+    spec.loader.exec_module(module)
 
-    # Include router if present
     if hasattr(module, "router"):
         app.include_router(module.router)
 
