@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models import ImageFrame, Annotation
+from schemas import ImageFrame, Annotation
 from PIL import Image, ImageDraw, ImageFont
 import io
 import cv2
@@ -12,8 +12,8 @@ proto_path = "/Users/tybusby/Work/publisher/python/app/models/deploy.prototxt"
 model_path = "/Users/tybusby/Work/publisher/python/app/models/res10_300x300_ssd_iter_140000_fp16.caffemodel"
 net = cv2.dnn.readNetFromCaffe(proto_path, model_path)
 
-@router.post("/detect_faces")
-async def faces_dnn(frame: ImageFrame):
+@router.post("/dnn")
+async def dnn(frame: ImageFrame):
     img = np.array(Image.open(io.BytesIO(frame.image.buffer)).convert("RGB"))[:, :, ::-1]
     (h, w) = img.shape[:2]
 

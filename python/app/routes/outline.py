@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models import ImageFrame
+from schemas import ImageFrame
 from PIL import Image, ImageDraw, ImageFont
 import io
 

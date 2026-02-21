@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from models import ImageFrame
+from schemas import ImageFrame
 
 router = APIRouter()
 

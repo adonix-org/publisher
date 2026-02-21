@@ -5,21 +5,17 @@ import { LocalFile } from "../tasks/transfer/local";
 import { Delegate } from "../tasks/delegate/delegate";
 import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
-import { ExtractFaces } from "../tasks/fork/faces";
 import { Confidence } from "../tasks/filter/confidence";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
-        const extract = new ExtractFaces();
         const folder = new SourceFolder("/Users/tybusby/Desktop/source");
 
-        super(folder, extract);
+        super(folder);
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Delegate("yolo"));
-        this.addImageTask(new Confidence(0.1));
-        this.addImageTask(extract);
-
+        this.addImageTask(new Confidence(0.2));
         this.addImageTask(new Delegate("outline"));
         this.addImageTask(new LocalFile("yolo"));
 
