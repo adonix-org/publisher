@@ -2,7 +2,7 @@ import { LogError } from "../tasks/error/log";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
 import { LocalFile } from "../tasks/transfer/local";
-import { Delegate } from "../tasks/transform/delegate";
+import { Delegate } from "../tasks/delegate/delegate";
 import { ProfileAgent } from "./profile";
 import { Folder } from "../sources/folder";
 
