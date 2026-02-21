@@ -7,7 +7,7 @@ import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
 import {} from "./task";
 import { ExtractFaces } from "../tasks/agents/faces";
-import { Confidence } from "../tasks/filters/confidence";
+import { Confidence } from "../tasks/filter/confidence";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
