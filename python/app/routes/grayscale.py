@@ -15,6 +15,7 @@ async def grayscale(frame: ImageFrame):
     bytes_ = buffer.getvalue()
 
     frame.image.buffer = bytes_
+    frame.image.contentType = "image/jpeg"
     return frame
 
 

@@ -2,7 +2,7 @@ import { LogError } from "../tasks/error/log";
 import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { Publish } from "../tasks/transfer/publish";
-import { MaxSize } from "../tasks/observe/maxsize";
+import { MaxSize } from "../tasks/filters/maxsize";
 import { ProfileAgent } from "./profile";
 
 export class LiveImage extends ProfileAgent {

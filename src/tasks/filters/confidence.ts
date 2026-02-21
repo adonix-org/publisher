@@ -1,0 +1,24 @@
+import { ImageFrame, ImageTask } from "..";
+
+export class Confidence implements ImageTask {
+    constructor(
+        private readonly threshold = 0.5,
+        private readonly label?: string,
+    ) {}
+
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        const filtered = frame.annotations.filter(
+            (ann) =>
+                (!this.label || ann.label === this.label) &&
+                (ann.confidence ?? 0) >= this.threshold,
+        );
+        return {
+            ...frame,
+            annotations: filtered,
+        };
+    }
+
+    public toString(): string {
+        return `[Confidence]`;
+    }
+}

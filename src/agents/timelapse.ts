@@ -7,6 +7,7 @@ import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
 import {} from "./task";
 import { ExtractFaces } from "../tasks/agents/faces";
+import { Confidence } from "../tasks/filters/confidence";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
@@ -17,9 +18,9 @@ export class TimeLapse extends ProfileAgent {
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Delegate("detect_faces"));
+        this.addImageTask(new Confidence(0.8, "face"));
         this.addImageTask(extract);
 
-        this.addImageTask(new Delegate("grayscale"));
         this.addImageTask(new Delegate("outline_faces"));
         this.addImageTask(new LocalFile("faces"));
 

@@ -21,25 +21,23 @@ export class ExtractFaces extends TaskAgent {
         const image = sharp(frame.image.buffer);
 
         for (const annotation of frame.annotations) {
-            if (annotation.label === "face") {
-                const { x, y, width, height } = annotation;
+            const { label, x, y, width, height } = annotation;
+            if (label !== "face") continue;
+            if (width < 5 || height < 5) continue;
 
-                console.log(annotation);
+            const face = await image
+                .clone()
+                .extract({ left: x, top: y, width, height })
+                .jpeg()
+                .toBuffer();
 
-                const face = await image
-                    .clone()
-                    .extract({ left: x, top: y, width, height })
-                    .jpeg()
-                    .toBuffer();
-
-                this.push({
-                    ...frame,
-                    image: {
-                        buffer: face,
-                        contentType: "image/jpeg",
-                    },
-                });
-            }
+            this.push({
+                ...frame,
+                image: {
+                    buffer: face,
+                    contentType: "image/jpeg",
+                },
+            });
         }
 
         return frame;
