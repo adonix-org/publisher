@@ -7,32 +7,12 @@ import numpy as np
 
 router = APIRouter()
 
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-
 # Load DNN face detector model
 proto_path = "/Users/tybusby/Work/publisher/python/app/models/deploy.prototxt"
 model_path = "/Users/tybusby/Work/publisher/python/app/models/res10_300x300_ssd_iter_140000_fp16.caffemodel"
 net = cv2.dnn.readNetFromCaffe(proto_path, model_path)
 
-@router.post("/faces")
-async def detect_faces(frame: ImageFrame):
-    source = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
-    img = np.array(source)[:, :, ::-1]
-
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-
-    frame.annotations = [
-        Annotation(x=int(x), y=int(y), width=int(w), height=int(h), label="face")
-        for (x, y, w, h) in faces
-    ]
-
-    print(frame.annotations)
-
-    return frame
-
-
-@router.post("/faces_dnn")
+@router.post("/detect_faces")
 async def faces_dnn(frame: ImageFrame):
     # Convert buffer to OpenCV image
     img = np.array(Image.open(io.BytesIO(frame.image.buffer)).convert("RGB"))[:, :, ::-1]
@@ -61,7 +41,7 @@ async def faces_dnn(frame: ImageFrame):
 
     return frame
 
-@router.post("/draw")
+@router.post("/outline_faces")
 async def faces_drawn(frame: ImageFrame):
     # Load image from buffer
     img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
