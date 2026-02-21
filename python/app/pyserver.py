@@ -8,10 +8,10 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup code
+    # Startup
     print(app.title + " ready", flush=True)
     yield
-    # Shutdown code
+    # Shutdown
     print(app.title + " shutdown", flush=True)
 
 app = FastAPI(title="PyServer", lifespan=lifespan)
