@@ -17,7 +17,4 @@ async def grayscale(frame: ImageFrame):
     frame.image.buffer = bytes_
     return frame
 
-@router.post("/passthrough")
-async def passthrough(frame: ImageFrame):
-    return frame
 

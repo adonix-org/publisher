@@ -43,18 +43,27 @@ async def faces_dnn(frame: ImageFrame):
 
 @router.post("/outline_faces")
 async def faces_drawn(frame: ImageFrame):
-    # Load image from buffer
+    has_face = any(
+        getattr(ann, "label", "").lower() == "face"
+        for ann in frame.annotations
+    )
+
+    if not has_face:
+        return frame
+
     img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
     draw = ImageDraw.Draw(img)
 
-    # Draw rectangles for each annotation
     for ann in frame.annotations:
+        if getattr(ann, "label", "").lower() != "face":
+            continue
+
         x, y, w, h = ann.x, ann.y, ann.width, ann.height
         draw.rectangle([x, y, x + w, y + h], outline="red", width=2)
 
-    # Save back to buffer
     buffer = io.BytesIO()
     img.save(buffer, format="JPEG")
     frame.image.buffer = buffer.getvalue()
+    frame.image.contentType = "image/jpeg"
 
     return frame
