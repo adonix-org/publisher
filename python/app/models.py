@@ -4,7 +4,7 @@ from typing import List
 SUPPORTED_VERSION = 1
 
 class Annotation(BaseModel):
-    tag: str
+    label: str
     x: int
     y: int
     width: int

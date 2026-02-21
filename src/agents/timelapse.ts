@@ -1,24 +1,22 @@
 import { LogError } from "../tasks/error/log";
-import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { MaxErrors } from "../tasks/error/max";
 import { LocalFile } from "../tasks/transfer/local";
 import { Delegate } from "../tasks/transform/delegate";
-import { MaxSize } from "../tasks/observe/maxsize";
 import { ProfileAgent } from "./profile";
+import { Folder } from "../sources/folder";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
-        const camera = new C121(10);
+        const camera = new Folder("/Users/tybusby/Desktop/source");
 
         super(camera);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new MaxSize());
-        this.addImageTask(new Delegate("passthrough"));
-        this.addImageTask(new Delegate("grayscale"));
-        this.addImageTask(new MaxSize());
-        this.addImageTask(new LocalFile(camera.getName()));
+        //this.addImageTask(new Delegate("passthrough"));
+        this.addImageTask(new Delegate("faces_dnn"));
+        this.addImageTask(new Delegate("draw"));
+        this.addImageTask(new LocalFile("c121"));
 
         this.addErrorTask(new LogError());
         this.addErrorTask(new MaxErrors());

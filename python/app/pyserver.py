@@ -4,8 +4,17 @@ import importlib.util
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="PyServer")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup code
+    print(app.title + " ready", flush=True)
+    yield
+    # Shutdown code
+    print(app.title + " shutdown", flush=True)
+
+app = FastAPI(title="PyServer", lifespan=lifespan)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -41,5 +50,4 @@ for filename in os.listdir(ROUTES_DIR):
 
 if __name__ == "__main__":
     import uvicorn
-    print("Starting FastAPI server...")
     uvicorn.run(app, host="127.0.0.1", port=8120, log_level="debug")

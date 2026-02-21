@@ -11,12 +11,28 @@ export class PyServer extends Lifecycle {
             `${process.cwd()}/python/.venv/bin/python`,
             [`${process.cwd()}/python/app/pyserver.py`],
             {
-                stdio: "inherit",
+                stdio: ["ignore", "pipe", "pipe"],
             },
         );
 
         this.process.once("exit", () => {
             this.process = null;
+        });
+
+        this.process.stdout?.on("data", (data) => {
+            console.debug(data.toString());
+        });
+
+        await new Promise<void>((resolve, reject) => {
+            if (this.process === null)
+                return reject(new Error("Process failed to start"));
+
+            this.process.stdout?.on("data", (data) => {
+                const text = data.toString();
+                if (text.includes("PyServer ready")) {
+                    resolve();
+                }
+            });
         });
     }
 
