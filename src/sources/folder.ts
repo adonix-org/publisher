@@ -13,7 +13,7 @@ export class SourceFolder extends FrameQueue {
             withFileTypes: true,
         });
 
-        const imageExts = [
+        const imageExts = new Set([
             ".jpg",
             ".jpeg",
             ".png",
@@ -22,13 +22,13 @@ export class SourceFolder extends FrameQueue {
             ".tiff",
             ".avif",
             ".svg",
-        ];
+        ]);
 
         const files = entries
             .filter(
                 (e) =>
                     e.isFile() &&
-                    imageExts.includes(path.extname(e.name).toLowerCase()),
+                    imageExts.has(path.extname(e.name).toLowerCase()),
             )
             .map((e) => path.join(this.folder, e.name))
             .sort();

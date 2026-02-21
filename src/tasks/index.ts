@@ -1,7 +1,5 @@
 type IMAGE_FRAME_SCHEMA_VERSION = 1;
 
-export type Base64 = string;
-
 export interface Annotation {
     label: string;
     x: number;
@@ -11,12 +9,12 @@ export interface Annotation {
     confidence?: number;
 }
 
-export interface ImageBuffer<T extends Buffer | Base64 = Buffer> {
+export interface ImageBuffer<T extends Buffer | string = Buffer> {
     contentType: string;
     buffer: T;
 }
 
-export interface ImageFrame<T extends Buffer | Base64 = Buffer> {
+export interface ImageFrame<T extends Buffer | string = Buffer> {
     image: ImageBuffer<T>;
     readonly version: IMAGE_FRAME_SCHEMA_VERSION;
     readonly annotations: Annotation[];

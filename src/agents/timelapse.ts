@@ -5,7 +5,6 @@ import { LocalFile } from "../tasks/transfer/local";
 import { Delegate } from "../tasks/delegate/delegate";
 import { ProfileAgent } from "./profile";
 import { SourceFolder } from "../sources/folder";
-import {} from "./fork";
 import { ExtractFaces } from "../tasks/fork/faces";
 import { Confidence } from "../tasks/filter/confidence";
 

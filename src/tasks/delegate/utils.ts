@@ -1,6 +1,6 @@
-import { ImageFrame, Base64 } from "..";
+import { ImageFrame } from "..";
 
-export function decode(frame: ImageFrame<Base64>): ImageFrame {
+export function decode(frame: ImageFrame<string>): ImageFrame {
     return {
         ...frame,
         image: {
@@ -10,7 +10,7 @@ export function decode(frame: ImageFrame<Base64>): ImageFrame {
     };
 }
 
-export function encode(frame: ImageFrame): ImageFrame<Base64> {
+export function encode(frame: ImageFrame): ImageFrame<string> {
     return {
         ...frame,
         image: {
@@ -22,28 +22,26 @@ export function encode(frame: ImageFrame): ImageFrame<Base64> {
 
 export function assertImageFrame(
     value: unknown,
-): asserts value is ImageFrame<Base64> {
+): asserts value is ImageFrame<string> {
     if (typeof value !== "object" || value === null) {
-        throw new Error("Invalid JSON response: not an object");
+        throw new TypeError("Invalid JSON response: not an object");
     }
 
     const obj = value as Record<string, unknown>;
-
     if (
         typeof obj.version !== "number" ||
         typeof obj.image !== "object" ||
         obj.image === null
     ) {
-        throw new Error("Invalid JSON response: missing image or version");
+        throw new TypeError("Invalid JSON response: missing image or version");
     }
 
     const img = obj.image as Record<string, unknown>;
-
     if (
         typeof img.buffer !== "string" ||
         typeof img.contentType !== "string" ||
         !Array.isArray(obj.annotations)
     ) {
-        throw new Error("Invalid JSON response: bad image or annotations");
+        throw new TypeError("Invalid JSON response: bad image or annotations");
     }
 }
