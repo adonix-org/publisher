@@ -17,6 +17,7 @@ export class TimeLapse extends ProfileAgent {
         this.addImageTask(new Confidence(0.2));
 
         this.addImageTask(new Delegate("outline"));
+        this.addImageTask(new Delegate("label"));
         this.addImageTask(new LocalFile("yolo"));
 
         this.addErrorTask(new LogError());

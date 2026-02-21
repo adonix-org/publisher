@@ -14,6 +14,30 @@ async def outline_annotations(frame: ImageFrame):
     img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
     draw = ImageDraw.Draw(img)
 
+    for ann in frame.annotations:
+        x, y, w, h = ann.x, ann.y, ann.width, ann.height
+
+        # Draw rectangle
+        draw.rectangle([x, y, x + w, y + h], outline="yellow", width=2)
+
+    # Save updated image back into buffer
+    buffer = io.BytesIO()
+    img.save(buffer, format="JPEG")
+    frame.image.buffer = buffer.getvalue()
+    frame.image.contentType = "image/jpeg"
+
+    return frame
+
+
+@router.post("/label")
+async def label_annotations(frame: ImageFrame):
+    if not frame.annotations:
+        return frame
+
+    # Load image
+    img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
+    draw = ImageDraw.Draw(img)
+
     try:
         font = ImageFont.truetype("Arial.ttf", size=28)
     except OSError:
@@ -21,10 +45,7 @@ async def outline_annotations(frame: ImageFrame):
         font = ImageFont.load_default()
 
     for ann in frame.annotations:
-        x, y, w, h = ann.x, ann.y, ann.width, ann.height
-
-        # Draw rectangle
-        draw.rectangle([x, y, x + w, y + h], outline="red", width=2)
+        x, y = ann.x, ann.y
 
         # Draw label + confidence
         conf_percent = f"{int(ann.confidence * 100)}%" if hasattr(ann, "confidence") else ""

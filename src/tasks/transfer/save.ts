@@ -14,7 +14,7 @@ const mimeToExt: Record<string, string> = {
 export class Save implements ImageTask {
     constructor(
         private readonly directory: string,
-        private readonly name: string = "image",
+        private readonly name: string = "image"
     ) {}
 
     private getTimestamp(): string {
