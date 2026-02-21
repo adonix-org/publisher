@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from models import Annotation, ImageFrame
 from ultralytics import YOLO
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import io
 import numpy as np
 
