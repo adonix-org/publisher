@@ -20,7 +20,9 @@ export function encode(frame: ImageFrame): ImageFrame<Base64> {
     };
 }
 
-export function assertImageFrame(value: unknown): asserts value is ImageFrame<Base64> {
+export function assertImageFrame(
+    value: unknown,
+): asserts value is ImageFrame<Base64> {
     if (typeof value !== "object" || value === null) {
         throw new Error("Invalid JSON response: not an object");
     }

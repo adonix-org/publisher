@@ -3,7 +3,7 @@ import { ImageFrame } from "..";
 import { TaskAgent } from "../../agents/task";
 import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
-import { Delegate } from "./delegate";
+import { Delegate } from "../delegate/delegate";
 
 export class ExtractFaces extends TaskAgent {
     constructor() {
@@ -23,6 +23,8 @@ export class ExtractFaces extends TaskAgent {
         for (const annotation of frame.annotations) {
             if (annotation.label === "face") {
                 const { x, y, width, height } = annotation;
+
+                console.log(annotation);
 
                 const face = await image
                     .clone()

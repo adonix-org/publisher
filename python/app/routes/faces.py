@@ -36,7 +36,8 @@ async def faces_dnn(frame: ImageFrame):
                 y=int(y1),
                 width=int(x2 - x1),
                 height=int(y2 - y1),
-                label="face"
+                label="face",
+                confidence=confidence
             ))
 
     return frame

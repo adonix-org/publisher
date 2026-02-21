@@ -1,6 +1,6 @@
-import { ImageTask, ImageFrame } from "..";
 import fetch from "node-fetch";
 import http from "node:http";
+import { ImageTask, ImageFrame } from "..";
 import { assertImageFrame, decode, encode } from "./utils";
 
 const agent = new http.Agent({ keepAlive: true });
