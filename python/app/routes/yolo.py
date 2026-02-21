@@ -7,7 +7,7 @@ import numpy as np
 
 router = APIRouter()
 
-model = YOLO("python/app/models/yolov8s.pt")
+model = YOLO("python/app/models/yolo/yolov8s.pt")
 
 @router.post("/yolo")
 async def yolo(frame: ImageFrame):

@@ -8,8 +8,8 @@ import numpy as np
 router = APIRouter()
 
 # Load DNN face detector model
-proto_path = "/Users/tybusby/Work/publisher/python/app/models/deploy.prototxt"
-model_path = "/Users/tybusby/Work/publisher/python/app/models/res10_300x300_ssd_iter_140000_fp16.caffemodel"
+proto_path = "/Users/tybusby/Work/publisher/python/app/models/dnn/deploy.prototxt"
+model_path = "/Users/tybusby/Work/publisher/python/app/models/dnn/res10_300x300_ssd_iter_140000_fp16.caffemodel"
 net = cv2.dnn.readNetFromCaffe(proto_path, model_path)
 
 @router.post("/dnn")
