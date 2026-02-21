@@ -1,19 +1,11 @@
-import { setTimeout as sleep } from "node:timers/promises";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { ImageSource } from ".";
 import { Annotation, ImageFrame } from "../tasks";
-import { Lifecycle } from "../lifecycle";
+import { FrameQueue } from "./queue";
 
-export class Folder extends Lifecycle implements ImageSource {
-    private readonly files: string[] = [];
-
+export class SourceFolder extends FrameQueue {
     constructor(private readonly folder: string) {
         super();
-    }
-
-    protected override async onstop(): Promise<void> {
-        this.files.length = 0;
     }
 
     protected override async onstart(): Promise<void> {
@@ -32,35 +24,27 @@ export class Folder extends Lifecycle implements ImageSource {
             ".svg",
         ];
 
-        this.files.push(
-            ...entries
-                .filter(
-                    (e) =>
-                        e.isFile() &&
-                        imageExts.includes(path.extname(e.name).toLowerCase()),
-                )
-                .map((e) => path.join(this.folder, e.name))
-                .sort(),
-        );
-    }
+        const files = entries
+            .filter(
+                (e) =>
+                    e.isFile() &&
+                    imageExts.includes(path.extname(e.name).toLowerCase()),
+            )
+            .map((e) => path.join(this.folder, e.name))
+            .sort();
 
-    public async next(signal: AbortSignal): Promise<ImageFrame | null> {
-        if (signal.aborted) return null;
-
-        if (this.files.length === 0) {
-            await sleep(1000);
-            return null;
+        for (const file of files) {
+            const buffer = await fs.readFile(file);
+            const frame: ImageFrame = {
+                image: {
+                    buffer,
+                    contentType: this.contentTypeFromExt(file),
+                },
+                annotations: new Array<Annotation>(),
+                version: 1,
+            };
+            this.push(frame);
         }
-
-        const filePath = this.files.shift();
-        if (!filePath) return null;
-
-        const buffer = await fs.readFile(filePath);
-        return {
-            image: { buffer, contentType: this.contentTypeFromExt(filePath) },
-            annotations: new Array<Annotation>(),
-            version: 1,
-        };
     }
 
     private contentTypeFromExt(file: string): string {
@@ -85,6 +69,6 @@ export class Folder extends Lifecycle implements ImageSource {
     }
 
     public override toString(): string {
-        return `[Folder ${this.folder}]`;
+        return `${super.toString()}[SourceFolder ${this.folder}]`;
     }
 }

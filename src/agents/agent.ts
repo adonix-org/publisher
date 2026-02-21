@@ -41,7 +41,7 @@ export abstract class Agent extends Lifecycle {
 
     private async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
-            const image = await this.next(signal);
+            const image = await this.get(signal);
             if (image) {
                 void this.onimage(image, signal);
             }
@@ -49,7 +49,7 @@ export abstract class Agent extends Lifecycle {
         }
     }
 
-    private async next(signal: AbortSignal): Promise<ImageFrame | null> {
+    private async get(signal: AbortSignal): Promise<ImageFrame | null> {
         try {
             return await this.source.next(signal);
         } catch (err) {

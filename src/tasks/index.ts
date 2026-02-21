@@ -3,7 +3,7 @@ type IMAGE_FRAME_SCHEMA_VERSION = 1;
 export type Base64 = string;
 
 export interface Annotation {
-    tag: string;
+    label: string;
     x: number;
     y: number;
     width: number;

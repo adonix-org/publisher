@@ -4,16 +4,21 @@ import { MaxErrors } from "../tasks/error/max";
 import { LocalFile } from "../tasks/transfer/local";
 import { Delegate } from "../tasks/delegate/delegate";
 import { ProfileAgent } from "./profile";
-import { Folder } from "../sources/folder";
+import { SourceFolder } from "../sources/folder";
+import { FacesTask as ExtractFaces } from "./task";
 
 export class TimeLapse extends ProfileAgent {
     constructor() {
-        const camera = new Folder("/Users/tybusby/Desktop/source");
+        const extract = new ExtractFaces();
+        const folder = new SourceFolder("/Users/tybusby/Desktop/source");
 
-        super(camera);
+        super(folder, extract);
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Delegate("detect_faces"));
+        this.addImageTask(extract);
+
+        this.addImageTask(new Delegate("grayscale"));
         this.addImageTask(new Delegate("outline_faces"));
         this.addImageTask(new LocalFile("faces"));
 
