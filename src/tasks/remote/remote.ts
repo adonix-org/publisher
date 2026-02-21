@@ -37,6 +37,6 @@ export class Remote implements ImageTask {
     }
 
     public toString(): string {
-        return `[Delegate: ${this.url}]`;
+        return `[Remote: ${this.url}]`;
     }
 }
