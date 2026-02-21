@@ -3,12 +3,15 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { ImageSource } from ".";
 import { Annotation, ImageFrame } from "../tasks";
+import { Lifecycle } from "../lifecycle";
 
-export class Folder implements ImageSource {
+export class Folder extends Lifecycle implements ImageSource {
     private files: string[] = [];
     private index = 0;
 
-    constructor(private readonly folder: string) {}
+    constructor(private readonly folder: string) {
+        super();
+    }
 
     private async loadFiles(): Promise<void> {
         if (this.files.length === 0) {
@@ -58,7 +61,7 @@ export class Folder implements ImageSource {
         };
     }
 
-    public toString(): string {
+    public override toString(): string {
         return `[Folder ${this.folder}]`;
     }
 }

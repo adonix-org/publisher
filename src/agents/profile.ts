@@ -1,22 +1,14 @@
-import { ImageSource } from "../sources";
+import { AgentSource } from ".";
 import { ImageTask } from "../tasks";
 import { Profiler } from "../tasks/observe/profiler";
 import { Agent } from "./agent";
 
 export class ProfileAgent extends Agent {
-    constructor(
-        source: ImageSource,
-        private readonly profile: boolean = true,
-    ) {
+    constructor(source: AgentSource) {
         super(source);
     }
 
     public override addImageTask(task: ImageTask): void {
-        if (this.profile) {
-            super.addImageTask(new Profiler(task));
-            return;
-        }
-
-        super.addImageTask(task);
+        super.addImageTask(new Profiler(task));
     }
 }

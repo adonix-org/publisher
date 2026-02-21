@@ -2,13 +2,15 @@ import { ImageSource } from ".";
 import { FfmpegProcess } from "./ffmpeg";
 import { SleepTimer } from "./timer";
 import { Annotation, ImageFrame } from "../tasks";
+import { Lifecycle } from "../lifecycle";
 
-export abstract class Camera implements ImageSource {
+export abstract class Camera extends Lifecycle implements ImageSource {
     protected static readonly DEFAULT_INTERVAL_SECONDS = 30;
 
     private readonly timer: SleepTimer;
 
     constructor(intervalSeconds: number = Camera.DEFAULT_INTERVAL_SECONDS) {
+        super();
         this.timer = new SleepTimer(intervalSeconds);
     }
 
@@ -32,7 +34,7 @@ export abstract class Camera implements ImageSource {
         };
     }
 
-    public toString(): string {
+    public override toString(): string {
         return `[Camera-${this.getName()}]`;
     }
 }

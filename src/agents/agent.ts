@@ -1,3 +1,4 @@
+import { AgentSource } from ".";
 import { Lifecycle } from "../lifecycle";
 import { ImageSource } from "../sources";
 import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
@@ -9,8 +10,11 @@ export abstract class Agent extends Lifecycle {
     private shutdown: AbortController | null = null;
     private finished: Promise<void> | null = null;
 
-    protected constructor(private readonly source: ImageSource) {
-        super();
+    protected constructor(
+        private readonly source: AgentSource,
+        ...children: Lifecycle[]
+    ) {
+        super(source, ...children);
     }
 
     protected addErrorTask(task: ErrorTask) {
