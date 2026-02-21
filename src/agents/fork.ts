@@ -2,7 +2,7 @@ import { ImageFrame, ImageTask } from "../tasks";
 import { Agent } from "./agent";
 import { FrameQueue } from "../sources/queue";
 
-export class TaskAgent extends Agent implements ImageTask {
+export class ForkAgent extends Agent implements ImageTask {
     private readonly frames: FrameQueue;
 
     constructor() {

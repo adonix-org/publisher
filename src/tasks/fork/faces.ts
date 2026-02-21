@@ -1,11 +1,11 @@
 import sharp from "sharp";
 import { ImageFrame } from "..";
-import { TaskAgent } from "../../agents/task";
+import { ForkAgent } from "../../agents/fork";
 import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
 import { Delegate } from "../delegate/delegate";
 
-export class ExtractFaces extends TaskAgent {
+export class ExtractFaces extends ForkAgent {
     constructor() {
         super();
 
