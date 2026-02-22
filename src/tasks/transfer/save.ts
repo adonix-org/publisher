@@ -14,7 +14,7 @@ const mimeToExt: Record<string, string> = {
 export class Save implements ImageTask {
     constructor(
         private readonly directory: string,
-        private readonly name: string = "image"
+        private readonly name: string = "image",
     ) {}
 
     private getTimestamp(): string {
@@ -34,23 +34,37 @@ export class Save implements ImageTask {
         return randomBytes(4).toString("hex");
     }
 
-    private getPrefix(): string {
+    protected getPrefix(): string {
         return this.name
             .replaceAll(/[^ -~]/g, "_")
             .replaceAll(/[/\\?%*:|"<>]/g, "_")
             .trim();
     }
 
-    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        const ext = mimeToExt[frame.image.contentType] ?? "bin";
+    protected async getFolder(_frame: ImageFrame): Promise<string> {
+        return this.directory;
+    }
 
+    protected async getFilename(_frame: ImageFrame): Promise<string> {
         const timestamp = this.getTimestamp();
         const suffix = this.getSuffix();
         const prefix = this.getPrefix();
+        return `${prefix}_${timestamp}_${suffix}`;
+    }
 
-        const filename = `${prefix}_${timestamp}_${suffix}`;
-        const filepath = path.join(this.directory, `${filename}.${ext}`);
-        const tempfile = path.join(this.directory, `${filename}.filepart`);
+    protected async getExtension(frame: ImageFrame): Promise<string> {
+        return mimeToExt[frame.image.contentType] ?? "bin";
+    }
+
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        await fs.mkdir(this.directory, { recursive: true });
+
+        const folder = await this.getFolder(frame);
+        const filename = await this.getFilename(frame);
+        const ext = await this.getExtension(frame);
+
+        const filepath = path.join(folder, `${filename}.${ext}`);
+        const tempfile = path.join(folder, `${filename}.filepart`);
 
         await fs.writeFile(tempfile, frame.image.buffer);
         await fs.rename(tempfile, filepath);
