@@ -3,6 +3,6 @@ import "./logging";
 
 import { Daemon } from "./daemon";
 import { LiveImage } from "./agents/live";
-import { PyServer } from "./pyserver";
+import { PublisherSession } from "./ws/publisher";
 
-new Daemon(new PyServer(), new LiveImage()).start();
+new Daemon(new PublisherSession(new LiveImage())).start();

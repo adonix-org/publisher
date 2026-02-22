@@ -8,10 +8,11 @@ export class SubjectFilter implements ImageTask {
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const filtered = frame.annotations.filter((annotation) => {
-            if (annotation.label !== this.label) return true; // keep other labels
-            if (this.threshold === undefined) return false; // remove all of this label
-            return (annotation.confidence ?? 0) >= this.threshold; // keep if above threshold
+            if (annotation.label !== this.label) return true;
+            if (this.threshold === undefined) return false;
+            return (annotation.confidence ?? 0) >= this.threshold;
         });
+
         return {
             ...frame,
             annotations: filtered,
@@ -19,6 +20,6 @@ export class SubjectFilter implements ImageTask {
     }
 
     public toString(): string {
-        return `[LabelFilter]`;
+        return `[SubjectFilter]`;
     }
 }

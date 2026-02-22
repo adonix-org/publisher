@@ -6,7 +6,8 @@
     "scripts": {
         "build": "tsc",
         "live": "npm run build && tsx src/live.ts",
-        "time": "npm run build && tsx src/timelapse.ts",
+        "timelapse": "npm run build && tsx src/timelapse.ts",
+        "watchdog": "npm run build && tsx src/watchdog.ts",
         "debug": "cross-env DEBUG=true npm run"
     },
     "keywords": [],
