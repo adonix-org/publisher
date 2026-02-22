@@ -5,8 +5,9 @@ import { Watermark } from "../tasks/transform/watermark";
 import { MaxSize } from "../tasks/filter/maxsize";
 import { ProfileAgent } from "./profile";
 import { Remote } from "../tasks/remote/remote";
-import { Confidence } from "../tasks/filter/confidence";
+import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { Detect } from "../tasks/transfer/detect";
+import { SubjectFilter } from "../tasks/filter/subject";
 
 export class LiveImage extends ProfileAgent {
     constructor() {
@@ -15,8 +16,9 @@ export class LiveImage extends ProfileAgent {
         super(camera);
 
         this.addImageTask(new Watermark());
-        this.addImageTask(new Remote("yolo"));
-        this.addImageTask(new Confidence(0.29));
+        this.addImageTask(new Remote("mega"));
+        this.addImageTask(new SubjectFilter("person", 0.6));
+        this.addImageTask(new ConfidenceFilter(0.29));
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(new Detect("/Users/tybusby/Desktop/yolo/detect"));
