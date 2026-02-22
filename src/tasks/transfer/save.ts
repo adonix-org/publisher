@@ -30,7 +30,7 @@ export class Save implements ImageTask {
         return `${yyyy}${mm}${dd}_${hh}${min}${ss}_${ms}`;
     }
 
-    private getSuffix(): string {
+    protected getUnique(): string {
         return randomBytes(4).toString("hex");
     }
 
@@ -47,7 +47,7 @@ export class Save implements ImageTask {
 
     protected async getFilename(_frame: ImageFrame): Promise<string> {
         const timestamp = this.getTimestamp();
-        const suffix = this.getSuffix();
+        const suffix = this.getUnique();
         const prefix = this.getPrefix();
         return `${prefix}_${timestamp}_${suffix}`;
     }
@@ -57,9 +57,9 @@ export class Save implements ImageTask {
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        await fs.mkdir(this.directory, { recursive: true });
-
         const folder = await this.getFolder(frame);
+        await fs.mkdir(folder, { recursive: true });
+
         const filename = await this.getFilename(frame);
         const ext = await this.getExtension(frame);
 
