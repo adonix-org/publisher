@@ -17,8 +17,8 @@ export class LiveImage extends ProfileAgent {
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Remote("mega"));
-        this.addImageTask(new SubjectFilter("person", 0.6));
         this.addImageTask(new ConfidenceFilter(0.29));
+        this.addImageTask(new SubjectFilter("person", 0.7));
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(new Detect("/Users/tybusby/Desktop/yolo/detect"));
