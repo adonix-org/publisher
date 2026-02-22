@@ -23,6 +23,6 @@ export class ForkAgent extends Agent implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[TaskAgent]`;
+        return `${super.toString()}[ForkAgent]`;
     }
 }

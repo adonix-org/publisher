@@ -22,7 +22,7 @@ export class Extract extends ForkAgent {
             const { x, y, width, height } = annotation;
             if (width < 5 || height < 5) continue;
 
-            const face = await image
+            const subject = await image
                 .clone()
                 .extract({ left: x, top: y, width, height })
                 .jpeg()
@@ -31,7 +31,7 @@ export class Extract extends ForkAgent {
             this.push({
                 ...frame,
                 image: {
-                    buffer: face,
+                    buffer: subject,
                     contentType: "image/jpeg",
                 },
             });
