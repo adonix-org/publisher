@@ -41,6 +41,7 @@ export class SourceFolder extends FrameQueue {
                     contentType: this.contentTypeFromExt(file),
                 },
                 annotations: new Array<Annotation>(),
+                seek: 0,
                 version: 1,
             };
             this.push(frame);

@@ -16,6 +16,7 @@ export interface ImageBuffer<T extends Buffer | string = Buffer> {
 
 export interface ImageFrame<T extends Buffer | string = Buffer> {
     image: ImageBuffer<T>;
+    seek: number;
     readonly version: IMAGE_FRAME_SCHEMA_VERSION;
     readonly annotations: Annotation[];
 }

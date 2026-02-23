@@ -16,6 +16,7 @@ class ImageBuffer(BaseModel):
     buffer: Base64Bytes
 
 class ImageFrame(BaseModel):
-    version: Literal[1] = SUPPORTED_VERSION
     image: ImageBuffer
+    seek: float
+    version: Literal[1] = SUPPORTED_VERSION
     annotations: List[Annotation]

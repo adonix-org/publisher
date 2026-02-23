@@ -31,6 +31,7 @@ export abstract class Camera extends Lifecycle implements ImageSource {
             image: { buffer, contentType: "image/jpeg" },
             annotations: new Array<Annotation>(),
             version: 1,
+            seek: 0,
         };
     }
 
