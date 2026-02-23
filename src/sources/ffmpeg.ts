@@ -18,8 +18,10 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
     public override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
+        this.buffer = Buffer.alloc(0);
+        this.frames.clear();
 
+        this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
         this.process.stdout.on("data", (chunk) => {
             this.buffer = Buffer.concat([this.buffer, chunk]);
 
@@ -34,15 +36,10 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
                     break;
                 }
 
-                const jpeg = Buffer.from(this.buffer.subarray(start, end + 2));
-                this.buffer = Buffer.from(this.buffer.subarray(end + 2));
+                const image = this.buffer.subarray(start, end + 2);
+                this.buffer = this.buffer.subarray(end + 2);
 
-                const frame: ImageFrame = {
-                    image: { buffer: jpeg, contentType: "image/jpeg" },
-                    seek: 0,
-                    version: 1,
-                    annotations: [],
-                };
+                const frame = this.onimage(image);
 
                 console.info(this.toString(), frame.image.buffer.byteLength);
                 this.frames.push(frame);
@@ -72,6 +69,15 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
             this.process.once("error", cleanup);
             this.process.kill();
         });
+    }
+
+    protected onimage(buffer: Buffer): ImageFrame {
+        return {
+            image: { buffer, contentType: "image/jpeg" },
+            seek: Date.now() / 1000,
+            version: 1,
+            annotations: [],
+        };
     }
 
     public async next(): Promise<ImageFrame | null> {

@@ -42,6 +42,10 @@ export class FrameQueue extends Lifecycle implements ImageSource {
         }
     }
 
+    public clear(): void {
+        this.frames.length = 0;
+    }
+
     public override toString(): string {
         return `${super.toString()}[FrameQueue]`;
     }
