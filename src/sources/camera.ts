@@ -1,5 +1,5 @@
 import { ImageSource } from ".";
-import { FfmpegProcess } from "./ffmpeg";
+import { FfmpegProcess } from "./ffmpeg-old";
 import { SleepTimer } from "./timer";
 import { Annotation, ImageFrame } from "../tasks";
 import { Lifecycle } from "../lifecycle";

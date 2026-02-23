@@ -1,47 +1,88 @@
-import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+import { ImageSource } from ".";
+import { Lifecycle } from "../lifecycle";
+import { ImageFrame } from "../tasks";
+import { FrameQueue } from "./queue";
 
-export class FfmpegProcess {
-    constructor(private readonly url: string) {}
+export class Ffmpeg extends Lifecycle implements ImageSource {
+    private process: ChildProcessWithoutNullStreams | null = null;
+    private buffer = Buffer.alloc(0);
 
-    public capture(): Promise<Buffer> {
-        return new Promise((resolve, reject) => {
-            if (!this.url) {
-                reject(new Error("Missing URL"));
+    constructor(
+        private readonly args: string[],
+        private readonly frames: FrameQueue = new FrameQueue(),
+    ) {
+        super(frames);
+    }
+
+    public override async onstart(): Promise<void> {
+        await super.onstart();
+
+        this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
+
+        this.process.stdout.on("data", (chunk) => {
+            this.buffer = Buffer.concat([this.buffer, chunk]);
+
+            while (true) {
+                const start = this.buffer.indexOf(Buffer.from([0xff, 0xd8]));
+                const end = this.buffer.indexOf(
+                    Buffer.from([0xff, 0xd9]),
+                    start + 2,
+                );
+
+                if (start === -1 || end === -1) {
+                    break;
+                }
+
+                const jpeg = Buffer.from(this.buffer.subarray(start, end + 2));
+                this.buffer = Buffer.from(this.buffer.subarray(end + 2));
+
+                const frame: ImageFrame = {
+                    image: { buffer: jpeg, contentType: "image/jpeg" },
+                    seek: 0,
+                    version: 1,
+                    annotations: [],
+                };
+
+                console.info(this.toString(), frame.image.buffer.byteLength);
+                this.frames.push(frame);
+            }
+        });
+
+        this.process.stderr.on("data", (chunk) => {
+            console.error(chunk.toString());
+        });
+
+        this.process.once("exit", () => {
+            this.process = null;
+        });
+    }
+
+    public override async onstop(): Promise<void> {
+        await super.onstop();
+
+        await new Promise<void>((resolve) => {
+            if (this.process === null || this.process.killed) {
+                resolve();
                 return;
             }
 
-            const buffer: Buffer[] = [];
-            const args = [
-                "-loglevel",
-                "error",
-                "-timeout",
-                "50000000",
-                "-rtsp_transport",
-                "tcp",
-                "-i",
-                this.url,
-                "-frames:v",
-                "1",
-                "-f",
-                "mjpeg",
-                "pipe:1",
-            ];
-            const ffmpeg: ChildProcessWithoutNullStreams = spawn(
-                "/opt/homebrew/bin/ffmpeg",
-                args,
-            );
-
-            ffmpeg.stdout.on("data", (chunk) => buffer.push(chunk));
-
-            ffmpeg.on("error", reject);
-
-            ffmpeg.on("close", (code) => {
-                if (code === 0 && buffer.length > 0) {
-                    resolve(Buffer.concat(buffer));
-                } else {
-                    reject(new Error(`ffmpeg exited with code ${code}`));
-                }
-            });
+            const cleanup = () => resolve();
+            this.process.once("exit", cleanup);
+            this.process.once("error", cleanup);
+            this.process.kill();
         });
+    }
+
+    public async next(): Promise<ImageFrame | null> {
+        if (this.process === null) {
+            return null;
+        }
+
+        return this.frames.next();
+    }
+
+    public override toString(): string {
+        return `[Ffmpeg]`;
     }
 }

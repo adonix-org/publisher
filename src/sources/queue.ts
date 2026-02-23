@@ -28,7 +28,7 @@ export class FrameQueue extends Lifecycle implements ImageSource {
     }
 
     public push(frame: ImageFrame): void {
-        if (this.running) {
+        if (!this.running) {
             console.warn(this.toString(), `ignored frame after close`);
             return;
         }

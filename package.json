@@ -8,6 +8,7 @@
         "live": "npm run build && tsx src/live.ts",
         "timelapse": "npm run build && tsx src/timelapse.ts",
         "watchdog": "npm run build && tsx src/watchdog.ts",
+        "rtsp": "npm run build && tsx src/rtsp.ts",
         "debug": "cross-env DEBUG=true npm run"
     },
     "keywords": [],
