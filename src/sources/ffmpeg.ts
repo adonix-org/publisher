@@ -75,14 +75,10 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
     }
 
     public async next(): Promise<ImageFrame | null> {
-        if (this.process === null) {
-            return null;
-        }
-
         return this.frames.next();
     }
 
     public override toString(): string {
-        return `[Ffmpeg]`;
+        return `[ffmpeg]`;
     }
 }

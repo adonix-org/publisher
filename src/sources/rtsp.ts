@@ -1,6 +1,6 @@
 import { Ffmpeg } from "./ffmpeg";
 
-export class RtspCamera extends Ffmpeg {
+export class Rtsp extends Ffmpeg {
     constructor(url: string, interval: number = 5) {
         const fps = 1 / interval;
         const args = [
@@ -22,7 +22,9 @@ export class RtspCamera extends Ffmpeg {
         ];
 
         super(args);
+    }
 
-        console.info(this.toString(), `FPS: ${fps}`);
+    public override toString(): string {
+        return `${super.toString()}[RTSP]`;
     }
 }
