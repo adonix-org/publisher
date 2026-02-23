@@ -10,7 +10,7 @@ import path from "node:path";
 import { Lifecycle } from "../lifecycle";
 
 export class TimeLapse extends ProfileAgent {
-    constructor(private readonly root: Lifecycle) {
+    constructor(private readonly application: Lifecycle) {
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
         const source = new SourceFolder(path.join(folder, "source"));
 
@@ -28,7 +28,7 @@ export class TimeLapse extends ProfileAgent {
     }
 
     protected override async oncomplete(): Promise<void> {
-        this.root.stop();
+        this.application.stop();
     }
 
     public override toString(): string {
