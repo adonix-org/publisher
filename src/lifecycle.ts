@@ -7,6 +7,10 @@ export abstract class Lifecycle {
         this.children = children;
     }
 
+    public addChild(child: Lifecycle): void {
+        this.children.push(child);
+    }
+
     public get running(): boolean {
         return this._running;
     }
