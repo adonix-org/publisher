@@ -26,6 +26,10 @@ export class TimeLapse extends ProfileAgent {
         this.addErrorTask(new MaxErrors());
     }
 
+    protected override async oncomplete(): Promise<void> {
+        this.stop();
+    }
+
     public override toString(): string {
         return `${super.toString()}[TimeLapse]`;
     }

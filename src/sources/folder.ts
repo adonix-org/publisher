@@ -45,6 +45,8 @@ export class SourceFolder extends FrameQueue {
             };
             this.push(frame);
         }
+
+        this.close();
     }
 
     private contentTypeFromExt(file: string): string {

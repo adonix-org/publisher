@@ -39,22 +39,26 @@ export abstract class Agent extends Lifecycle {
         await this.finished;
     }
 
+    protected async oncomplete(): Promise<void> {}
+
     private async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
-            const image = await this.get(signal);
-            if (image) {
-                void this.onimage(image, signal);
+            try {
+                const image = await this.source.next(signal);
+                if (!image) {
+                    break;
+                }
+
+                await this.onimage(image, signal);
+            } catch (err) {
+                void this.onerror(this.source, err, signal);
             }
+
             await new Promise((res) => setImmediate(res));
         }
-    }
 
-    private async get(signal: AbortSignal): Promise<ImageFrame | null> {
-        try {
-            return await this.source.next(signal);
-        } catch (err) {
-            void this.onerror(this.source, err, signal);
-            return null;
+        if (!signal.aborted) {
+            await this.oncomplete();
         }
     }
 
