@@ -15,7 +15,7 @@ export class FfmpegProcess {
                 "-loglevel",
                 "error",
                 "-timeout",
-                "10000000",
+                "50000000",
                 "-rtsp_transport",
                 "tcp",
                 "-i",
