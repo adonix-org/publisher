@@ -15,6 +15,15 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         super(frames);
     }
 
+    protected onimage(buffer: Buffer): ImageFrame {
+        return {
+            image: { buffer, contentType: "image/jpeg" },
+            seek: Date.now() / 1000,
+            version: 1,
+            annotations: [],
+        };
+    }
+
     public override async onstart(): Promise<void> {
         await super.onstart();
 
@@ -69,15 +78,6 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
             this.process.once("error", cleanup);
             this.process.kill();
         });
-    }
-
-    protected onimage(buffer: Buffer): ImageFrame {
-        return {
-            image: { buffer, contentType: "image/jpeg" },
-            seek: Date.now() / 1000,
-            version: 1,
-            annotations: [],
-        };
     }
 
     public async next(): Promise<ImageFrame | null> {

@@ -1,8 +1,10 @@
 import { Ffmpeg } from "./ffmpeg";
 
 export class Rtsp extends Ffmpeg {
+    private static readonly MIN_FPS = 15;
+
     constructor(url: string, interval: number = 5) {
-        const fps = 1 / interval;
+        const fps = Math.min(1 / interval, Rtsp.MIN_FPS);
         const args = [
             "-loglevel",
             "fatal",

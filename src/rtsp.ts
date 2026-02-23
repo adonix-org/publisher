@@ -2,8 +2,6 @@ import "dotenv/config";
 import "./logging";
 
 import { Daemon } from "./daemon";
-import { Rtsp } from "./sources/rtsp";
+import { C121 } from "./sources/c121";
 
-const C121_RTSP_URL = process.env.C121_RTSP_URL!;
-
-new Daemon(new Rtsp(C121_RTSP_URL)).start();
+new Daemon(new C121(5)).start();
