@@ -45,15 +45,3 @@ export abstract class ImageStream extends FrameQueue {
         }
     }
 }
-
-export abstract class JpegStream extends ImageStream {
-    public static readonly SOI = Buffer.from([0xff, 0xd8]);
-    public static readonly EOI = Buffer.from([0xff, 0xd9]);
-
-    protected override get soi(): Buffer<ArrayBufferLike> {
-        return JpegStream.SOI;
-    }
-    protected override get eoi(): Buffer<ArrayBufferLike> {
-        return JpegStream.EOI;
-    }
-}

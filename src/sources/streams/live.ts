@@ -1,5 +1,5 @@
 import { ImageFrame } from "../../tasks";
-import { JpegStream } from "./stream";
+import { JpegStream } from "./formats";
 
 export class LiveJpegStream extends JpegStream {
     protected onimage(buffer: Buffer): ImageFrame {
