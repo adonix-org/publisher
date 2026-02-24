@@ -50,4 +50,8 @@ export abstract class ImageStream extends FrameQueue {
             }
         }
     }
+
+    public override toString(): string {
+        return `${super.toString()}[ImageStream]`;
+    }
 }

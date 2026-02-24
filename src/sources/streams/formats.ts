@@ -10,6 +10,10 @@ export abstract class JpegStream extends ImageStream {
     protected override get eoi(): Buffer<ArrayBufferLike> {
         return JpegStream.EOI;
     }
+
+    public override toString(): string {
+        return `${super.toString()}[JPEG]`;
+    }
 }
 
 export abstract class GifStream extends ImageStream {
@@ -22,6 +26,10 @@ export abstract class GifStream extends ImageStream {
 
     protected override get eoi(): Buffer {
         return GifStream.EOI;
+    }
+
+    public override toString(): string {
+        return `${super.toString()}[GIF]`;
     }
 }
 
@@ -39,5 +47,9 @@ export abstract class PngStream extends ImageStream {
 
     protected override get eoi(): Buffer {
         return PngStream.EOI;
+    }
+
+    public override toString(): string {
+        return `${super.toString()}[PNG]`;
     }
 }

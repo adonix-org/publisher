@@ -1,5 +1,5 @@
 import { Ffmpeg } from "../ffmpeg";
-import { LiveJpegStream } from "./live";
+import { CameraStream } from "./camera";
 
 export class Rtsp extends Ffmpeg {
     private static readonly MAX_FPS = 15;
@@ -24,7 +24,7 @@ export class Rtsp extends Ffmpeg {
             "pipe:1",
         ];
 
-        super(args, new LiveJpegStream());
+        super(args, new CameraStream());
     }
 
     public override toString(): string {
