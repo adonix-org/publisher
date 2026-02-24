@@ -18,9 +18,10 @@ export class TimeLapse extends ProfileAgent {
 
         this.addImageTask(new Watermark());
         this.addImageTask(new Save(path.join(folder, this.getFolder())));
-        this.addImageTask(new Remote("yolo"));
-        this.addImageTask(new ActivityFilter());
+        
+        this.addImageTask(new Remote("mega"));
         this.addImageTask(new ConfidenceFilter(0.4));
+        this.addImageTask(new ActivityFilter());
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(
