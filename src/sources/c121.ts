@@ -1,9 +1,9 @@
 import { CameraStream } from "./streams/camera";
-import { Rtsp } from "./rtsp";
+import { RtspSource } from "./rtsp";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
-export class C121 extends Rtsp {
+export class C121 extends RtspSource {
     constructor(interval?: number) {
         super(new CameraStream(), C121_RTSP_URL, interval);
     }

@@ -3,7 +3,7 @@ import path from "node:path";
 import { ImageFrame } from "../tasks";
 import { ImageList } from "./list";
 
-export class SourceFolder extends ImageList {
+export class FolderSource extends ImageList {
     constructor(private readonly folder: string) {
         super();
     }
