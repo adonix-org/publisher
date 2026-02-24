@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Annotation, ImageFrame } from "../tasks";
+import { ImageFrame } from "../tasks";
 import { FrameQueue } from "./queue";
 
 export class SourceFolder extends FrameQueue {
@@ -9,6 +9,8 @@ export class SourceFolder extends FrameQueue {
     }
 
     protected override async onstart(): Promise<void> {
+        await super.onstart();
+
         const entries = await fs.readdir(this.folder, {
             withFileTypes: true,
         });
@@ -40,10 +42,11 @@ export class SourceFolder extends FrameQueue {
                     buffer,
                     contentType: this.contentTypeFromExt(file),
                 },
-                annotations: new Array<Annotation>(),
+                annotations: [],
                 seek: 0,
                 version: 1,
             };
+
             this.push(frame);
         }
 

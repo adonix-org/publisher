@@ -10,7 +10,7 @@ router = APIRouter()
 model = YOLO("python/app/models/mega/MDV6-yolov9-c.pt")
 
 @router.post("/mega")
-async def yolo(frame: ImageFrame):
+async def mega(frame: ImageFrame):
     image = np.array(Image.open(io.BytesIO(frame.image.buffer)).convert("RGB"))
 
     results = model(image)
