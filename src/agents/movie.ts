@@ -14,7 +14,7 @@ export class Movie extends ProfileAgent {
 
         const source = new FileSource(
             path.join(folder, "movies", "deer.mp4"),
-            0.1,
+            1,
         );
 
         super(source);

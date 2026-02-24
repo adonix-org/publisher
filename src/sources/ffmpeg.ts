@@ -30,7 +30,9 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         this.process.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
         });
-        this.process.once("exit", () => {
+        this.process.once("exit", async () => {
+            await this.stream.stop();
+
             this.process = null;
         });
     }
