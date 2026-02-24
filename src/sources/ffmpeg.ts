@@ -9,7 +9,6 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
     private static readonly JPEG_END = Buffer.from([0xff, 0xd9]);
 
     private process: ChildProcessWithoutNullStreams | null = null;
-    private buffer = Buffer.alloc(0);
 
     constructor(
         private readonly args: string[],
@@ -31,28 +30,39 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         };
     }
 
+    private chunks: Buffer[] = [];
+    private totalLength = 0;
+    private scanOffset = 0;
+
     protected ondata(chunk: Buffer): void {
-        this.buffer = Buffer.concat([this.buffer, chunk]);
+        this.chunks.push(chunk);
+        this.totalLength += chunk.length;
 
-        while (true) {
-            const start = this.buffer.indexOf(Ffmpeg.JPEG_START);
-            const end = this.buffer.indexOf(Ffmpeg.JPEG_END, start + 2);
+        let buffer = Buffer.concat(this.chunks, this.totalLength);
+        let start = buffer.indexOf(Ffmpeg.JPEG_START, this.scanOffset);
+        let end: number;
 
-            if (start === -1 || end === -1) {
-                break;
-            }
-
-            const image = this.buffer.subarray(start, end + 2);
-            this.buffer = this.buffer.subarray(end + 2);
-
+        while (
+            start !== -1 &&
+            (end = buffer.indexOf(Ffmpeg.JPEG_END, start + 2)) !== -1
+        ) {
+            const image = buffer.subarray(start, end + 2);
             this.frames.push(this.onimage(image));
+            this.scanOffset = end + 2;
+            start = buffer.indexOf(Ffmpeg.JPEG_START, this.scanOffset);
+        }
+
+        if (this.scanOffset > 0) {
+            buffer = buffer.subarray(this.scanOffset);
+            this.chunks = [buffer];
+            this.totalLength = buffer.length;
+            this.scanOffset = 0;
         }
     }
 
     public override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.buffer = Buffer.alloc(0);
         this.frames.clear();
 
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
