@@ -9,6 +9,7 @@
         "timelapse": "npm run build && tsx src/timelapse.ts",
         "watchdog": "npm run build && tsx src/watchdog.ts",
         "rtsp": "npm run build && tsx src/rtsp.ts",
+        "movie": "npm run build && tsx src/movie.ts",
         "debug": "cross-env DEBUG=true npm run"
     },
     "keywords": [],

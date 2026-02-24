@@ -5,7 +5,7 @@ export class FileSource extends Ffmpeg {
     constructor(path: string, fps: number = 15) {
         const args = [
             "-loglevel",
-            "error",
+            "fatal",
             "-i",
             path,
             "-vf",
