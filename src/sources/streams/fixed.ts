@@ -2,14 +2,16 @@ import { ImageFrame } from "../../tasks";
 import { JpegStream } from "./formats";
 
 export class FixedFpsStream extends JpegStream {
+    private readonly frameDuration: number;
     private frameIndex = 0;
 
-    constructor(private readonly fps: number) {
+    constructor(fps: number) {
         super();
+        this.frameDuration = 1 / fps;
     }
 
     protected override onimage(buffer: Buffer): ImageFrame {
-        const seek = this.frameIndex / this.fps;
+        const seek = this.frameIndex * this.frameDuration;
         this.frameIndex++;
 
         return {
