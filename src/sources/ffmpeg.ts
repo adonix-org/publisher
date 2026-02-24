@@ -3,7 +3,6 @@ import { ImageSource } from ".";
 import { Lifecycle } from "../lifecycle";
 import { ImageFrame } from "../tasks";
 import { ImageStream } from "./streams/stream";
-import { performance } from "node:perf_hooks";
 
 export class Ffmpeg extends Lifecycle implements ImageSource {
     private process: ChildProcessWithoutNullStreams | null = null;
@@ -26,12 +25,7 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
 
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
         this.process.stdout.on("data", (chunk) => {
-            const start = performance.now();
             this.stream.ondata(chunk);
-            const end = performance.now();
-            console.info(
-                `Processed chunk of ${chunk.length} bytes in ${end - start} ms`,
-            );
         });
         this.process.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
