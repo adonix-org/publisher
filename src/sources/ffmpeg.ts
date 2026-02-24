@@ -15,6 +15,10 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         super(frames);
     }
 
+    public async next(): Promise<ImageFrame | null> {
+        return this.frames.next();
+    }
+
     protected onimage(buffer: Buffer): ImageFrame {
         return {
             image: { buffer, contentType: "image/jpeg" },
@@ -24,6 +28,30 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         };
     }
 
+    protected ondata(chunk: Buffer): void {
+        this.buffer = Buffer.concat([this.buffer, chunk]);
+
+        while (true) {
+            const start = this.buffer.indexOf(Buffer.from([0xff, 0xd8]));
+            const end = this.buffer.indexOf(
+                Buffer.from([0xff, 0xd9]),
+                start + 2,
+            );
+
+            if (start === -1 || end === -1) {
+                break;
+            }
+
+            const image = this.buffer.subarray(start, end + 2);
+            this.buffer = this.buffer.subarray(end + 2);
+
+            const frame = this.onimage(image);
+
+            console.info(this.toString(), frame.image.buffer.byteLength);
+            this.frames.push(frame);
+        }
+    }
+
     public override async onstart(): Promise<void> {
         await super.onstart();
 
@@ -31,28 +59,9 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         this.frames.clear();
 
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
+
         this.process.stdout.on("data", (chunk) => {
-            this.buffer = Buffer.concat([this.buffer, chunk]);
-
-            while (true) {
-                const start = this.buffer.indexOf(Buffer.from([0xff, 0xd8]));
-                const end = this.buffer.indexOf(
-                    Buffer.from([0xff, 0xd9]),
-                    start + 2,
-                );
-
-                if (start === -1 || end === -1) {
-                    break;
-                }
-
-                const image = this.buffer.subarray(start, end + 2);
-                this.buffer = this.buffer.subarray(end + 2);
-
-                const frame = this.onimage(image);
-
-                console.info(this.toString(), frame.image.buffer.byteLength);
-                this.frames.push(frame);
-            }
+            this.ondata(chunk);
         });
 
         this.process.stderr.on("data", (chunk) => {
@@ -78,10 +87,6 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
             this.process.once("error", cleanup);
             this.process.kill();
         });
-    }
-
-    public async next(): Promise<ImageFrame | null> {
-        return this.frames.next();
     }
 
     public override toString(): string {
