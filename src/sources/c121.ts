@@ -1,5 +1,5 @@
 import { CameraStream } from "./streams/camera";
-import { Rtsp } from "./streams/rtsp";
+import { Rtsp } from "./rtsp";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
