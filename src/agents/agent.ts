@@ -39,7 +39,9 @@ export abstract class Agent extends Lifecycle {
         await this.finished;
     }
 
-    protected async oncomplete(): Promise<void> {}
+    protected oncomplete(): Promise<void> {
+        return Promise.resolve(); // default no-op
+    }
 
     private async run(signal: AbortSignal): Promise<void> {
         while (!signal.aborted) {
