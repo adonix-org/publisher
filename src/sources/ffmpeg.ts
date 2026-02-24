@@ -5,6 +5,9 @@ import { ImageFrame } from "../tasks";
 import { FrameQueue } from "./queue";
 
 export class Ffmpeg extends Lifecycle implements ImageSource {
+    private static readonly JPEG_START = Buffer.from([0xff, 0xd8]);
+    private static readonly JPEG_END = Buffer.from([0xff, 0xd9]);
+
     private process: ChildProcessWithoutNullStreams | null = null;
     private buffer = Buffer.alloc(0);
 
@@ -32,11 +35,8 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         this.buffer = Buffer.concat([this.buffer, chunk]);
 
         while (true) {
-            const start = this.buffer.indexOf(Buffer.from([0xff, 0xd8]));
-            const end = this.buffer.indexOf(
-                Buffer.from([0xff, 0xd9]),
-                start + 2,
-            );
+            const start = this.buffer.indexOf(Ffmpeg.JPEG_START);
+            const end = this.buffer.indexOf(Ffmpeg.JPEG_END, start + 2);
 
             if (start === -1 || end === -1) {
                 break;
@@ -45,10 +45,7 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
             const image = this.buffer.subarray(start, end + 2);
             this.buffer = this.buffer.subarray(end + 2);
 
-            const frame = this.onimage(image);
-
-            console.info(this.toString(), frame.image.buffer.byteLength);
-            this.frames.push(frame);
+            this.frames.push(this.onimage(image));
         }
     }
 
@@ -59,15 +56,12 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
         this.frames.clear();
 
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
-
         this.process.stdout.on("data", (chunk) => {
             this.ondata(chunk);
         });
-
         this.process.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
         });
-
         this.process.once("exit", () => {
             this.process = null;
         });
