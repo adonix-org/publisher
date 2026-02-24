@@ -1,12 +1,12 @@
 import { ImageFrame, ImageTask } from "../tasks";
 import { Agent } from "./agent";
-import { FrameQueue } from "../sources/queue";
+import { ImageQueue } from "../sources/queue";
 
 export class ForkAgent extends Agent implements ImageTask {
-    private readonly frames: FrameQueue;
+    private readonly frames: ImageQueue;
 
     constructor() {
-        const queue = new FrameQueue();
+        const queue = new ImageQueue();
         super(queue);
 
         this.frames = queue;

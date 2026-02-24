@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { ImageFrame } from "../tasks";
-import { FrameQueue } from "./queue";
+import { ImageList } from "./list";
 
-export class SourceFolder extends FrameQueue {
+export class SourceFolder extends ImageList {
     constructor(private readonly folder: string) {
         super();
     }
@@ -49,8 +49,6 @@ export class SourceFolder extends FrameQueue {
 
             this.push(frame);
         }
-
-        void this.stop();
     }
 
     private contentTypeFromExt(file: string): string {

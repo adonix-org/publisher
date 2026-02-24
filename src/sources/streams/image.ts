@@ -1,7 +1,7 @@
 import { ImageFrame } from "../../tasks";
-import { FrameQueue } from "../queue";
+import { ImageQueue } from "../queue";
 
-export abstract class ImageStream extends FrameQueue {
+export abstract class ImageStream extends ImageQueue {
     private buffer: Buffer = Buffer.alloc(0);
     private offset = 0;
 

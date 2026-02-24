@@ -2,7 +2,7 @@ import { ImageFrame } from "../tasks";
 import { Lifecycle } from "../lifecycle";
 import { ImageSource } from ".";
 
-export class FrameQueue extends Lifecycle implements ImageSource {
+export class ImageQueue extends Lifecycle implements ImageSource {
     private readonly frames: ImageFrame[] = [];
     private waiting: ((frame: ImageFrame | null) => void) | null = null;
 
@@ -42,6 +42,6 @@ export class FrameQueue extends Lifecycle implements ImageSource {
     }
 
     public override toString(): string {
-        return `${super.toString()}[FrameQueue]`;
+        return `${super.toString()}[ImageQueue]`;
     }
 }
