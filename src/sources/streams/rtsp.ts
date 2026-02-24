@@ -1,10 +1,10 @@
 import { Ffmpeg } from "../ffmpeg";
-import { CameraStream } from "./camera";
+import { ImageStream } from "./stream";
 
 export class Rtsp extends Ffmpeg {
     private static readonly MAX_FPS = 15;
 
-    constructor(url: string, interval: number = 5) {
+    constructor(stream: ImageStream, url: string, interval: number = 5) {
         const fps = Math.min(Rtsp.MAX_FPS, 1 / interval);
         const args = [
             "-loglevel",
@@ -24,7 +24,7 @@ export class Rtsp extends Ffmpeg {
             "pipe:1",
         ];
 
-        super(args, new CameraStream());
+        super(args, stream);
     }
 
     public override toString(): string {
