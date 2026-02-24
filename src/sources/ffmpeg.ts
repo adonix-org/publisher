@@ -63,6 +63,10 @@ export class Ffmpeg extends Lifecycle implements ImageSource {
     public override async onstart(): Promise<void> {
         await super.onstart();
 
+        this.chunks = [];
+        this.scanOffset = 0;
+        this.totalLength = 0;
+
         this.frames.clear();
 
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
