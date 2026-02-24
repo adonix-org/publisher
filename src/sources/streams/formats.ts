@@ -1,4 +1,4 @@
-import { ImageStream } from "./stream";
+import { ImageStream } from "./image";
 
 export abstract class JpegStream extends ImageStream {
     public static readonly SOI = Buffer.from([0xff, 0xd8]);

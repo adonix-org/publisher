@@ -1,5 +1,5 @@
 import { Ffmpeg } from "./ffmpeg";
-import { ImageStream } from "./streams/stream";
+import { ImageStream } from "./streams/image";
 
 export class Rtsp extends Ffmpeg {
     private static readonly MAX_FPS = 15;
