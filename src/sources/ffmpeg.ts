@@ -2,7 +2,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { ImageSource } from ".";
 import { Lifecycle } from "../lifecycle";
 import { ImageFrame } from "../tasks";
-import { ImageStream } from "./stream";
+import { ImageStream } from "./streams/stream";
 
 export class Ffmpeg extends Lifecycle implements ImageSource {
     private process: ChildProcessWithoutNullStreams | null = null;

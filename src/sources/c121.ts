@@ -1,4 +1,4 @@
-import { Rtsp } from "./rtsp";
+import { Rtsp } from "./streams/rtsp";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 

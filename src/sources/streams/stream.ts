@@ -1,5 +1,5 @@
-import { ImageFrame } from "../tasks";
-import { FrameQueue } from "./queue";
+import { ImageFrame } from "../../tasks";
+import { FrameQueue } from "../queue";
 
 export abstract class ImageStream extends FrameQueue {
     private chunks: Buffer[] = [];

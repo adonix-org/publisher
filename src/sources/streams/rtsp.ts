@@ -1,17 +1,5 @@
-import { ImageFrame } from "../tasks";
-import { Ffmpeg } from "./ffmpeg";
-import { JpegStream } from "./stream";
-
-class RtspStream extends JpegStream {
-    protected onimage(buffer: Buffer): ImageFrame {
-        return {
-            image: { buffer, contentType: "image/jpeg" },
-            seek: Date.now() / 1000,
-            version: 1,
-            annotations: [],
-        };
-    }
-}
+import { Ffmpeg } from "../ffmpeg";
+import { LiveJpegStream } from "./live";
 
 export class Rtsp extends Ffmpeg {
     private static readonly MAX_FPS = 15;
@@ -36,7 +24,7 @@ export class Rtsp extends Ffmpeg {
             "pipe:1",
         ];
 
-        super(args, new RtspStream());
+        super(args, new LiveJpegStream());
     }
 
     public override toString(): string {
