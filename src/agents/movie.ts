@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import { Lifecycle } from "../lifecycle";
 import { LogError } from "../tasks/error/log";
 import { Remote } from "../tasks/remote/remote";

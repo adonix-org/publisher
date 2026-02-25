@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Query
 from schemas import ImageFrame
+from typing import Annotated
 from PIL import Image, ImageDraw, ImageFont
 import io
 
 router = APIRouter()
 
 @router.post("/outline")
-async def outline_annotations(frame: ImageFrame, color: str = Query("yellow"), width: int = Query(2)):
+async def outline_annotations(
+    frame: ImageFrame,
+    color: Annotated[str, Query(description="Outline color")] = "yellow",
+    width: Annotated[int, Query(description="Outline width")] = 2
+):
     if not frame.annotations:
         return frame
 
@@ -26,7 +31,10 @@ async def outline_annotations(frame: ImageFrame, color: str = Query("yellow"), w
 
 
 @router.post("/label")
-async def label_annotations(frame: ImageFrame, fontSize: int = Query(28)):
+async def label_annotations(
+    frame: ImageFrame,
+    font_size: Annotated[int, Query(description="Font size for labels")] = 28
+):
     if not frame.annotations:
         return frame
 
@@ -34,7 +42,7 @@ async def label_annotations(frame: ImageFrame, fontSize: int = Query(28)):
     draw = ImageDraw.Draw(img)
 
     try:
-        font = ImageFont.truetype("Arial.ttf", size=fontSize)
+        font = ImageFont.truetype("Arial.ttf", size=font_size)
     except OSError:
         font = ImageFont.load_default()
 

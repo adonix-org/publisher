@@ -3,7 +3,7 @@ import { Lifecycle } from "../lifecycle";
 import { ImageFrame } from "../tasks";
 
 export class ImageList extends Lifecycle implements ImageSource {
-    private list: ImageFrame[] = [];
+    private readonly list: ImageFrame[] = [];
 
     public async next(): Promise<ImageFrame | null> {
         return this.list.shift() ?? null;
