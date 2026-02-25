@@ -43,7 +43,7 @@ def run_model(frame: ImageFrame, model_name: Literal["mega", "yolo"]) -> ImageFr
     return frame
 
 @router.post("/mega")
-async def mega(frame: ImageFrame):
+async def mega_detector(frame: ImageFrame):
     return run_model(frame, "mega")
 
 @router.post("/yolo")
