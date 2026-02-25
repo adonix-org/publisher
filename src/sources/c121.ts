@@ -4,8 +4,8 @@ import { RtspSource } from "./rtsp";
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 export class C121 extends RtspSource {
-    constructor(interval?: number, bufferSize?: number) {
-        super(new CameraStream(bufferSize), C121_RTSP_URL, interval);
+    constructor(fps?: number, bufferSize?: number) {
+        super(new CameraStream(bufferSize), C121_RTSP_URL, fps);
     }
 
     public getName(): string {

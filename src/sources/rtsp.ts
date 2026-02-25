@@ -2,10 +2,7 @@ import { Ffmpeg } from "./ffmpeg";
 import { ImageStream } from "./streams/image";
 
 export class RtspSource extends Ffmpeg {
-    private static readonly MAX_FPS = 15;
-
-    constructor(stream: ImageStream, url: string, interval: number = 5) {
-        const fps = Math.min(RtspSource.MAX_FPS, 1 / interval);
+    constructor(stream: ImageStream, url: string, fps: number = 1) {
         const args = [
             "-loglevel",
             "fatal",

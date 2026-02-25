@@ -14,7 +14,7 @@ import { Profiler } from "../tasks/observe/profiler";
 export class Watchdog extends Agent {
     constructor() {
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
-        const camera = new C121(5);
+        const camera = new C121(15, 60);
         super(camera);
 
         this.addImageTask(new Profiler(new Remote("mega")));

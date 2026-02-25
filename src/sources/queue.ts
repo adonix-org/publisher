@@ -6,8 +6,22 @@ export class ImageQueue extends Lifecycle implements ImageSource {
     private readonly frames: ImageFrame[] = [];
     private waiting: ((frame: ImageFrame | null) => void) | null = null;
 
+    private readonly intervalId?: NodeJS.Timeout;
+    private dropped = 0;
+
+    private report(): void {
+        if (this.dropped === 0) return;
+
+        console.warn(this.toString(), `${this.dropped} dropped frames`);
+        this.dropped = 0;
+    }
+
     constructor(private readonly bufferSize = Infinity) {
         super();
+
+        if (this.bufferSize === Infinity) return;
+
+        this.intervalId = setInterval(() => this.report(), 5000);
     }
 
     public async next(): Promise<ImageFrame | null> {
@@ -26,6 +40,8 @@ export class ImageQueue extends Lifecycle implements ImageSource {
     public override async onstop(): Promise<void> {
         await super.onstop();
 
+        clearInterval(this.intervalId);
+
         if (this.waiting) {
             this.waiting(null);
         }
@@ -39,15 +55,12 @@ export class ImageQueue extends Lifecycle implements ImageSource {
             return;
         }
 
-        this.frames.push(frame);
-
-        if (this.frames.length <= this.bufferSize) {
-            return;
+        if (this.frames.length >= this.bufferSize) {
+            this.frames.shift();
+            this.dropped++;
         }
 
-        const dropped = this.frames.length - this.bufferSize;
-        this.frames.splice(0, dropped);
-        console.warn(this.toString(), `dropped ${dropped} frame(s)`);
+        this.frames.push(frame);
     }
 
     public clear(): void {
