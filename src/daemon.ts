@@ -1,3 +1,4 @@
+import { abort } from "./controller";
 import { Lifecycle } from "./lifecycle";
 
 export class Daemon extends Lifecycle {
@@ -12,12 +13,18 @@ export class Daemon extends Lifecycle {
             process.stdin.resume();
             process.stdin.setEncoding("utf8");
             process.stdin.on("data", async (key) => {
-                if (key === "\u0003") {
-                    // Ctrl+C to exit
-                    await this.stop();
-                }
                 if (key.toString().toLowerCase() === "q") {
                     // q to exit
+                    await this.stop();
+                }
+                if (key === "\u0003") {
+                    // Ctrl+C to fast exit
+                    abort();
+                    await this.stop();
+                }
+                if (key.toString().toLowerCase() === "k") {
+                    // k to fast exit
+                    abort();
                     await this.stop();
                 }
                 if (key.toString().toLowerCase() === "c") {

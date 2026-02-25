@@ -4,7 +4,7 @@ import { LogError } from "../tasks/error/log";
 import { Remote } from "../tasks/remote/remote";
 import { FileSource } from "../sources/file";
 import { MetaData, MetaFrame } from "../tasks/observe/metadata";
-import { Save } from "../tasks/transfer/save";
+//import { Save } from "../tasks/transfer/save";
 import { Agent } from "./agent";
 import { Profiler } from "../tasks/observe/profiler";
 import { ActivityFilter } from "../tasks/filter/activity";
@@ -31,7 +31,7 @@ export class Movie extends Agent {
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(this.metadata);
-        this.addImageTask(new Save(path.join(folder, "movies", "mega")));
+        //this.addImageTask(new Save(path.join(folder, "movies", "mega")));
 
         this.addErrorTask(new LogError());
     }
