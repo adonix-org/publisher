@@ -13,7 +13,6 @@ export class Throttle implements ImageTask {
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         if (!this.open) return null;
 
-        console.info(this.toString(), "gate open", Date.now());
         this.open = false;
         return frame;
     }
