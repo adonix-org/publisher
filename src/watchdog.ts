@@ -1,8 +1,8 @@
 import "dotenv/config";
 import "./logging";
 
-import { Daemon } from "./daemon";
 import { PyServer } from "./pyserver";
 import { Watchdog } from "./agents/watchdog";
+import { application } from "./application";
 
-new Daemon(new PyServer(), new Watchdog()).start();
+application.add(new PyServer(), new Watchdog()).start();

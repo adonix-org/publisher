@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "./logging";
 
-import { Daemon } from "./daemon";
 import { C121 } from "./sources/c121";
+import { application } from "./application";
 
-new Daemon(new C121(5)).start();
+application.add(new C121(5)).start();

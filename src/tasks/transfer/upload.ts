@@ -1,5 +1,5 @@
 import { ImageFrame, ImageTask } from "..";
-import { signal } from "../../controller";
+import { application } from "../../application";
 
 export class Upload implements ImageTask {
     constructor(
@@ -15,7 +15,7 @@ export class Upload implements ImageTask {
             method: "POST",
             headers,
             body: new Uint8Array(frame.image.buffer),
-            signal,
+            signal: application.signal,
         });
 
         if (!response.ok) {

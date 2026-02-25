@@ -5,12 +5,12 @@ import { Remote } from "../tasks/remote/remote";
 import { ProfileAgent } from "./profile";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { Save } from "../tasks/transfer/save";
-import { Lifecycle } from "../lifecycle";
 import { C121 } from "../sources/c121";
 import { ActivityFilter } from "../tasks/filter/activity";
+import { application } from "../application";
 
 export class TimeLapse extends ProfileAgent {
-    constructor(private readonly application: Lifecycle) {
+    constructor() {
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
         const source = new C121(10);
 
@@ -42,7 +42,7 @@ export class TimeLapse extends ProfileAgent {
     }
 
     protected override async oncomplete(): Promise<void> {
-        this.application.stop();
+        application.stop();
     }
 
     public override toString(): string {

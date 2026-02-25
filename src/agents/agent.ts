@@ -1,5 +1,5 @@
 import { AgentSource } from ".";
-import { signal } from "../controller";
+import { application } from "../application";
 import { Lifecycle } from "../lifecycle";
 import { ImageSource } from "../sources";
 import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
@@ -41,7 +41,7 @@ export abstract class Agent extends Lifecycle {
     }
 
     private async run(): Promise<void> {
-        while (!signal.aborted) {
+        while (!application.signal.aborted) {
             try {
                 const image = await this.source.next();
                 if (!image) break;
@@ -54,7 +54,7 @@ export abstract class Agent extends Lifecycle {
             await new Promise((res) => setImmediate(res));
         }
 
-        if (!signal.aborted) {
+        if (!application.signal.aborted) {
             await this.oncomplete();
         }
     }

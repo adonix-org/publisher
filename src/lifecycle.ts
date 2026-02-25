@@ -7,8 +7,10 @@ export abstract class Lifecycle {
         this.children = children;
     }
 
-    public addChild(child: Lifecycle): void {
-        this.children.push(child);
+    public add(child: Lifecycle, ...children: Lifecycle[]): this {
+        this.children.push(child, ...children);
+
+        return this;
     }
 
     public get running(): boolean {

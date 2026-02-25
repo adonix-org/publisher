@@ -7,7 +7,7 @@ import { ProfileAgent } from "./profile";
 
 export class LiveImage extends ProfileAgent {
     constructor() {
-        const camera = new C121(10);
+        const camera = new C121(5);
 
         super(camera);
 

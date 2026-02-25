@@ -1,7 +1,8 @@
-import { abort } from "./controller";
 import { Lifecycle } from "./lifecycle";
 
-export class Daemon extends Lifecycle {
+class Application extends Lifecycle {
+    private readonly controller = new AbortController();
+
     constructor(...children: Lifecycle[]) {
         super(...children);
 
@@ -19,13 +20,11 @@ export class Daemon extends Lifecycle {
                 }
                 if (key === "\u0003") {
                     // Ctrl+C to fast exit
-                    abort();
-                    await this.stop();
+                    await this.abort();
                 }
                 if (key.toString().toLowerCase() === "k") {
                     // k to fast exit
-                    abort();
-                    await this.stop();
+                    await this.abort();
                 }
                 if (key.toString().toLowerCase() === "c") {
                     // Press 'c' to clear
@@ -47,7 +46,20 @@ export class Daemon extends Lifecycle {
         process.exit(0);
     }
 
+    public async abort(): Promise<void> {
+        if (!this.controller.signal.aborted) {
+            this.controller.abort();
+        }
+        await this.stop();
+    }
+
+    public get signal(): AbortSignal {
+        return this.controller.signal;
+    }
+
     public override toString(): string {
-        return `${super.toString()}[Daemon]`;
+        return `${super.toString()}[Application]`;
     }
 }
+
+export const application = new Application();

@@ -1,5 +1,4 @@
 import path from "node:path";
-import { Lifecycle } from "../lifecycle";
 import { LogError } from "../tasks/error/log";
 import { Remote } from "../tasks/remote/remote";
 import { FileSource } from "../sources/file";
@@ -8,6 +7,7 @@ import { MetaData, MetaFrame } from "../tasks/observe/metadata";
 import { Agent } from "./agent";
 import { Profiler } from "../tasks/observe/profiler";
 import { ActivityFilter } from "../tasks/filter/activity";
+import { application } from "../application";
 
 interface MovieMetaData {
     filepath: string;
@@ -18,7 +18,7 @@ export class Movie extends Agent {
     private readonly metadata = new MetaData();
     private readonly filepath: string;
 
-    constructor(private readonly application: Lifecycle) {
+    constructor() {
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
         const file = path.join(folder, "movies", "deer.mp4");
         const source = new FileSource(file, 1);
@@ -52,7 +52,7 @@ export class Movie extends Agent {
 
         console.info(movieData.filepath, `${movieData.metadata.length} frames`);
 
-        this.application.stop();
+        application.stop();
     }
 
     public override toString(): string {
