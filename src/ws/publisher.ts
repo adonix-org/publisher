@@ -32,8 +32,6 @@ export class PublisherSession extends EventSession {
     }
 
     protected override async handle(msg: EventMessage): Promise<void> {
-        console.debug(this.toString(), msg);
-
         if (msg.event === "online") {
             const online = msg as OnlineMessage;
             if (online.active > 0) this.agent.start();

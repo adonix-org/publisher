@@ -1,0 +1,24 @@
+import { ImageTask, ImageFrame } from "..";
+
+export class Throttle implements ImageTask {
+    private open = true;
+
+    constructor(private readonly fps: number = 1) {
+        const interval = 1000 / fps;
+        setInterval(() => {
+            this.open = true;
+        }, interval);
+    }
+
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
+        if (!this.open) return null;
+
+        console.info(this.toString(), "gate open", Date.now());
+        this.open = false;
+        return frame;
+    }
+
+    public toString(): string {
+        return `[Throttle ${this.fps}fps]`;
+    }
+}
