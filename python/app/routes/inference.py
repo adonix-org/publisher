@@ -18,12 +18,10 @@ models = {
 def run_model(frame: ImageFrame, model_name: Literal["mega", "yolo"]) -> ImageFrame:
     model = models[model_name]
 
-    # decode buffer
     np_buffer = np.frombuffer(frame.image.buffer, dtype=np.uint8)
     image = cv2.imdecode(np_buffer, cv2.IMREAD_COLOR)
 
     with torch.inference_mode():
-        # DO NOT pass device here — model is already on the GPU
         results = model(image, imgsz=640, verbose=False)
 
     for r in results:
