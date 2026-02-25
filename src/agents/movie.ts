@@ -55,6 +55,10 @@ export class Movie extends Agent {
         application.stop();
     }
 
+    protected override async onabort(): Promise<void> {
+        console.error(this.toString(), "killed");
+    }
+
     public override toString(): string {
         return `${super.toString()}[Movie]`;
     }

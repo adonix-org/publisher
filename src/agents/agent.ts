@@ -40,6 +40,10 @@ export abstract class Agent extends Lifecycle {
         return Promise.resolve(); // default no-op
     }
 
+    protected onabort(): Promise<void> {
+        return Promise.resolve(); // default no-op
+    }
+
     private async run(): Promise<void> {
         while (!application.signal.aborted) {
             try {
@@ -54,7 +58,9 @@ export abstract class Agent extends Lifecycle {
             await new Promise((res) => setImmediate(res));
         }
 
-        if (!application.signal.aborted) {
+        if (application.signal.aborted) {
+            await this.onabort();
+        } else {
             await this.oncomplete();
         }
     }
