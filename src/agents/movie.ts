@@ -28,7 +28,7 @@ export class Movie extends Agent {
 
         this.addImageTask(new Profiler(new Remote("mega")));
         this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Remote("outline?color=blue"));
+        this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(this.metadata);
         this.addImageTask(new Save(path.join(folder, "movies", "mega")));
