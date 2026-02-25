@@ -6,6 +6,10 @@ export class ImageQueue extends Lifecycle implements ImageSource {
     private readonly frames: ImageFrame[] = [];
     private waiting: ((frame: ImageFrame | null) => void) | null = null;
 
+    constructor(private readonly bufferSize = Infinity) {
+        super();
+    }
+
     public async next(): Promise<ImageFrame | null> {
         const frame = this.frames.shift();
         if (frame) return frame;
@@ -32,9 +36,18 @@ export class ImageQueue extends Lifecycle implements ImageSource {
             const resolve = this.waiting;
             this.waiting = null;
             resolve(frame);
-        } else {
-            this.frames.push(frame);
+            return;
         }
+
+        this.frames.push(frame);
+
+        if (this.frames.length <= this.bufferSize) {
+            return;
+        }
+
+        const dropped = this.frames.length - this.bufferSize;
+        this.frames.splice(0, dropped);
+        console.warn(this.toString(), `dropped ${dropped} frame(s)`);
     }
 
     public clear(): void {

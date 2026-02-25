@@ -1,36 +1,28 @@
 import path from "node:path";
 import { LogError } from "../tasks/error/log";
-import { Remote } from "../tasks/remote/remote";
 import { FileSource } from "../sources/file";
-import { MetaData, MetaFrame } from "../tasks/observe/metadata";
-//import { Save } from "../tasks/transfer/save";
+import { MetaFrame } from "../tasks/observe/metadata";
 import { Agent } from "./agent";
-import { Profiler } from "../tasks/observe/profiler";
-import { ActivityFilter } from "../tasks/filter/activity";
 import { application } from "../application";
+import { Inference } from "../tasks/observe/inference";
 
-interface MovieMetaData {
+export interface MovieMetaData {
     filepath: string;
     metadata: MetaFrame[];
 }
 
 export class Movie extends Agent {
-    private readonly metadata = new MetaData();
-    private readonly filepath: string;
-
     constructor() {
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
         const file = path.join(folder, "movies", "deer.mp4");
+
         const source = new FileSource(file, 1);
+        const fork = new Inference();
+        
+        super(source, fork);
 
-        super(source);
-        this.filepath = file;
+        this.addImageTask(fork);
 
-        this.addImageTask(new Profiler(new Remote("mega")));
-        this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Remote("outline"));
-        this.addImageTask(new Remote("label"));
-        this.addImageTask(this.metadata);
         //this.addImageTask(new Save(path.join(folder, "movies", "mega")));
 
         this.addErrorTask(new LogError());
@@ -38,20 +30,11 @@ export class Movie extends Agent {
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
-
         console.info("start");
     }
 
     protected override async oncomplete(): Promise<void> {
         console.info("complete");
-
-        const movieData: MovieMetaData = {
-            filepath: this.filepath,
-            metadata: this.metadata.getData(),
-        };
-
-        console.info(movieData.filepath, `${movieData.metadata.length} frames`);
-
         application.stop();
     }
 

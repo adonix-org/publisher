@@ -3,13 +3,8 @@ import { Agent } from "./agent";
 import { ImageQueue } from "../sources/queue";
 
 export class ForkAgent extends Agent implements ImageTask {
-    private readonly frames: ImageQueue;
-
-    constructor() {
-        const queue = new ImageQueue();
+    constructor(private readonly queue: ImageQueue = new ImageQueue()) {
         super(queue);
-
-        this.frames = queue;
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
@@ -19,7 +14,7 @@ export class ForkAgent extends Agent implements ImageTask {
     }
 
     protected push(frame: ImageFrame): void {
-        this.frames.push(frame);
+        this.queue.push(frame);
     }
 
     public override toString(): string {
