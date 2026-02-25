@@ -7,6 +7,7 @@ import { MetaData, MetaFrame } from "../tasks/observe/metadata";
 import { Save } from "../tasks/transfer/save";
 import { Agent } from "./agent";
 import { Profiler } from "../tasks/observe/profiler";
+import { ActivityFilter } from "../tasks/filter/activity";
 
 interface MovieMetaData {
     filepath: string;
@@ -25,11 +26,12 @@ export class Movie extends Agent {
         super(source);
         this.filepath = file;
 
-        this.addImageTask(new Profiler(new Remote("yolo")));
-        this.addImageTask(this.metadata);
-        this.addImageTask(new Remote("outline"));
+        this.addImageTask(new Profiler(new Remote("mega")));
+        this.addImageTask(new ActivityFilter());
+        this.addImageTask(new Remote("outline?color=blue"));
         this.addImageTask(new Remote("label"));
-        this.addImageTask(new Save(path.join(folder, "movies", "yolo")));
+        this.addImageTask(this.metadata);
+        this.addImageTask(new Save(path.join(folder, "movies", "mega")));
 
         this.addErrorTask(new LogError());
     }

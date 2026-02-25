@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from schemas import ImageFrame
 from PIL import Image, ImageDraw, ImageFont
 import io
@@ -6,21 +6,17 @@ import io
 router = APIRouter()
 
 @router.post("/outline")
-async def outline_annotations(frame: ImageFrame):
+async def outline_annotations(frame: ImageFrame, color: str = Query("yellow"), width: int = Query(2)):
     if not frame.annotations:
         return frame
 
-    # Load image
     img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
     draw = ImageDraw.Draw(img)
 
     for ann in frame.annotations:
         x, y, w, h = ann.x, ann.y, ann.width, ann.height
+        draw.rectangle([x, y, x + w, y + h], outline=color, width=width)
 
-        # Draw rectangle
-        draw.rectangle([x, y, x + w, y + h], outline="yellow", width=2)
-
-    # Save updated image back into buffer
     buffer = io.BytesIO()
     img.save(buffer, format="JPEG")
     frame.image.buffer = buffer.getvalue()
@@ -30,28 +26,24 @@ async def outline_annotations(frame: ImageFrame):
 
 
 @router.post("/label")
-async def label_annotations(frame: ImageFrame):
+async def label_annotations(frame: ImageFrame, fontSize: int = Query(28)):
     if not frame.annotations:
         return frame
 
-    # Load image
     img = Image.open(io.BytesIO(frame.image.buffer)).convert("RGB")
     draw = ImageDraw.Draw(img)
 
     try:
-        font = ImageFont.truetype("Arial.ttf", size=28)
+        font = ImageFont.truetype("Arial.ttf", size=fontSize)
     except OSError:
-        # fallback if Arial is not available
         font = ImageFont.load_default()
 
     for ann in frame.annotations:
         x, y = ann.x, ann.y
 
-        # Draw label + confidence
         conf_percent = f"{int(ann.confidence * 100)}%" if hasattr(ann, "confidence") else ""
         text = f"{ann.label} {conf_percent}".strip()
 
-        # position above rectangle, avoid negative y
         text_x, text_y = x, max(y - 10, 0)
 
         draw.text(
@@ -63,7 +55,6 @@ async def label_annotations(frame: ImageFrame):
             stroke_fill="black"
         )
 
-    # Save updated image back into buffer
     buffer = io.BytesIO()
     img.save(buffer, format="JPEG")
     frame.image.buffer = buffer.getvalue()
