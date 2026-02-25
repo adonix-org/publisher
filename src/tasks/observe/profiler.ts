@@ -3,12 +3,9 @@ import { ImageFrame, ImageTask } from "..";
 export class Profiler implements ImageTask {
     constructor(private readonly task: ImageTask) {}
 
-    public async process(
-        frame: ImageFrame,
-        signal: AbortSignal,
-    ): Promise<ImageFrame | null> {
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const start = performance.now();
-        const result = await this.task.process(frame, signal);
+        const result = await this.task.process(frame);
         const end = performance.now();
 
         if (result) {

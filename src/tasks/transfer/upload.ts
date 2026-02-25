@@ -6,10 +6,7 @@ export class Upload implements ImageTask {
         private readonly headers: Headers,
     ) {}
 
-    public async process(
-        frame: ImageFrame,
-        signal: AbortSignal,
-    ): Promise<ImageFrame | null> {
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const headers = new Headers(this.headers);
         headers.set("Content-Type", frame.image.contentType);
 
@@ -17,7 +14,6 @@ export class Upload implements ImageTask {
             method: "POST",
             headers,
             body: new Uint8Array(frame.image.buffer),
-            signal,
         });
 
         if (!response.ok) {

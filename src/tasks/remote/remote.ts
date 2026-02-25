@@ -12,15 +12,11 @@ export class Remote implements ImageTask {
         this.url = new URL(path, `http://${host}:${port}`);
     }
 
-    public async process(
-        frame: ImageFrame,
-        signal: AbortSignal,
-    ): Promise<ImageFrame | null> {
+    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const response = await fetch(this.url, {
             method: "POST",
             body: JSON.stringify(encode(frame)),
             headers: { "Content-Type": "application/json" },
-            signal,
             agent,
         });
 

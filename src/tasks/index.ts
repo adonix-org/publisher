@@ -22,7 +22,7 @@ export interface ImageFrame<T extends Buffer | string = Buffer> {
 }
 
 export interface ImageTask {
-    process(frame: ImageFrame, signal: AbortSignal): Promise<ImageFrame | null>;
+    process(frame: ImageFrame): Promise<ImageFrame | null>;
 
     toString(): string;
 }

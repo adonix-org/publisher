@@ -7,7 +7,6 @@ export abstract class Agent extends Lifecycle {
     private readonly imageTasks: ImageTask[] = [];
     private readonly errorTasks: ErrorTask[] = [];
 
-    private shutdown: AbortController | null = null;
     private finished: Promise<void> | null = null;
 
     protected constructor(
@@ -28,14 +27,11 @@ export abstract class Agent extends Lifecycle {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.shutdown = new AbortController();
-        this.finished = this.run(this.shutdown.signal);
+        this.finished = this.run();
     }
 
     protected override async onstop(): Promise<void> {
         await super.onstop();
-
-        this.shutdown?.abort();
         await this.finished;
     }
 
@@ -43,38 +39,30 @@ export abstract class Agent extends Lifecycle {
         return Promise.resolve(); // default no-op
     }
 
-    private async run(signal: AbortSignal): Promise<void> {
-        while (!signal.aborted) {
+    private async run(): Promise<void> {
+        while (true) {
             try {
-                const image = await this.source.next(signal);
-                if (!image) {
-                    break;
-                }
+                const image = await this.source.next();
+                if (!image) break;
 
-                await this.onimage(image, signal);
+                await this.onimage(image);
             } catch (err) {
-                void this.onerror(this.source, err, signal);
+                void this.onerror(this.source, err);
             }
 
             await new Promise((res) => setImmediate(res));
         }
 
-        if (!signal.aborted) {
-            await this.oncomplete();
-        }
+        await this.oncomplete();
     }
 
-    private async onimage(
-        image: ImageFrame,
-        signal: AbortSignal,
-    ): Promise<void> {
+    private async onimage(image: ImageFrame): Promise<void> {
         let current: ImageFrame | null = image;
         for (const task of this.imageTasks) {
-            if (signal.aborted) return;
             try {
-                current = await task.process(current, signal);
+                current = await task.process(current);
             } catch (err) {
-                void this.onerror(task, err, signal);
+                void this.onerror(task, err);
                 return;
             }
             if (!current) return;
@@ -84,21 +72,17 @@ export abstract class Agent extends Lifecycle {
     private async onerror(
         source: ImageSource | ImageTask,
         err: unknown,
-        signal: AbortSignal,
     ): Promise<void> {
         const error = err instanceof Error ? err : new Error(String(err));
 
         if (error.name === "AbortError") return;
 
         for (const task of this.errorTasks) {
-            void task.handle(
-                {
-                    source: source.toString(),
-                    error,
-                    timestamp: Date.now(),
-                },
-                signal,
-            );
+            void task.handle({
+                source: source.toString(),
+                error,
+                timestamp: Date.now(),
+            });
         }
     }
 
