@@ -4,26 +4,27 @@ from ultralytics import YOLO
 import torch
 import numpy as np
 import cv2
+from typing import Literal
 
 router = APIRouter()
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
-model = YOLO("python/app/models/mega/MDV6-yolov9-c.pt")
-model.to(device)
 
-@router.post("/mega")
-async def mega(frame: ImageFrame):
+models = {
+    "mega": YOLO("python/app/models/mega/MDV6-yolov9-c.pt").to(device),
+    "yolo": YOLO("python/app/models/yolo/yolov8s.pt").to(device)
+}
 
+def run_model(frame: ImageFrame, model_name: Literal["mega", "yolo"]) -> ImageFrame:
+    model = models[model_name]
+
+    # decode buffer
     np_buffer = np.frombuffer(frame.image.buffer, dtype=np.uint8)
     image = cv2.imdecode(np_buffer, cv2.IMREAD_COLOR)
 
     with torch.inference_mode():
-        results = model(
-            image,
-            imgsz=640,
-            device=device,
-            verbose=False
-        )
+        # DO NOT pass device here — model is already on the GPU
+        results = model(image, imgsz=640, verbose=False)
 
     for r in results:
         for box in r.boxes:
@@ -42,3 +43,11 @@ async def mega(frame: ImageFrame):
             )
 
     return frame
+
+@router.post("/mega")
+async def mega(frame: ImageFrame):
+    return run_model(frame, "mega")
+
+@router.post("/yolo")
+async def yolo(frame: ImageFrame):
+    return run_model(frame, "yolo")
