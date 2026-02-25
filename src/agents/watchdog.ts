@@ -24,7 +24,7 @@ export class Watchdog extends ProfileAgent {
         this.addImageTask(new Watermark());
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
-        this.addImageTask(new Save(path.join(folder, "activity")));
+        this.addImageTask(new Save(path.join(folder, "watchdog", "activity")));
 
         this.addErrorTask(new LogError());
     }

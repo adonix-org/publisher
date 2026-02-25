@@ -23,8 +23,6 @@ export class Movie extends Agent {
 
         this.addImageTask(fork);
 
-        //this.addImageTask(new Save(path.join(folder, "movies", "mega")));
-
         this.addErrorTask(new LogError());
     }
 
