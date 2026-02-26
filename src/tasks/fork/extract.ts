@@ -1,11 +1,11 @@
 import sharp from "sharp";
 import { ImageFrame } from "..";
-import { ForkAgent } from "../../agents/fork";
+import { AgentFork } from "../../agents/fork";
 import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
 import { Remote } from "../remote/remote";
 
-export class Extract extends ForkAgent {
+export class Extract extends AgentFork {
     constructor(folder: string) {
         super();
 

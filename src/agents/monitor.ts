@@ -1,34 +1,26 @@
 import path from "node:path";
 import { LogError } from "../tasks/error/log";
-import { Watermark } from "../tasks/transform/watermark";
 import { Remote } from "../tasks/remote/remote";
-import { ProfileAgent } from "./profile";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { Save } from "../tasks/transfer/save";
-import { C121 } from "../sources/c121";
 import { ActivityFilter } from "../tasks/filter/activity";
-import { application } from "../application";
+import { AgentFork } from "./fork";
+import { Throttle } from "../tasks/filter/throttle";
 
-export class TimeLapse extends ProfileAgent {
+export class Monitor extends AgentFork {
     constructor() {
-        const folder = process.env.LOCAL_IMAGE_FOLDER!;
-        const source = new C121(10);
+        super();
 
-        super(source);
+        const base = process.env.LOCAL_IMAGE_FOLDER!;
+        const folder = path.join(base, this.getFolder(), "activity");
 
-        this.addImageTask(new Watermark());
-        this.addImageTask(
-            new Save(path.join(folder, this.getFolder(), "timelapse")),
-        );
-
+        this.addImageTask(new Throttle(1));
         this.addImageTask(new Remote("mega"));
         this.addImageTask(new ConfidenceFilter(0.2));
         this.addImageTask(new ActivityFilter());
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
-        this.addImageTask(
-            new Save(path.join(folder, this.getFolder(), "activity")),
-        );
+        this.addImageTask(new Save(folder));
 
         this.addErrorTask(new LogError());
     }
@@ -41,11 +33,7 @@ export class TimeLapse extends ProfileAgent {
         return `${y}-${m}-${d}`;
     }
 
-    protected override async oncomplete(): Promise<void> {
-        application.stop();
-    }
-
     public override toString(): string {
-        return `${super.toString()}[TimeLapse]`;
+        return `${super.toString()}[Monitor]`;
     }
 }

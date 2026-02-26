@@ -1,21 +1,20 @@
 import path from "node:path";
 
 import { LogError } from "../tasks/error/log";
-import { C121 } from "../sources/c121";
 import { Watermark } from "../tasks/transform/watermark";
 import { Remote } from "../tasks/remote/remote";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { SubjectFilter } from "../tasks/filter/subject";
 import { ActivityFilter } from "../tasks/filter/activity";
 import { Save } from "../tasks/transfer/save";
-import { Agent } from "./agent";
 import { Profiler } from "../tasks/observe/profiler";
+import { AgentFork } from "./fork";
 
-export class Watchdog extends Agent {
+export class Watchdog extends AgentFork {
     constructor() {
+        super();
+
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
-        const camera = new C121(15, 60);
-        super(camera);
 
         this.addImageTask(new Profiler(new Remote("mega")));
         this.addImageTask(new ConfidenceFilter(0.3));

@@ -5,6 +5,7 @@ export class Throttle implements ImageTask {
 
     constructor(private readonly fps: number = 1) {
         const interval = 1000 / fps;
+
         setInterval(() => {
             this.open = true;
         }, interval);

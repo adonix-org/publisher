@@ -2,7 +2,7 @@ import { ImageFrame, ImageTask } from "../tasks";
 import { Agent } from "./agent";
 import { ImageQueue } from "../sources/queue";
 
-export class ForkAgent extends Agent implements ImageTask {
+export class AgentFork extends Agent implements ImageTask {
     constructor(private readonly queue: ImageQueue = new ImageQueue()) {
         super(queue);
     }
@@ -18,6 +18,6 @@ export class ForkAgent extends Agent implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[ForkAgent]`;
+        return `${super.toString()}[AgentFork]`;
     }
 }
