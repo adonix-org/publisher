@@ -5,7 +5,7 @@ export class Watermark implements ImageTask {
     private cachedOverlay?: Buffer;
 
     constructor(
-        private readonly text: string = "LiveImage",
+        private readonly text: string,
         private readonly fontSize: number = 80,
         private readonly position: sharp.Gravity = "southeast",
     ) {}

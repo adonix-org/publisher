@@ -22,7 +22,7 @@ export class Watchdog extends Workflow {
         this.addImageTask(new SubjectFilter("animal", 0.5));
         this.addImageTask(new SubjectFilter("vehicle", 0.5));
         this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Watermark());
+        this.addImageTask(new Watermark("Watchdog"));
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(new Save(path.join(folder, "watchdog", "activity")));
