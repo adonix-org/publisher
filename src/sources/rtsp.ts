@@ -41,7 +41,7 @@ export class RtspSource extends Ffmpeg implements ImageSource {
 
         this.stream.clear();
 
-        this.process?.stdout.on("data", (chunk) => {
+        this.child.stdout.on("data", (chunk) => {
             this.stream.ondata(chunk);
         });
     }

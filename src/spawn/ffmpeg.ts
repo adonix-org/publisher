@@ -2,23 +2,30 @@ import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { Lifecycle } from "../lifecycle";
 
 export abstract class Ffmpeg extends Lifecycle {
-    protected process: ChildProcessWithoutNullStreams | null = null;
+    private _child: ChildProcessWithoutNullStreams | null = null;
 
     constructor(private readonly args: string[]) {
         super();
     }
 
+    protected get child(): ChildProcessWithoutNullStreams {
+        if (!this._child) {
+            throw new Error("FFmpeg process is not running.");
+        }
+        return this._child;
+    }
+
     public override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
+        this._child = spawn("/opt/homebrew/bin/ffmpeg", this.args);
 
-        this.process.stderr.on("data", (chunk) => {
+        this._child.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
         });
 
-        this.process.once("exit", async () => {
-            this.process = null;
+        this._child.once("exit", async () => {
+            this._child = null;
         });
     }
 
@@ -26,15 +33,15 @@ export abstract class Ffmpeg extends Lifecycle {
         await super.onstop();
 
         await new Promise<void>((resolve) => {
-            if (this.process === null || this.process.killed) {
+            if (this._child === null || this._child.killed) {
                 resolve();
                 return;
             }
 
             const cleanup = () => resolve();
-            this.process.once("exit", cleanup);
-            this.process.once("error", cleanup);
-            this.process.kill();
+            this._child.once("exit", cleanup);
+            this._child.once("error", cleanup);
+            this._child.kill();
         });
     }
 
