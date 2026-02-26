@@ -8,7 +8,11 @@ import { Remote } from "../tasks/remote/remote";
 import { Watermark } from "../tasks/transform/watermark";
 
 export class ExportSubject extends Workflow {
-    constructor(folder: string, label: string, threshold: number = 0) {
+    constructor(
+        folder: string,
+        private readonly label: string,
+        threshold: number = 0,
+    ) {
         super();
 
         const target = path.join(folder, label);
@@ -23,6 +27,6 @@ export class ExportSubject extends Workflow {
     }
 
     public override toString(): string {
-        return `${super.toString()}[ExportSubject]`;
+        return `${super.toString()}[ExportSubject-${this.label}]`;
     }
 }

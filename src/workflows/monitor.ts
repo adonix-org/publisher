@@ -16,9 +16,9 @@ export class Monitor extends Workflow {
         const person = new ExportSubject(folder, "person", 0.5);
         const vehicle = new ExportSubject(folder, "vehicle", 0.667);
 
-        this.add(animal);
-        this.add(person);
-        this.add(vehicle);
+        this.register(animal);
+        this.register(person);
+        this.register(vehicle);
 
         this.addTask(new Throttle(1));
         this.addTask(new Remote("mega"));

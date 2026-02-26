@@ -7,7 +7,7 @@ export abstract class Lifecycle {
         this.children = children;
     }
 
-    public add(child: Lifecycle, ...children: Lifecycle[]): this {
+    public register(child: Lifecycle, ...children: Lifecycle[]): this {
         this.children.push(child, ...children);
 
         return this;

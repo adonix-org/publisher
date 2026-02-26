@@ -3,6 +3,7 @@ import { Monitor } from "../workflows/monitor";
 import { Agent } from "./agent";
 import { LiveImage } from "../workflows/live";
 import { PublisherSession } from "../ws/publisher";
+import { PyServer } from "../pyserver";
 
 export class Camera extends Agent {
     constructor() {
@@ -12,7 +13,10 @@ export class Camera extends Agent {
         const session = new PublisherSession(live);
         const monitor = new Monitor();
 
-        super(source, session, monitor);
+        super(source);
+        this.register(session);
+        this.register(new PyServer());
+        this.register(monitor);
 
         this.addTask(live);
         this.addTask(monitor);
