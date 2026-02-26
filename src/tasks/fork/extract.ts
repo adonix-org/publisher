@@ -1,11 +1,11 @@
 import sharp from "sharp";
 import { ImageFrame } from "..";
-import { AgentFork } from "../../agents/fork";
+import { Workflow } from "../../workflows/workflow";
 import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
 import { Remote } from "../remote/remote";
 
-export class Extract extends AgentFork {
+export class Extract extends Workflow {
     constructor(folder: string) {
         super();
 

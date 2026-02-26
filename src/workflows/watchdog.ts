@@ -8,9 +8,9 @@ import { SubjectFilter } from "../tasks/filter/subject";
 import { ActivityFilter } from "../tasks/filter/activity";
 import { Save } from "../tasks/transfer/save";
 import { Profiler } from "../tasks/observe/profiler";
-import { AgentFork } from "./fork";
+import { Workflow } from "./workflow";
 
-export class Watchdog extends AgentFork {
+export class Watchdog extends Workflow {
     constructor() {
         super();
 

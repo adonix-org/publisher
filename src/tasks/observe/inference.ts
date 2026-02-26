@@ -1,11 +1,11 @@
-import { AgentFork } from "../../agents/fork";
+import { Workflow } from "../../workflows/workflow";
 import { LogError } from "../error/log";
 import { ActivityFilter } from "../filter/activity";
 import { Remote } from "../remote/remote";
 import { MetaData } from "./metadata";
 import { Profiler } from "./profiler";
 
-export class Inference extends AgentFork {
+export class Inference extends Workflow {
     public readonly metadata: MetaData = new MetaData();
 
     constructor() {

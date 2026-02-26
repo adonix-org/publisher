@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import http from "node:http";
 import { ImageTask, ImageFrame } from "..";
 import { assertImageFrame, decode, encode } from "./utils";
-import { signal } from "../../signal";
+import { signal } from "../../constants";
 
 const agent = new http.Agent({ keepAlive: true });
 

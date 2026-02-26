@@ -1,5 +1,5 @@
 import { ImageFrame, ImageTask } from "..";
-import { signal } from "../../signal";
+import { signal } from "../../constants";
 
 export class Upload implements ImageTask {
     constructor(

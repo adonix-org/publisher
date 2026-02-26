@@ -1,6 +1,6 @@
 import { AgentSource } from ".";
 import { Lifecycle } from "../lifecycle";
-import { signal } from "../signal";
+import { signal } from "../constants";
 import { ImageSource } from "../sources";
 import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
 

@@ -1,7 +1,7 @@
 import { C121 } from "../sources/c121";
-import { Monitor } from "./monitor";
+import { Monitor } from "../workflows/monitor";
 import { Agent } from "./agent";
-import { LiveImage } from "./live";
+import { LiveImage } from "../workflows/live";
 import { PublisherSession } from "../ws/publisher";
 import { Watermark } from "../tasks/transform/watermark";
 

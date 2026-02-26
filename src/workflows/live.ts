@@ -2,9 +2,9 @@ import { LogError } from "../tasks/error/log";
 import { Publish } from "../tasks/transfer/publish";
 import { MaxSize } from "../tasks/filter/maxsize";
 import { Throttle } from "../tasks/filter/throttle";
-import { AgentFork } from "./fork";
+import { Workflow } from "./workflow";
 
-export class LiveImage extends AgentFork {
+export class LiveImage extends Workflow {
     constructor(name: string) {
         super();
 

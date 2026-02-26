@@ -2,7 +2,7 @@ import path from "node:path";
 import { LogError } from "../tasks/error/log";
 import { FileSource } from "../sources/file";
 import { MetaFrame } from "../tasks/observe/metadata";
-import { Agent } from "./agent";
+import { Agent } from "../agents/agent";
 import { application } from "../application";
 import { Inference } from "../tasks/observe/inference";
 

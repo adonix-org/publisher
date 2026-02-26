@@ -1,5 +1,5 @@
 import { Lifecycle } from "./lifecycle";
-import { abort } from "./signal";
+import { abort } from "./constants";
 
 class Application extends Lifecycle {
     constructor(...children: Lifecycle[]) {
