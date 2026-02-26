@@ -1,7 +1,6 @@
 import sharp from "sharp";
 import { ImageFrame } from "..";
 import { Workflow } from "../../workflows/workflow";
-import { LogError } from "../error/log";
 import { Save } from "../transfer/save";
 import { Remote } from "../remote/remote";
 
@@ -9,10 +8,8 @@ export class Extract extends Workflow {
     constructor(folder: string) {
         super();
 
-        this.addImageTask(new Remote("grayscale"));
-        this.addImageTask(new Save(folder));
-
-        this.addErrorTask(new LogError());
+        this.addTask(new Remote("grayscale"));
+        this.addTask(new Save(folder));
     }
 
     public override async process(frame: ImageFrame): Promise<ImageFrame> {

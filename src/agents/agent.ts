@@ -3,6 +3,7 @@ import { Lifecycle } from "../lifecycle";
 import { signal } from "../constants";
 import { ImageSource } from "../sources";
 import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
+import { LogError } from "../tasks/error/log";
 
 export abstract class Agent extends Lifecycle {
     private readonly imageTasks: ImageTask[] = [];
@@ -15,14 +16,18 @@ export abstract class Agent extends Lifecycle {
         ...children: Lifecycle[]
     ) {
         super(source, ...children);
+
+        this.addErrorTask(new LogError());
     }
 
-    protected addErrorTask(task: ErrorTask) {
+    protected addErrorTask(task: ErrorTask): this {
         this.errorTasks.push(task);
+        return this;
     }
 
-    protected addImageTask(task: ImageTask) {
+    protected addTask(task: ImageTask): this {
         this.imageTasks.push(task);
+        return this;
     }
 
     protected override async onstart(): Promise<void> {

@@ -1,13 +1,9 @@
 import path from "node:path";
-import { LogError } from "../tasks/error/log";
 import { Remote } from "../tasks/remote/remote";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
-import { Save } from "../tasks/transfer/save";
-import { ActivityFilter } from "../tasks/filter/activity";
 import { Workflow } from "./workflow";
 import { Throttle } from "../tasks/filter/throttle";
-import { SubjectFilter } from "../tasks/filter/subject";
-import { Watermark } from "../tasks/transform/watermark";
+import { ExportSubject } from "./export";
 
 export class Monitor extends Workflow {
     constructor() {
@@ -16,18 +12,20 @@ export class Monitor extends Workflow {
         const base = process.env.LOCAL_IMAGE_FOLDER!;
         const folder = path.join(base, this.getFolder(), "activity");
 
-        this.addImageTask(new Throttle(1));
-        this.addImageTask(new Remote("mega"));
-        this.addImageTask(new ConfidenceFilter(0.2));
-        this.addImageTask(new SubjectFilter("animal", 0.4));
-        this.addImageTask(new SubjectFilter("vehicle", 0.667));
-        this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Watermark("ActiveImage"));
-        this.addImageTask(new Remote("outline"));
-        this.addImageTask(new Remote("label"));
-        this.addImageTask(new Save(folder));
+        const animal = new ExportSubject(folder, "animal", 0.4);
+        const person = new ExportSubject(folder, "person", 0.5);
+        const vehicle = new ExportSubject(folder, "vehicle", 0.667);
 
-        this.addErrorTask(new LogError());
+        this.add(animal);
+        this.add(person);
+        this.add(vehicle);
+
+        this.addTask(new Throttle(1));
+        this.addTask(new Remote("mega"));
+        this.addTask(new ConfidenceFilter(0.4));
+        this.addTask(animal);
+        this.addTask(person);
+        this.addTask(vehicle);
     }
 
     private getFolder(): string {

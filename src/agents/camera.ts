@@ -14,8 +14,8 @@ export class Camera extends Agent {
 
         super(source, session, monitor);
 
-        this.addImageTask(live);
-        this.addImageTask(monitor);
+        this.addTask(live);
+        this.addTask(monitor);
     }
 
     public override toString(): string {

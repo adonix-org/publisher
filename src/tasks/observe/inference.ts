@@ -1,5 +1,4 @@
 import { Workflow } from "../../workflows/workflow";
-import { LogError } from "../error/log";
 import { ActivityFilter } from "../filter/activity";
 import { Remote } from "../remote/remote";
 import { MetaData } from "./metadata";
@@ -11,13 +10,11 @@ export class Inference extends Workflow {
     constructor() {
         super();
 
-        this.addImageTask(new Profiler(new Remote("mega")));
-        this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Remote("outline"));
-        this.addImageTask(new Remote("label"));
-        this.addImageTask(this.metadata);
-
-        this.addErrorTask(new LogError());
+        this.addTask(new Profiler(new Remote("mega")));
+        this.addTask(new ActivityFilter());
+        this.addTask(new Remote("outline"));
+        this.addTask(new Remote("label"));
+        this.addTask(this.metadata);
     }
 
     protected override async oncomplete(): Promise<void> {

@@ -1,6 +1,4 @@
 import path from "node:path";
-
-import { LogError } from "../tasks/error/log";
 import { Watermark } from "../tasks/transform/watermark";
 import { Remote } from "../tasks/remote/remote";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
@@ -16,18 +14,16 @@ export class Watchdog extends Workflow {
 
         const folder = process.env.LOCAL_IMAGE_FOLDER!;
 
-        this.addImageTask(new Profiler(new Remote("mega")));
-        this.addImageTask(new ConfidenceFilter(0.3));
-        this.addImageTask(new SubjectFilter("person", 0.4));
-        this.addImageTask(new SubjectFilter("animal", 0.5));
-        this.addImageTask(new SubjectFilter("vehicle", 0.5));
-        this.addImageTask(new ActivityFilter());
-        this.addImageTask(new Watermark("Watchdog"));
-        this.addImageTask(new Remote("outline"));
-        this.addImageTask(new Remote("label"));
-        this.addImageTask(new Save(path.join(folder, "watchdog", "activity")));
-
-        this.addErrorTask(new LogError());
+        this.addTask(new Profiler(new Remote("mega")));
+        this.addTask(new ConfidenceFilter(0.3));
+        this.addTask(new SubjectFilter("person", 0.4));
+        this.addTask(new SubjectFilter("animal", 0.5));
+        this.addTask(new SubjectFilter("vehicle", 0.5));
+        this.addTask(new ActivityFilter());
+        this.addTask(new Watermark("Watchdog"));
+        this.addTask(new Remote("outline"));
+        this.addTask(new Remote("label"));
+        this.addTask(new Save(path.join(folder, "watchdog", "activity")));
     }
 
     public override toString(): string {

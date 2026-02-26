@@ -1,5 +1,4 @@
 import path from "node:path";
-import { LogError } from "../tasks/error/log";
 import { FileSource } from "../sources/file";
 import { MetaFrame } from "../tasks/observe/metadata";
 import { Agent } from "./agent";
@@ -21,9 +20,7 @@ export class Movie extends Agent {
 
         super(source, fork);
 
-        this.addImageTask(fork);
-
-        this.addErrorTask(new LogError());
+        this.addTask(fork);
     }
 
     protected override async onstart(): Promise<void> {
