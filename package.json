@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "dev": "npm run build && DEBUG=true tsx src/index.ts",
-        "start": "npm run build && DEBUG=true tsx src/index.ts",
+        "start": "npm run build && tsx src/index.ts",
         "debug": "cross-env DEBUG=true npm run"
     },
     "keywords": [],
