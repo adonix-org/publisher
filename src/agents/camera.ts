@@ -9,10 +9,10 @@ export class Camera extends Agent {
         const source = new C121(1, 60);
 
         const live = new LiveImage(source.getName());
-        const websockets = new PublisherSession(live);
+        const session = new PublisherSession(live);
         const monitor = new Monitor();
 
-        super(source, websockets, monitor);
+        super(source, session, monitor);
 
         this.addImageTask(live);
         this.addImageTask(monitor);
