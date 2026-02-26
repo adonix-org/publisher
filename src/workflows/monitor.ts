@@ -7,6 +7,7 @@ import { ActivityFilter } from "../tasks/filter/activity";
 import { Workflow } from "./workflow";
 import { Throttle } from "../tasks/filter/throttle";
 import { SubjectFilter } from "../tasks/filter/subject";
+import { Watermark } from "../tasks/transform/watermark";
 
 export class Monitor extends Workflow {
     constructor() {
@@ -21,6 +22,7 @@ export class Monitor extends Workflow {
         this.addImageTask(new SubjectFilter("animal", 0.4));
         this.addImageTask(new SubjectFilter("vehicle", 0.667));
         this.addImageTask(new ActivityFilter());
+        this.addImageTask(new Watermark("ActiveImage"));
         this.addImageTask(new Remote("outline"));
         this.addImageTask(new Remote("label"));
         this.addImageTask(new Save(folder));

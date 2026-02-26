@@ -3,7 +3,6 @@ import { Monitor } from "../workflows/monitor";
 import { Agent } from "./agent";
 import { LiveImage } from "../workflows/live";
 import { PublisherSession } from "../ws/publisher";
-import { Watermark } from "../tasks/transform/watermark";
 
 export class Camera extends Agent {
     constructor() {
@@ -15,7 +14,6 @@ export class Camera extends Agent {
 
         super(source, websockets, monitor);
 
-        this.addImageTask(new Watermark());
         this.addImageTask(live);
         this.addImageTask(monitor);
     }
