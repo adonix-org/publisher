@@ -1,38 +1,23 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
-import { ImageSource } from ".";
 import { Lifecycle } from "../lifecycle";
-import { ImageFrame } from "../tasks";
-import { ImageStream } from "./streams/image";
 
-export class Ffmpeg extends Lifecycle implements ImageSource {
-    private process: ChildProcessWithoutNullStreams | null = null;
+export abstract class Ffmpeg extends Lifecycle {
+    protected process: ChildProcessWithoutNullStreams | null = null;
 
-    constructor(
-        private readonly args: string[],
-        private readonly stream: ImageStream,
-    ) {
-        super(stream);
-    }
-
-    public async next(): Promise<ImageFrame | null> {
-        return this.stream.next();
+    constructor(private readonly args: string[]) {
+        super();
     }
 
     public override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.stream.clear();
-
         this.process = spawn("/opt/homebrew/bin/ffmpeg", this.args);
-        this.process.stdout.on("data", (chunk) => {
-            this.stream.ondata(chunk);
-        });
+
         this.process.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
         });
-        this.process.once("exit", async () => {
-            await this.stream.stop();
 
+        this.process.once("exit", async () => {
             this.process = null;
         });
     }

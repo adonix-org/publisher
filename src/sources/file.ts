@@ -1,5 +1,4 @@
-import { Ffmpeg } from "./ffmpeg";
-import { FixedFpsStream } from "./streams/fixed";
+import { Ffmpeg } from "../spawn/ffmpeg";
 
 export class FileSource extends Ffmpeg {
     constructor(path: string, fps: number = 15) {
@@ -17,7 +16,7 @@ export class FileSource extends Ffmpeg {
             "pipe:1",
         ];
 
-        super(args, new FixedFpsStream(fps));
+        super(args);
     }
 
     public override toString(): string {

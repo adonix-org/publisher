@@ -1,8 +1,14 @@
-import { Ffmpeg } from "./ffmpeg";
+import { ImageSource } from ".";
+import { ImageFrame } from "../tasks";
+import { Ffmpeg } from "../spawn/ffmpeg";
 import { ImageStream } from "./streams/image";
 
-export class RtspSource extends Ffmpeg {
-    constructor(stream: ImageStream, url: string, fps: number = 1) {
+export class RtspSource extends Ffmpeg implements ImageSource {
+    constructor(
+        private readonly stream: ImageStream,
+        url: string,
+        fps: number = 1,
+    ) {
         const args = [
             "-loglevel",
             "fatal",
@@ -21,7 +27,23 @@ export class RtspSource extends Ffmpeg {
             "pipe:1",
         ];
 
-        super(args, stream);
+        super(args);
+
+        this.register(stream);
+    }
+
+    public async next(): Promise<ImageFrame | null> {
+        return this.stream.next();
+    }
+
+    public override async onstart(): Promise<void> {
+        await super.onstart();
+
+        this.stream.clear();
+
+        this.process?.stdout.on("data", (chunk) => {
+            this.stream.ondata(chunk);
+        });
     }
 
     public override toString(): string {

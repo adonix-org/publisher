@@ -1,5 +1,5 @@
 import { spawn, ChildProcess } from "node:child_process";
-import { Lifecycle } from "./lifecycle";
+import { Lifecycle } from "../lifecycle";
 
 export class PyServer extends Lifecycle {
     private process: ChildProcess | null = null;

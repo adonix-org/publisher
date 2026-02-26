@@ -3,9 +3,9 @@ import { Monitor } from "../workflows/monitor";
 import { Agent } from "./agent";
 import { LiveImage } from "../workflows/live";
 import { PublisherSession } from "../ws/publisher";
-import { PyServer } from "../pyserver";
+import { PyServer } from "../spawn/pyserver";
 
-export class Camera extends Agent {
+export class MonitorLive extends Agent {
     constructor() {
         const source = new C121(1, 60);
 
