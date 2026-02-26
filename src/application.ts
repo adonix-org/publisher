@@ -1,8 +1,7 @@
 import { Lifecycle } from "./lifecycle";
+import { abort } from "./signal";
 
 class Application extends Lifecycle {
-    private readonly controller = new AbortController();
-
     constructor(...children: Lifecycle[]) {
         super(...children);
 
@@ -46,15 +45,10 @@ class Application extends Lifecycle {
         process.exit(0);
     }
 
-    public async abort(): Promise<void> {
-        if (!this.controller.signal.aborted) {
-            this.controller.abort();
-        }
-        await this.stop();
-    }
+    private async abort(): Promise<void> {
+        abort();
 
-    public get signal(): AbortSignal {
-        return this.controller.signal;
+        await this.stop();
     }
 
     public override toString(): string {

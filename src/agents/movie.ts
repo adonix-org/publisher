@@ -18,7 +18,7 @@ export class Movie extends Agent {
 
         const source = new FileSource(file, 1);
         const fork = new Inference();
-        
+
         super(source, fork);
 
         this.addImageTask(fork);
@@ -37,7 +37,7 @@ export class Movie extends Agent {
     }
 
     protected override async onabort(): Promise<void> {
-        console.error(this.toString(), "killed");
+        console.warn(this.toString(), "killed");
     }
 
     public override toString(): string {

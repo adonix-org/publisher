@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import http from "node:http";
 import { ImageTask, ImageFrame } from "..";
 import { assertImageFrame, decode, encode } from "./utils";
-import { application } from "../../application";
+import { signal } from "../../signal";
 
 const agent = new http.Agent({ keepAlive: true });
 
@@ -19,7 +19,7 @@ export class Remote implements ImageTask {
             body: JSON.stringify(encode(frame)),
             headers: { "Content-Type": "application/json" },
             agent,
-            signal: application.signal,
+            signal,
         });
 
         if (response.status === 204) return null;

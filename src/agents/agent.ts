@@ -1,6 +1,6 @@
 import { AgentSource } from ".";
-import { application } from "../application";
 import { Lifecycle } from "../lifecycle";
+import { signal } from "../signal";
 import { ImageSource } from "../sources";
 import { ErrorTask, ImageFrame, ImageTask } from "../tasks";
 
@@ -33,7 +33,11 @@ export abstract class Agent extends Lifecycle {
 
     protected override async onstop(): Promise<void> {
         await super.onstop();
-        await this.finished;
+
+        if (this.finished) {
+            await this.finished;
+            this.finished = null;
+        }
     }
 
     protected oncomplete(): Promise<void> {
@@ -45,7 +49,7 @@ export abstract class Agent extends Lifecycle {
     }
 
     private async run(): Promise<void> {
-        while (!application.signal.aborted) {
+        while (!signal.aborted) {
             try {
                 const image = await this.source.next();
                 if (!image) break;
@@ -58,7 +62,7 @@ export abstract class Agent extends Lifecycle {
             await new Promise((res) => setImmediate(res));
         }
 
-        if (application.signal.aborted) {
+        if (signal.aborted) {
             await this.onabort();
         } else {
             await this.oncomplete();

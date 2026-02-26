@@ -29,7 +29,7 @@ export class Inference extends ForkAgent {
     protected override async onabort(): Promise<void> {
         await super.onabort();
 
-        console.info(this.toString(), "killed");
+        console.warn(this.toString(), "killed");
     }
 
     public override toString(): string {
