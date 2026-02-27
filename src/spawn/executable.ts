@@ -18,13 +18,13 @@ export abstract class Executable extends Lifecycle {
         return this._child;
     }
 
-    public override async onstart(): Promise<void> {
+    protected override async onstart(): Promise<void> {
         await super.onstart();
 
         this._child = spawn(this.path, this.args);
 
-        this._child.stderr.on("data", (chunk) => {
-            console.error(chunk.toString());
+        this._child.stderr.on("data", (buffer: Buffer) => {
+            this.stderr(buffer);
         });
 
         this._child.once("exit", async () => {
@@ -32,7 +32,11 @@ export abstract class Executable extends Lifecycle {
         });
     }
 
-    public override async onstop(): Promise<void> {
+    protected stderr(buffer: Buffer): void {
+        console.error(buffer);
+    }
+
+    protected override async onstop(): Promise<void> {
         await super.onstop();
 
         await new Promise<void>((resolve) => {
@@ -49,6 +53,6 @@ export abstract class Executable extends Lifecycle {
     }
 
     public override toString(): string {
-        return `[${this.path}}]`;
+        return `[Executable]`;
     }
 }

@@ -23,7 +23,7 @@ export class Preview extends Ffplay implements ImageTask {
         return frame;
     }
 
-    public override async onstop(): Promise<void> {
+    protected override async onstop(): Promise<void> {
         this.child.stdin.end();
 
         await super.onstop();

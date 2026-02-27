@@ -36,7 +36,7 @@ export class RtspSource extends Ffmpeg implements ImageSource {
         return this.stream.next();
     }
 
-    public override async onstart(): Promise<void> {
+    protected override async onstart(): Promise<void> {
         await super.onstart();
 
         this.stream.clear();

@@ -6,6 +6,6 @@ export abstract class Ffplay extends Executable {
     }
 
     public override toString(): string {
-        return `[ffplay]`;
+        return `${super.toString()}[ffplay]`;
     }
 }

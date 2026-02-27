@@ -6,6 +6,6 @@ export abstract class Ffmpeg extends Executable {
     }
 
     public override toString(): string {
-        return `[ffmpeg]`;
+        return `${super.toString()}[ffmpeg]`;
     }
 }

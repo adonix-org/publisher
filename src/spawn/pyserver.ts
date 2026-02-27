@@ -1,36 +1,27 @@
-import { spawn, ChildProcess } from "node:child_process";
-import { Lifecycle } from "../lifecycle";
+import { Executable } from "./executable";
 
-export class PyServer extends Lifecycle {
-    private process: ChildProcess | null = null;
+export class PyServer extends Executable {
+    constructor() {
+        super(`${process.cwd()}/python/.venv/bin/python`, [
+            `${process.cwd()}/python/app/pyserver.py`,
+        ]);
+    }
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.process = spawn(
-            `${process.cwd()}/python/.venv/bin/python`,
-            [`${process.cwd()}/python/app/pyserver.py`],
-            {
-                stdio: ["ignore", "pipe", "pipe"],
-            },
-        );
-
-        this.process.once("exit", () => {
-            this.process = null;
-        });
-
-        this.process.stdout?.on("data", (data) => {
+        this.child.stdout?.on("data", (data) => {
             const msg = data.toString().trim();
             if (!msg) return;
 
-            console.debug(`[🐍 \x1b[32mPyServer\x1b[0m] ${msg}`);
+            console.debug(this.toString(), msg);
         });
 
         await new Promise<void>((resolve, reject) => {
-            if (this.process === null)
+            if (this.child === null)
                 return reject(new Error("Process failed to start"));
 
-            this.process.stdout?.on("data", (data) => {
+            this.child.stdout?.on("data", (data) => {
                 const text = data.toString();
                 if (text.includes("PyServer ready")) {
                     resolve();
@@ -39,24 +30,11 @@ export class PyServer extends Lifecycle {
         });
     }
 
-    protected override async onstop(): Promise<void> {
-        await super.onstop();
-
-        await new Promise<void>((resolve) => {
-            if (this.process === null || this.process.killed) {
-                resolve();
-                return;
-            }
-
-            const cleanup = () => resolve();
-            this.process.once("exit", cleanup);
-            this.process.once("error", cleanup);
-
-            this.process.kill("SIGINT");
-        });
+    protected override stderr(): void {
+        return;
     }
 
     public override toString(): string {
-        return `${super.toString()}[PyServer]`;
+        return `${super.toString()}[🐍 \x1b[32mPyServer\x1b[0m]`;
     }
 }

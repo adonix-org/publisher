@@ -35,14 +35,14 @@ export class Record extends Ffmpeg implements ImageTask {
         return frame;
     }
 
-    public override async onstart(): Promise<void> {
+    protected override async onstart(): Promise<void> {
         await super.onstart();
 
         const folder = path.dirname(this.output);
         await fs.mkdir(folder, { recursive: true });
     }
 
-    public override async onstop(): Promise<void> {
+    protected override async onstop(): Promise<void> {
         this.child.stdin.end();
 
         await super.onstop();
