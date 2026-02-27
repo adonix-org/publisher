@@ -3,10 +3,13 @@ import { C121 } from "../sources/c121";
 import { Record } from "../targets/record";
 import { Agent } from "./agent";
 import { Preview } from "../targets/preview";
+import { Remote } from "../tasks/remote/remote";
+import { ConfidenceFilter } from "../tasks/filter/confidence";
 
 export class Motion extends Agent {
     constructor() {
-        const fps = 20;
+        const fps = 10;
+
         const source = new C121(fps, 60);
 
         super(source);
@@ -20,8 +23,11 @@ export class Motion extends Agent {
         this.register(preview);
         this.register(record);
 
+        this.addTask(new Remote("mega"));
+        this.addTask(new ConfidenceFilter(0.4));
+        this.addTask(new Remote("outline"));
+        this.addTask(new Remote("label"));
         this.addTask(preview);
-        this.addTask(record);
     }
 
     protected getFolder(): string {

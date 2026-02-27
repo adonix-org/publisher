@@ -37,6 +37,8 @@ export abstract class Agent extends Lifecycle {
     }
 
     protected override async onstop(): Promise<void> {
+        await this.source.stop();
+
         await super.onstop();
 
         if (this.finished) {

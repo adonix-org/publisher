@@ -12,12 +12,8 @@ export class RtspSource extends Ffmpeg implements ImageSource {
         const args = [
             "-loglevel",
             "fatal",
-            "-timeout",
-            "50000000",
             "-i",
             url,
-            "-rtsp_transport",
-            "tcp",
             "-vf",
             `fps=${fps}`,
             "-f",
