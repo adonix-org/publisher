@@ -33,7 +33,7 @@ export abstract class Executable extends Lifecycle {
     }
 
     protected stderr(buffer: Buffer): void {
-        console.error(buffer);
+        console.error(buffer.toString());
     }
 
     protected override async onstop(): Promise<void> {

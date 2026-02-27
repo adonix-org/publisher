@@ -6,7 +6,7 @@ import { ImageFrame, ImageTask } from "../tasks";
 export class Record extends Ffmpeg implements ImageTask {
     constructor(
         fps: number,
-        private readonly output: string,
+        private readonly file: string,
     ) {
         const args = [
             "-loglevel",
@@ -24,7 +24,7 @@ export class Record extends Ffmpeg implements ImageTask {
             "libx264",
             "-pix_fmt",
             "yuv420p",
-            output,
+            file,
         ];
         super(args);
     }
@@ -38,7 +38,7 @@ export class Record extends Ffmpeg implements ImageTask {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        const folder = path.dirname(this.output);
+        const folder = path.dirname(this.file);
         await fs.mkdir(folder, { recursive: true });
     }
 
@@ -49,6 +49,6 @@ export class Record extends Ffmpeg implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[Movie]`;
+        return `${super.toString()}[Record]`;
     }
 }
