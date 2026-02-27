@@ -7,7 +7,7 @@ export class RtspSource extends Ffmpeg implements ImageSource {
     constructor(
         private readonly stream: ImageStream,
         url: string,
-        fps: number = 1,
+        fps: number = 5,
     ) {
         const args = [
             "-loglevel",

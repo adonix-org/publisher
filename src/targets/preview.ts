@@ -4,20 +4,14 @@ import { Ffplay } from "../spawn/ffplay";
 export class Preview extends Ffplay implements ImageTask {
     constructor(title: string = "Preview") {
         const args = [
+            "-loglevel",
+            "quiet",
             "-f",
             "mjpeg",
             "-i",
             "pipe:0",
-            "-vf",
-            "scale=-1:480",
             "-window_title",
             title,
-            "-fflags",
-            "nobuffer",
-            "-flags",
-            "low_delay",
-            "-loglevel",
-            "quiet",
         ];
 
         super(args);

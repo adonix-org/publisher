@@ -3,7 +3,7 @@ import { promises as fs } from "node:fs";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { ImageFrame, ImageTask } from "../tasks";
 
-export class Movie extends Ffmpeg implements ImageTask {
+export class Record extends Ffmpeg implements ImageTask {
     constructor(
         fps: number,
         private readonly output: string,
