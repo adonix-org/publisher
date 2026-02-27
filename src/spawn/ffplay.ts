@@ -1,7 +1,7 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { Lifecycle } from "../lifecycle";
 
-export abstract class Ffmpeg extends Lifecycle {
+export abstract class Ffplay extends Lifecycle {
     private _child: ChildProcessWithoutNullStreams | null = null;
 
     constructor(private readonly args: string[]) {
@@ -10,7 +10,7 @@ export abstract class Ffmpeg extends Lifecycle {
 
     protected get child(): ChildProcessWithoutNullStreams {
         if (!this._child) {
-            throw new Error("ffmpeg is not running.");
+            throw new Error("ffplay is not running.");
         }
         return this._child;
     }
@@ -18,7 +18,7 @@ export abstract class Ffmpeg extends Lifecycle {
     public override async onstart(): Promise<void> {
         await super.onstart();
 
-        this._child = spawn("/opt/homebrew/bin/ffmpeg", this.args);
+        this._child = spawn("/opt/homebrew/bin/ffplay", this.args);
 
         this._child.stderr.on("data", (chunk) => {
             console.error(chunk.toString());
@@ -46,6 +46,6 @@ export abstract class Ffmpeg extends Lifecycle {
     }
 
     public override toString(): string {
-        return `[ffmpeg]`;
+        return `[ffplay]`;
     }
 }
