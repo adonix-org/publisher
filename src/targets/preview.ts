@@ -19,11 +19,13 @@ export class Preview extends Ffplay implements ImageTask {
             "-loglevel",
             "quiet",
         ];
+
         super(args);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         this.child.stdin.write(frame.image.buffer);
+
         return frame;
     }
 

@@ -31,6 +31,7 @@ export class Movie extends Ffmpeg implements ImageTask {
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         this.child.stdin.write(frame.image.buffer);
+
         return frame;
     }
 
@@ -43,6 +44,8 @@ export class Movie extends Ffmpeg implements ImageTask {
 
     public override async onstop(): Promise<void> {
         this.child.stdin.end();
+
+        await super.onstop();
     }
 
     public override toString(): string {
