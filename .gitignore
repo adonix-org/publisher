@@ -9,6 +9,7 @@ python/.venv/
 __pycache__/
 python/app/models/
 *.pyc
+*.mp4
 
 # Local environment variables
 .env
