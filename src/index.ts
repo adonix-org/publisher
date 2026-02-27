@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "./logging";
 
-import { MonitorLive } from "./agents/monitor";
 import { application } from "./application";
+import { Motion } from "./agents/motion";
 
-application.register(new MonitorLive()).start();
+application.register(new Motion()).start();

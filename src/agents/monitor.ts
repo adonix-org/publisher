@@ -23,6 +23,6 @@ export class MonitorLive extends Agent {
     }
 
     public override toString(): string {
-        return `${super.toString()}[Camera]`;
+        return `${super.toString()}[MonitorLive]`;
     }
 }
