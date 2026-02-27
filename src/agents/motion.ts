@@ -15,13 +15,13 @@ export class Motion extends Agent {
 
         const file = path.join(base, this.getFolder(), "movies", "live.mp4");
         const preview = new Preview();
-        const movie = new Record(fps, file);
+        const record = new Record(fps, file);
 
         this.register(preview);
-        this.register(movie);
+        this.register(record);
 
         this.addTask(preview);
-        this.addTask(movie);
+        this.addTask(record);
     }
 
     protected getFolder(): string {
