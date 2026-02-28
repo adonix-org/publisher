@@ -1,35 +1,31 @@
-import { ImageSource } from ".";
-import { ImageFrame } from "../tasks";
 import { Ffmpeg } from "../spawn/ffmpeg";
-import { ImageStream } from "./streams/image";
+import { StreamBuffer } from "./streams/buffer";
 
-export class RtspSource extends Ffmpeg implements ImageSource {
+export class RtspMpegTs extends Ffmpeg {
     constructor(
-        private readonly stream: ImageStream,
+        private readonly stream: StreamBuffer,
         url: string,
-        fps: number = 5,
     ) {
         const args = [
             "-loglevel",
             "fatal",
+            "-rtsp_transport",
+            "tcp",
+            "-use_wallclock_as_timestamps",
+            "1",
             "-i",
             url,
-            "-vf",
-            `fps=${fps}`,
+            "-an",
+            "-c",
+            "copy",
             "-f",
-            "image2pipe",
-            "-vcodec",
-            "mjpeg",
+            "mpegts",
             "pipe:1",
         ];
 
         super(args);
 
         this.register(stream);
-    }
-
-    public async next(): Promise<ImageFrame | null> {
-        return this.stream.next();
     }
 
     protected override async onstart(): Promise<void> {
@@ -43,6 +39,6 @@ export class RtspSource extends Ffmpeg implements ImageSource {
     }
 
     public override toString(): string {
-        return `${super.toString()}[RTSP]`;
+        return `${super.toString()}[RtspMpegTs]`;
     }
 }

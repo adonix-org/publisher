@@ -30,6 +30,7 @@ export class Motion extends Agent {
         this.addTask(new Remote("outline"));
         this.addTask(new Remote("label"));
         this.addTask(preview);
+        this.addTask(record);
     }
 
     protected getFolder(): string {

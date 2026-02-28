@@ -4,10 +4,11 @@ export abstract class JpegStream extends ImageStream {
     public static readonly SOI = Buffer.from([0xff, 0xd8]);
     public static readonly EOI = Buffer.from([0xff, 0xd9]);
 
-    protected override get soi(): Buffer<ArrayBufferLike> {
+    protected override get soi(): Buffer {
         return JpegStream.SOI;
     }
-    protected override get eoi(): Buffer<ArrayBufferLike> {
+
+    protected override get eoi(): Buffer {
         return JpegStream.EOI;
     }
 
