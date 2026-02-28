@@ -1,45 +1,37 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { Ffmpeg } from "../spawn/ffmpeg";
-import { ImageFrame, ImageTask } from "../tasks";
+import { DataConsumer } from "../sources/streams/transport";
 
-export class Record extends Ffmpeg implements ImageTask {
-    constructor(
-        fps: number,
-        private readonly file: string,
-    ) {
+export class RecordTransportStream extends Ffmpeg implements DataConsumer {
+    constructor(private readonly folder: string) {
+        const file = path.join(folder, "output.mp4");
         const args = [
             "-loglevel",
             "fatal",
             "-y",
             "-f",
-            "image2pipe",
-            "-vcodec",
-            "mjpeg",
-            "-r",
-            fps.toString(),
+            "mpegts",
             "-i",
-            "-",
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
+            "pipe:0",
+            "-c",
+            "copy",
             file,
         ];
+
         super(args);
     }
 
-    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        this.child.stdin.write(frame.image.buffer);
+    public ondata(data: Buffer): void {
+        if (!this.running) return;
 
-        return frame;
+        this.child.stdin.write(data);
     }
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        const folder = path.dirname(this.file);
-        await fs.mkdir(folder, { recursive: true });
+        await fs.mkdir(this.folder, { recursive: true });
     }
 
     protected override async onstop(): Promise<void> {
@@ -49,6 +41,6 @@ export class Record extends Ffmpeg implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[Record]`;
+        return `${super.toString()}[RecordTransportStream]`;
     }
 }

@@ -1,6 +1,4 @@
-import path from "node:path";
 import { C121 } from "../sources/c121";
-import { Record } from "../targets/record";
 import { Agent } from "./agent";
 import { Preview } from "../targets/preview";
 import { Remote } from "../tasks/remote/remote";
@@ -15,14 +13,11 @@ export class Motion extends Agent {
 
         super(source);
 
-        const base = process.env.LOCAL_IMAGE_FOLDER!;
+        // const base = process.env.LOCAL_IMAGE_FOLDER!;
 
-        const file = path.join(base, this.getFolder(), "movies", "live.mp4");
         const preview = new Preview();
-        const record = new Record(fps, file);
 
         this.register(preview);
-        this.register(record);
 
         this.addTask(new Timer(new Remote("yolo"), 60_000));
         this.addTask(new Timer(new Remote("passthrough")));
@@ -30,7 +25,6 @@ export class Motion extends Agent {
         this.addTask(new Remote("outline"));
         this.addTask(new Remote("label"));
         this.addTask(preview);
-        this.addTask(record);
     }
 
     protected getFolder(): string {
