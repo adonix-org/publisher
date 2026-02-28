@@ -1,9 +1,9 @@
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { TransportStream } from "./streams/transport";
 
-export class RtspMpegTS extends Ffmpeg {
+export class Rtsp extends Ffmpeg {
     constructor(
-        private readonly stream: TransportStream,
+        protected readonly stream: TransportStream,
         url: string,
     ) {
         const args = [
@@ -37,6 +37,6 @@ export class RtspMpegTS extends Ffmpeg {
     }
 
     public override toString(): string {
-        return `${super.toString()}[RtspMpegTs]`;
+        return `${super.toString()}[Rtsp]`;
     }
 }

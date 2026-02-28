@@ -7,7 +7,7 @@ import { PyServer } from "../spawn/pyserver";
 
 export class MonitorLive extends Agent {
     constructor() {
-        const source = new C121(1, 60);
+        const source = new C121();
 
         const live = new LiveImage(source.getName());
         const session = new PublisherSession(live);

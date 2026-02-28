@@ -2,30 +2,34 @@ import { ImageSource } from ".";
 import { ImageFrame } from "../tasks";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { ImageStream } from "./streams/image";
+import { DataConsumer } from "./streams/transport";
 
-export class RtspMjpeg extends Ffmpeg implements ImageSource {
+export class Encoder extends Ffmpeg implements DataConsumer, ImageSource {
     constructor(
         private readonly stream: ImageStream,
-        url: string,
-        fps: number = 5,
+        fps: number = 15,
     ) {
         const args = [
             "-loglevel",
             "fatal",
             "-i",
-            url,
+            "pipe:0",
             "-vf",
             `fps=${fps}`,
             "-f",
             "image2pipe",
             "-vcodec",
-            "mjpeg",
+            stream.vcodec,
             "pipe:1",
         ];
 
         super(args);
 
         this.register(stream);
+    }
+
+    public ondata(data: Buffer): Promise<void> | void {
+        this.child.stdin.write(data);
     }
 
     public async next(): Promise<ImageFrame | null> {
@@ -37,12 +41,12 @@ export class RtspMjpeg extends Ffmpeg implements ImageSource {
 
         this.stream.clear();
 
-        this.child.stdout.on("data", (chunk) => {
-            this.stream.ondata(chunk);
+        this.child.stdout.on("data", (data) => {
+            this.stream.ondata(data);
         });
     }
 
     public override toString(): string {
-        return `${super.toString()}[RtspMjpeg]`;
+        return `${super.toString()}[Mjpeg]`;
     }
 }

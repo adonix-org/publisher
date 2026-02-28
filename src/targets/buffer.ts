@@ -9,6 +9,12 @@ export class DataBuffer extends Lifecycle implements DataConsumer {
         super();
     }
 
+    protected override async onstart(): Promise<void> {
+        await super.onstart();
+
+        this.chunks.length = 0;
+    }
+
     public ondata(data: Buffer): void {
         this.chunks.push(data);
         this.size += data.length;

@@ -7,13 +7,7 @@ import { Timer } from "../tasks/observe/timer";
 
 export class Motion extends Agent {
     constructor() {
-        const fps = 10;
-
-        const source = new C121(fps, 60);
-
-        super(source);
-
-        // const base = process.env.LOCAL_IMAGE_FOLDER!;
+        super(new C121());
 
         const preview = new Preview();
 

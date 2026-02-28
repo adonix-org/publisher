@@ -1,10 +1,12 @@
 import { ImageFrame } from "../../tasks";
 import { ImageQueue } from "../queue";
+import { DataConsumer } from "./transport";
 
-export abstract class ImageStream extends ImageQueue {
+export abstract class ImageStream extends ImageQueue implements DataConsumer {
     private buffer: Buffer = Buffer.alloc(0);
     private offset = 0;
 
+    public abstract get vcodec(): string;
     protected abstract get soi(): Buffer;
     protected abstract get eoi(): Buffer;
     protected abstract onimage(buffer: Buffer): ImageFrame;

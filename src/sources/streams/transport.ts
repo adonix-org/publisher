@@ -1,24 +1,29 @@
 import { Lifecycle } from "../../lifecycle";
 
 export interface DataConsumer {
-    ondata(chunk: Buffer): Promise<void> | void;
+    ondata(data: Buffer): Promise<void> | void;
 }
 
-export type DataListener = Lifecycle & DataConsumer;
+export class TransportStream extends Lifecycle implements DataConsumer {
+    protected consumers: DataConsumer[] = [];
 
-export class TransportStream
-    extends Lifecycle<DataListener>
-    implements DataConsumer
-{
-    constructor(...children: DataListener[]) {
-        super(...children);
+    public addConsumer(consumer: DataConsumer): this {
+        this.consumers.push(consumer);
+
+        return this;
     }
 
-    public ondata(chunk: Buffer): void {
+    public ondata(data: Buffer): void {
+        if (!this.running) return;
+
         setImmediate(() => {
-            for (const listener of this.children) {
-                listener.ondata(chunk);
+            for (const consumer of this.consumers) {
+                consumer.ondata(data);
             }
         });
+    }
+
+    public override toString(): string {
+        return `${super.toString()}[TransportStream]`;
     }
 }

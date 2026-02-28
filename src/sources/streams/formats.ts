@@ -4,6 +4,10 @@ export abstract class JpegStream extends ImageStream {
     public static readonly SOI = Buffer.from([0xff, 0xd8]);
     public static readonly EOI = Buffer.from([0xff, 0xd9]);
 
+    public override get vcodec(): string {
+        return "mjpeg";
+    }
+
     protected override get soi(): Buffer {
         return JpegStream.SOI;
     }
@@ -20,6 +24,10 @@ export abstract class JpegStream extends ImageStream {
 export abstract class GifStream extends ImageStream {
     public static readonly SOI = Buffer.from("GIF89a", "ascii");
     public static readonly EOI = Buffer.from([0x3b]);
+
+    public override get vcodec(): string {
+        return "gif";
+    }
 
     protected override get soi(): Buffer {
         return GifStream.SOI;
@@ -41,6 +49,10 @@ export abstract class PngStream extends ImageStream {
     public static readonly EOI = Buffer.from([
         0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
     ]);
+
+    public override get vcodec(): string {
+        return "png";
+    }
 
     protected override get soi(): Buffer {
         return PngStream.SOI;

@@ -1,13 +1,13 @@
-export abstract class Lifecycle<T extends Lifecycle<any> = Lifecycle<any>> {
-    protected readonly children: T[];
+export abstract class Lifecycle {
+    protected readonly children: Lifecycle[];
     private transition: Promise<void> | null = null;
     private _running = false;
 
-    constructor(...children: T[]) {
+    constructor(...children: Lifecycle[]) {
         this.children = children;
     }
 
-    public register(child: T, ...children: T[]): this {
+    public register(child: Lifecycle, ...children: Lifecycle[]): this {
         this.children.push(child, ...children);
 
         return this;
