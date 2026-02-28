@@ -1,38 +1,26 @@
 import { Lifecycle } from "../../lifecycle";
+import { TSPacket, TSPacketConsumer } from "./transport";
 
-export class StreamBuffer extends Lifecycle {
-    private static readonly TS_SYNC_BYTE = 0x47;
-    private static readonly TS_PACKET_SIZE = 188;
-    private static readonly MAX_BUFFER_SIZE = 1024;
+export class PacketBuffer extends Lifecycle implements TSPacketConsumer {
+    private readonly _packets: TSPacket[];
+    private index = 0;
+    private count = 0;
 
-    private readonly packets: Buffer[] = [];
-
-    // Keep a list of consumers to send chunks to here?  Or in RtspMpegTs?
-
-    public clear(): void {
-        this.packets.length = 0;
+    constructor(private readonly maxSize: number = 1024) {
+        super();
+        this._packets = new Array(maxSize);
     }
 
-    public ondata(chunk: Buffer): void {
-        let offset = 0;
+    onpacket(packet: TSPacket): void {
+        this._packets[this.index] = packet;
+        this.index = (this.index + 1) % this.maxSize;
+        if (this.count < this.maxSize) this.count++;
+    }
 
-        while (offset + StreamBuffer.TS_PACKET_SIZE <= chunk.length) {
-            const packet: Buffer = chunk.subarray(
-                offset,
-                offset + StreamBuffer.TS_PACKET_SIZE,
-            );
-
-            if (packet[0] !== StreamBuffer.TS_SYNC_BYTE) {
-                console.warn("TS packet missing sync byte at offset", offset);
-            }
-
-            this.packets.push(packet);
-
-            while (this.packets.length > StreamBuffer.MAX_BUFFER_SIZE) {
-                this.packets.shift();
-            }
-
-            offset += StreamBuffer.TS_PACKET_SIZE;
+    public *packets(): IterableIterator<TSPacket> {
+        for (let i = 0; i < this.count; i++) {
+            const idx = (this.index + i) % this.maxSize;
+            yield this._packets[idx]!;
         }
     }
 }

@@ -1,13 +1,13 @@
-export abstract class Lifecycle {
-    private readonly children: Lifecycle[];
+export abstract class Lifecycle<T extends Lifecycle<any> = Lifecycle<any>> {
+    protected readonly children: T[];
     private transition: Promise<void> | null = null;
     private _running = false;
 
-    constructor(...children: Lifecycle[]) {
+    constructor(...children: T[]) {
         this.children = children;
     }
 
-    public register(child: Lifecycle, ...children: Lifecycle[]): this {
+    public register(child: T, ...children: T[]): this {
         this.children.push(child, ...children);
 
         return this;
@@ -51,9 +51,9 @@ export abstract class Lifecycle {
         }
     }
 
-    protected callback<T extends unknown[]>(
-        fn: ((...args: T) => void) | undefined,
-        ...args: T
+    protected callback<A extends unknown[]>(
+        fn: ((...args: A) => void) | undefined,
+        ...args: A
     ): void {
         if (!fn) return;
         setImmediate(() => fn(...args));

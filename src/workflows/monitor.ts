@@ -12,8 +12,8 @@ export class Monitor extends Workflow {
         const base = process.env.LOCAL_IMAGE_FOLDER!;
         const folder = path.join(base, this.getFolder(), "activity");
 
-        const animal = new ExportSubject(folder, "animal", 0.4);
-        const person = new ExportSubject(folder, "person", 0.5);
+        const animal = new ExportSubject(folder, "animal", 0.55);
+        const person = new ExportSubject(folder, "person", 0.55);
         const vehicle = new ExportSubject(folder, "vehicle", 0.667);
 
         this.register(animal);

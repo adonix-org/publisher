@@ -1,9 +1,9 @@
 import { Ffmpeg } from "../spawn/ffmpeg";
-import { StreamBuffer } from "./streams/buffer";
+import { TransportStream } from "./streams/transport";
 
-export class RtspMpegTs extends Ffmpeg {
+export class RtspMpegTS extends Ffmpeg {
     constructor(
-        private readonly stream: StreamBuffer,
+        private readonly stream: TransportStream,
         url: string,
     ) {
         const args = [
@@ -30,8 +30,6 @@ export class RtspMpegTs extends Ffmpeg {
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
-
-        this.stream.clear();
 
         this.child.stdout.on("data", (chunk) => {
             this.stream.ondata(chunk);
