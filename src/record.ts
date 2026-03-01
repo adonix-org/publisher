@@ -5,13 +5,16 @@ import { application } from "./application";
 import { Rtsp } from "./sources/rtsp";
 
 import { Recorder } from "./targets/recorder";
+import { Preview } from "./targets/preview";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
-const recorder = new Recorder("/Users/tybusby/Camera/recordings");
-
 const rtsp = new Rtsp(C121_RTSP_URL);
-rtsp.addConsumer(recorder);
 
-application.register(recorder, rtsp);
+const preview = new Preview(rtsp, "mpegts", "LiveMotion");
+const recorder = new Recorder(rtsp, "/Users/tybusby/Camera/recordings");
+
+application.register(rtsp, recorder);
 application.start();
+
+preview;

@@ -1,6 +1,5 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { Lifecycle } from "../lifecycle";
-import { Writable } from "node:stream";
 
 export abstract class Executable extends Lifecycle {
     private _child: ChildProcessWithoutNullStreams | null = null;
@@ -17,10 +16,6 @@ export abstract class Executable extends Lifecycle {
             throw new Error(`${this.path} is not running.`);
         }
         return this._child;
-    }
-
-    public getWritable(): Writable {
-        return this.child.stdin;
     }
 
     protected override async onstart(): Promise<void> {

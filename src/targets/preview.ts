@@ -1,11 +1,16 @@
 import { ImageFrame, ImageTask } from "../tasks";
 import { Ffplay } from "../spawn/ffplay";
-import { DataConsumer } from "../sources/streams/transport";
+import { PassThrough } from "node:stream";
+import { StreamProvider } from "../sources/rtsp";
 
 type DataFormat = "mjpeg" | "mpegts";
 
-export class Preview extends Ffplay implements DataConsumer, ImageTask {
-    constructor(format: DataFormat = "mjpeg", title = "Preview") {
+export class Preview extends Ffplay implements ImageTask {
+    constructor(
+        private readonly provider: StreamProvider,
+        format: DataFormat = "mjpeg",
+        title = "Preview",
+    ) {
         const args = [
             "-loglevel",
             "quiet",
@@ -18,6 +23,13 @@ export class Preview extends Ffplay implements DataConsumer, ImageTask {
         ];
 
         super(args);
+    }
+
+    protected override async onstart(): Promise<void> {
+        await super.onstart();
+
+        const buffer = new PassThrough({ highWaterMark: 256 * 1024 });
+        this.provider.getStream().pipe(buffer).pipe(this.child.stdin);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
