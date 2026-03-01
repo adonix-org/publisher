@@ -10,8 +10,8 @@ export class Preview extends Ffplay implements ImageTask {
 
     constructor(
         private readonly provider: StreamProvider,
-        private readonly format: DataFormat = "mjpeg",
-        private readonly title = "Preview",
+        private readonly format: DataFormat,
+        private readonly title = "Publisher",
     ) {
         super();
     }

@@ -11,10 +11,8 @@ const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 const rtsp = new Rtsp(C121_RTSP_URL);
 
-const preview = new MPV(rtsp);
+const mpv = new MPV(rtsp);
 const recorder = new Recorder(rtsp, "/Users/tybusby/Camera/recordings");
 
-application.register(rtsp, preview, recorder);
+application.register(rtsp, mpv, recorder);
 application.start();
-
-preview;

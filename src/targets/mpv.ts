@@ -6,7 +6,10 @@ import { Executable } from "../spawn/executable";
 export class MPV extends Executable implements ImageTask {
     private pipe: BufferedPipe | undefined;
 
-    constructor(private readonly provider: StreamProvider) {
+    constructor(
+        private readonly provider: StreamProvider,
+        private readonly title: string = "Publisher",
+    ) {
         super();
     }
 
@@ -15,13 +18,7 @@ export class MPV extends Executable implements ImageTask {
     }
 
     protected override args(): string[] {
-        const args = [
-            "-",
-            "--force-window=yes",
-            "--input-terminal=no",
-            "--no-resume-playback",
-            "--idle=no",
-        ];
+        const args = ["-", "--input-terminal=no", `--title=${this.title}`];
         return args;
     }
 
