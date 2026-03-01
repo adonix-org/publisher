@@ -2,9 +2,8 @@ import { ImageSource } from ".";
 import { ImageFrame } from "../tasks";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { ImageStream } from "./streams/image";
-import { DataConsumer } from "./streams/transport";
 
-export class Encoder extends Ffmpeg implements DataConsumer, ImageSource {
+export class Encoder extends Ffmpeg implements ImageSource {
     constructor(
         private readonly stream: ImageStream,
         fps: number = 15,

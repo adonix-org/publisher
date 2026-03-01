@@ -1,11 +1,11 @@
+import { PassThrough } from "node:stream";
 import { Ffmpeg } from "../spawn/ffmpeg";
-import { TransportStream } from "./streams/transport";
+import { DataConsumer } from "./streams/transport";
 
 export class Rtsp extends Ffmpeg {
-    constructor(
-        protected readonly stream: TransportStream,
-        url: string,
-    ) {
+    private readonly consumers: DataConsumer[] = [];
+
+    constructor(url: string) {
         const args = [
             "-loglevel",
             "fatal",
@@ -24,16 +24,27 @@ export class Rtsp extends Ffmpeg {
         ];
 
         super(args);
+    }
 
-        this.register(stream);
+    public addConsumer(consumer: DataConsumer): void {
+        this.consumers.push(consumer);
     }
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.child.stdout.on("data", (chunk) => {
-            this.stream.ondata(chunk);
-        });
+        for (const consumer of this.consumers) {
+            const buffer = new PassThrough({ highWaterMark: 256 * 1024 });
+            this.child.stdout.pipe(buffer).pipe(consumer.getWritable());
+        }
+    }
+
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
+        for (const consumer of this.consumers) {
+            consumer.getWritable().end();
+        }
     }
 
     public override toString(): string {

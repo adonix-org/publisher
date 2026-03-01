@@ -1,8 +1,7 @@
 import { ImageFrame } from "../../tasks";
 import { ImageQueue } from "../queue";
-import { DataConsumer } from "./transport";
 
-export abstract class ImageStream extends ImageQueue implements DataConsumer {
+export abstract class ImageStream extends ImageQueue {
     private buffer: Buffer = Buffer.alloc(0);
     private offset = 0;
 

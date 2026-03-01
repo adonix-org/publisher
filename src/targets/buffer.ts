@@ -1,3 +1,4 @@
+import { Writable } from "node:stream";
 import { Lifecycle } from "../lifecycle";
 import { DataConsumer } from "../sources/streams/transport";
 
@@ -7,6 +8,10 @@ export class DataBuffer extends Lifecycle implements DataConsumer {
 
     constructor(private readonly maxSize: number = 1024 * 1024) {
         super();
+    }
+
+    getWritable(): Writable {
+        throw new Error("Method not implemented.");
     }
 
     protected override async onstart(): Promise<void> {

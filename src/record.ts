@@ -3,16 +3,18 @@ import "./logging";
 
 import { application } from "./application";
 import { Rtsp } from "./sources/rtsp";
-import { TransportStream } from "./sources/streams/transport";
-import { RecordTransportStream } from "./targets/record";
+
+import { Recorder } from "./targets/recorder";
+import { Preview } from "./targets/preview";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
-const recorder = new RecordTransportStream("/Users/tybusby/Camera/recordings");
+const recorder = new Recorder("/Users/tybusby/Camera/recordings");
+const preview = new Preview("mpegts", "Live Motion");
 
-const stream = new TransportStream();
-stream.addConsumer(recorder);
+const rtsp = new Rtsp(C121_RTSP_URL);
+rtsp.addConsumer(recorder);
+rtsp.addConsumer(preview);
 
-const rtsp = new Rtsp(stream, C121_RTSP_URL);
-application.register(rtsp, recorder);
+application.register(preview, recorder, rtsp);
 application.start();

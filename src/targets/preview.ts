@@ -20,24 +20,12 @@ export class Preview extends Ffplay implements DataConsumer, ImageTask {
         super(args);
     }
 
-    public ondata(data: Buffer): Promise<void> | void {
-        if (!this.running) return;
-
-        this.child.stdin.write(data);
-    }
-
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         if (!this.running) return frame;
 
         this.child.stdin.write(frame.image.buffer);
 
         return frame;
-    }
-
-    protected override async onstop(): Promise<void> {
-        this.child.stdin.end();
-
-        await super.onstop();
     }
 
     public override toString(): string {
