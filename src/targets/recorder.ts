@@ -30,10 +30,16 @@ export class Recorder extends Ffmpeg {
             "-y",
             "-f",
             "mpegts",
+            "-use_wallclock_as_timestamps",
+            "0",
             "-i",
             "pipe:0",
+            "-avoid_negative_ts",
+            "make_zero",
+            "-copyts",
             "-c",
             "copy",
+            "-start_at_zero",
             filepath,
         ];
 
@@ -46,6 +52,7 @@ export class Recorder extends Ffmpeg {
         source.resume();
 
         await fs.mkdir(this.folder, { recursive: true });
+
         await super.onstart();
 
         this.buffer = new PassThrough({ highWaterMark: 256 * 1024 });
