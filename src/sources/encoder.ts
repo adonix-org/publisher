@@ -13,7 +13,7 @@ export class Encoder extends Ffmpeg implements ImageSource {
         this.register(stream);
     }
 
-    protected override async args(): Promise<string[]> {
+    protected override args(): string[] {
         const args = [
             "-loglevel",
             "fatal",

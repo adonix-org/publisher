@@ -8,7 +8,7 @@ export class FileSource extends Ffmpeg {
         super();
     }
 
-    protected override async args(): Promise<string[]> {
+    protected override args(): string[] {
         const args = [
             "-loglevel",
             "fatal",

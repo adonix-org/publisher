@@ -1,11 +1,13 @@
 import { ImageFrame, ImageTask } from "../tasks";
 import { Ffplay } from "../spawn/ffplay";
-import { PassThrough } from "node:stream";
 import { StreamProvider } from "../sources/rtsp";
+import { BufferedPipe } from "./pipe";
 
 type DataFormat = "mjpeg" | "mpegts";
 
 export class Preview extends Ffplay implements ImageTask {
+    private pipe: BufferedPipe | undefined;
+
     constructor(
         private readonly provider: StreamProvider,
         private readonly format: DataFormat = "mjpeg",
@@ -14,7 +16,7 @@ export class Preview extends Ffplay implements ImageTask {
         super();
     }
 
-    protected override async args(): Promise<string[]> {
+    protected override args(): string[] {
         const args = [
             "-loglevel",
             "quiet",
@@ -31,14 +33,21 @@ export class Preview extends Ffplay implements ImageTask {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        const buffer = new PassThrough({ highWaterMark: 256 * 1024 });
-        this.provider.getStream().pipe(buffer).pipe(this.child.stdin);
+        this.pipe = new BufferedPipe(
+            this.provider.getStream(),
+            this.child.stdin,
+        );
+        await this.pipe.start();
+    }
+
+    protected override async onstop(): Promise<void> {
+        await this.pipe?.stop();
+
+        await super.onstop();
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         if (!this.running) return frame;
-
-        this.child.stdin.write(frame.image.buffer);
 
         return frame;
     }

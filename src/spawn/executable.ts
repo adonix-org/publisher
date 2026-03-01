@@ -4,15 +4,13 @@ import { Lifecycle } from "../lifecycle";
 export abstract class Executable extends Lifecycle {
     private _child: ChildProcessWithoutNullStreams | null = null;
 
-    constructor(private readonly path: string) {
-        super();
-    }
+    protected abstract executable(): string;
 
-    protected abstract args(): Promise<string[]>;
+    protected abstract args(): string[];
 
     protected get child(): ChildProcessWithoutNullStreams {
         if (!this._child) {
-            throw new Error(`${this.path} is not running.`);
+            throw new Error(`${this.executable} is not running.`);
         }
         return this._child;
     }
@@ -20,7 +18,7 @@ export abstract class Executable extends Lifecycle {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this._child = spawn(this.path, await this.args());
+        this._child = spawn(this.executable(), this.args());
 
         this._child.stderr.on("data", (buffer: Buffer) => {
             this.stderr(buffer);

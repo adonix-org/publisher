@@ -10,7 +10,7 @@ export class Rtsp extends Ffmpeg implements StreamProvider {
         super();
     }
 
-    protected override async args(): Promise<string[]> {
+    protected override args(): string[] {
         const args = [
             "-loglevel",
             "fatal",
