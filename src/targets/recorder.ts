@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { StreamProvider } from "../sources/rtsp";
 import { PassThrough } from "node:stream";
-import { UniqueFile } from "../utils/unique";
+import { Filename } from "../utils/filename";
 import path from "node:path";
 
 export class Recorder extends Ffmpeg {
@@ -15,10 +15,7 @@ export class Recorder extends Ffmpeg {
     }
 
     protected override async args(): Promise<string[]> {
-        const filename = await new UniqueFile(
-            this.folder,
-            "movie",
-        ).getFilename();
+        const filename = await new Filename(this.folder, "movie").getFilename();
 
         const filepath = path.join(
             this.folder,

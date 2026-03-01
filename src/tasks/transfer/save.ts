@@ -1,7 +1,7 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { ImageFrame, ImageTask } from "..";
-import { UniqueFile } from "../../utils/unique";
+import { Filename } from "../../utils/filename";
 
 const mimeToExt: Record<string, string> = {
     "image/jpeg": "jpg",
@@ -12,10 +12,10 @@ const mimeToExt: Record<string, string> = {
 };
 
 export class Save implements ImageTask {
-    private readonly file: UniqueFile;
+    private readonly file: Filename;
 
     constructor(folder: string, name: string = "image") {
-        this.file = new UniqueFile(folder, name);
+        this.file = new Filename(folder, name);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
