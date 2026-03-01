@@ -4,6 +4,7 @@ import { DataConsumer } from "./streams/transport";
 
 export class Rtsp extends Ffmpeg {
     private readonly consumers: DataConsumer[] = [];
+    private buffers: PassThrough[] = [];
 
     constructor(url: string) {
         const args = [
@@ -33,18 +34,24 @@ export class Rtsp extends Ffmpeg {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
+        this.buffers = [];
+
         for (const consumer of this.consumers) {
             const buffer = new PassThrough({ highWaterMark: 256 * 1024 });
             this.child.stdout.pipe(buffer).pipe(consumer.getWritable());
+            this.buffers.push(buffer);
         }
     }
 
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
-        for (const consumer of this.consumers) {
-            consumer.getWritable().end();
+        for (const buffer of this.buffers) {
+            buffer.end();
+            buffer.unpipe();
         }
+
+        this.buffers = [];
     }
 
     public override toString(): string {
