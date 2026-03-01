@@ -17,9 +17,8 @@ export class BufferedPipe {
     }
 
     public async end(): Promise<void> {
-        if (!this.buffer) return;
-
         const buffer = this.buffer;
+        if (!buffer) return;
 
         this.input.unpipe(buffer);
 
@@ -27,8 +26,6 @@ export class BufferedPipe {
             buffer.once("finish", resolve);
             buffer.end();
         });
-
-        this.buffer = undefined;
     }
 
     public toString(): string {
