@@ -39,7 +39,6 @@ export class Recorder extends Ffmpeg {
             "-copyts",
             "-c",
             "copy",
-            "-start_at_zero",
             filepath,
         ];
 
