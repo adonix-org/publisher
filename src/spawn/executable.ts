@@ -51,11 +51,9 @@ export abstract class Executable extends Lifecycle {
             child.kill();
 
             const forceTimer = setTimeout(() => {
-                if (!child.killed) {
-                    console.warn(this.toString(), "terminating...");
-                    child.kill("SIGKILL");
-                }
-            }, 5000);
+                console.warn(this.toString(), "terminating...");
+                child.kill("SIGKILL");
+            }, 3000);
         });
     }
 
