@@ -3,12 +3,13 @@ import { Agent } from "./agent";
 import { Remote } from "../tasks/remote/remote";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { Timer } from "../tasks/observe/timer";
+import { PyServer } from "../spawn/pyserver";
 
 export class Motion extends Agent {
     constructor() {
         const source = new C121();
 
-        super(source);
+        super(source, new PyServer());
 
         this.addTask(new Timer(new Remote("yolo"), 60_000));
         this.addTask(new Timer(new Remote("passthrough")));
