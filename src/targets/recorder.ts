@@ -58,7 +58,7 @@ export class Recorder extends Ffmpeg {
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.end();
+        await this.pipe?.stop();
 
         await super.onstop();
     }

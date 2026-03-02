@@ -57,7 +57,7 @@ export class StreamDecoder extends Ffmpeg implements ImageSource {
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.end();
+        await this.pipe?.stop();
 
         await super.onstop();
     }

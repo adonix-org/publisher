@@ -1,40 +1,58 @@
 import { PassThrough, Readable, Writable } from "node:stream";
+import { finished } from "node:stream/promises";
 
 export class BufferedPipe {
-    private buffer: PassThrough | undefined;
+    private branch = new PassThrough({
+        highWaterMark: 1024 * 1024,
+        allowHalfOpen: true,
+    });
+
+    private ended = false;
 
     constructor(
-        private readonly input: Readable,
+        private readonly source: Readable,
         private readonly output: Writable,
     ) {}
 
     public async start(): Promise<void> {
-        this.input.resume();
+        if (this.ended) return;
 
-        this.buffer = new PassThrough({ highWaterMark: 256 * 1024 });
-        this.buffer.pipe(this.output);
+        this.source.pipe(this.branch, { end: false });
+        this.branch.pipe(this.output, { end: false });
 
-        this.input.pipe(this.buffer);
-    }
+        this.output.on("error", (err: NodeJS.ErrnoException) => {
+            if (err.code === "EPIPE" || err.code === "ECONNRESET") {
+                console.warn(
+                    this.toString(),
+                    `slow/broken listener detected (${err.code}) — isolating`,
+                );
+            } else {
+                console.error(this.toString(), `output error:`, err);
+            }
 
-    public async end(): Promise<void> {
-        const buffer = this.buffer;
-        if (!buffer) return;
-
-        this.input.unpipe(buffer);
-        await new Promise<void>((resolve) => {
-            buffer.once("finish", resolve);
-            buffer.end();
+            this.stop();
         });
 
-        buffer.unpipe(this.output);
-        await new Promise<void>((resolve) => {
-            this.output.once("finish", resolve);
-            this.output.end();
-        });
+        this.output.once("close", () => this.stop());
+
+        return;
     }
 
-    public toString(): string {
-        return `[BufferedPipe]`;
+    public async stop(): Promise<void> {
+        if (this.ended) return;
+        this.ended = true;
+
+        this.branch.unpipe(this.output);
+        this.branch.end();
+
+        try {
+            await finished(this.branch, { writable: true, readable: false });
+        } catch (err) {
+            console.error(this.toString(), err);
+        }
+    }
+
+    public toString() {
+        return "[BufferedPipe]";
     }
 }

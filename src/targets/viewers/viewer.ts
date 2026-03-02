@@ -22,7 +22,7 @@ export abstract class Viewer extends Executable implements ImageTask {
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.end();
+        await this.pipe?.stop();
 
         await super.onstop();
     }
