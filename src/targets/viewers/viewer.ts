@@ -14,7 +14,7 @@ export abstract class Viewer extends Executable implements ImageTask {
         await super.onstart();
 
         this.pipe = new BufferedPipe(
-            this.broadcast.getReadable(),
+            this.broadcast.getStream(),
             this.child.stdin,
         );
 

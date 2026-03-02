@@ -34,7 +34,7 @@ export class Rtsp extends Ffmpeg implements Broadcast {
         this.child.stdout.resume();
     }
 
-    public getReadable(): Readable {
+    public getStream(): Readable {
         return this.child.stdout;
     }
 

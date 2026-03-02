@@ -45,7 +45,7 @@ export class StreamDecoder extends Ffmpeg implements ImageSource {
         await super.onstart();
 
         this.pipe = new BufferedPipe(
-            this.broadcast.getReadable(),
+            this.broadcast.getStream(),
             this.child.stdin,
         );
 
