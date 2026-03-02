@@ -12,7 +12,7 @@ const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 export class C121 extends Lifecycle implements ImageSource {
     private readonly rtsp: Rtsp = new Rtsp(C121_RTSP_URL);
     private readonly viewer: Viewer = new FfplayViewer(this.rtsp, "mpegts");
-    private readonly mjpeg: MJpeg = new MJpeg(this.rtsp, new LiveStream(), 1);
+    private readonly mjpeg: MJpeg = new MJpeg(this.rtsp, new LiveStream(1), 1);
 
     constructor() {
         super();
