@@ -2,12 +2,12 @@ import { Broadcast } from "../../sources/broadcast";
 import { ImageTask } from "../../tasks";
 import { Viewer } from "./viewer";
 
-type DataFormat = "mjpeg" | "mpegts";
+type FfplayInputFormat = "mjpeg" | "mpegts";
 
 export class FfplayViewer extends Viewer implements ImageTask {
     constructor(
         broadcast: Broadcast,
-        private readonly format: DataFormat,
+        private readonly format: FfplayInputFormat,
         private readonly title: string = "Publisher",
     ) {
         super(broadcast);
