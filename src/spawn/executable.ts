@@ -18,19 +18,16 @@ export abstract class Executable extends Lifecycle {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this._child = spawn(this.executable(), this.args());
-
-        this._child.stderr.on("data", (buffer: Buffer) => {
-            this.stderr(buffer);
+        this._child = spawn(this.executable(), this.args(), {
+            stdio: ["pipe", "pipe", "pipe"],
         });
+
+        this._child.stderr.resume();
+        this._child.stdout.resume();
 
         this._child.once("exit", async () => {
             this._child = null;
         });
-    }
-
-    protected stderr(buffer: Buffer): void {
-        console.error(buffer.toString());
     }
 
     protected override async onstop(): Promise<void> {

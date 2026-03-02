@@ -12,7 +12,7 @@ export class PyServer extends Executable {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.child.stdout?.on("data", (data) => {
+        this.child.stdout.on("data", (data) => {
             const msg = data.toString().trim();
             if (!msg) return;
 
@@ -30,10 +30,6 @@ export class PyServer extends Executable {
                 }
             });
         });
-    }
-
-    protected override stderr(): void {
-        return;
     }
 
     public override toString(): string {

@@ -1,7 +1,7 @@
 import { AgentSource } from "../agents";
 import { Lifecycle } from "../lifecycle";
 import { MJpeg } from "../targets/mjpeg";
-import { FfplayViewer } from "../targets/viewers/ffplay";
+import { MpvViewer } from "../targets/viewers/mpv";
 import { Viewer } from "../targets/viewers/viewer";
 import { ImageFrame } from "../tasks";
 import { Rtsp } from "./rtsp";
@@ -11,7 +11,10 @@ const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 export class C121 extends Lifecycle implements AgentSource {
     private readonly camera: Rtsp = new Rtsp(C121_RTSP_URL);
-    private readonly viewer: Viewer = new FfplayViewer(this.camera, "mpegts");
+    private readonly viewer: Viewer = new MpvViewer(
+        this.camera,
+        "C121 - Front Yard",
+    );
     private readonly source: AgentSource = new MJpeg(
         this.camera,
         new LiveStream(1),
