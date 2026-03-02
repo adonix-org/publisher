@@ -1,23 +1,24 @@
 import { ImageSource } from ".";
 import { Lifecycle } from "../lifecycle";
 import { MJpeg } from "../targets/mjpeg";
-import { MpvViewer } from "../targets/viewers/mpv";
+import { FfplayViewer } from "../targets/viewers/ffplay";
+import { Viewer } from "../targets/viewers/viewer";
 import { ImageFrame } from "../tasks";
 import { Rtsp } from "./rtsp";
-import { CameraStream } from "./streams/camera";
+import { LiveStream } from "./streams/live";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 export class C121 extends Lifecycle implements ImageSource {
     private readonly rtsp: Rtsp = new Rtsp(C121_RTSP_URL);
-    private readonly mpv: MpvViewer = new MpvViewer(this.rtsp);
-    private readonly mjpeg: MJpeg = new MJpeg(this.rtsp, new CameraStream(), 1);
+    private readonly viewer: Viewer = new FfplayViewer(this.rtsp, "mpegts");
+    private readonly mjpeg: MJpeg = new MJpeg(this.rtsp, new LiveStream(), 1);
 
     constructor() {
         super();
 
         this.register(this.rtsp);
-        this.register(this.mpv);
+        this.register(this.viewer);
         this.register(this.mjpeg);
     }
 

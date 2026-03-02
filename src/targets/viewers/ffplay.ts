@@ -32,6 +32,6 @@ export class FfplayViewer extends Viewer implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[mpv]`;
+        return `${super.toString()}[ffplay]`;
     }
 }

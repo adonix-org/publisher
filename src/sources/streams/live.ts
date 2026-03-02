@@ -1,9 +1,8 @@
 import { ImageFrame } from "../../tasks";
 import { JpegStream } from "./formats";
 
-export class CameraStream extends JpegStream {
+export class LiveStream extends JpegStream {
     protected onimage(buffer: Buffer): ImageFrame {
-        console.info(this.toString(), buffer.length);
         return {
             image: { buffer, contentType: "image/jpeg" },
             seek: Date.now() / 1000,
@@ -13,6 +12,6 @@ export class CameraStream extends JpegStream {
     }
 
     public override toString(): string {
-        return `${super.toString()}[CameraStream]`;
+        return `${super.toString()}[LiveStream]`;
     }
 }
