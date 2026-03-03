@@ -5,14 +5,24 @@ import { application } from "./application";
 import { Rtsp } from "./sources/rtsp";
 import { MpvViewer } from "./targets/viewers/mpv";
 
-import { Recorder } from "./targets/recorder";
+import { Recording } from "./targets/recording";
+import { PreRollBuffer } from "./targets/preroll";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 const broadcast = new Rtsp(C121_RTSP_URL);
 
+const loop = new PreRollBuffer(broadcast);
 const mpv = new MpvViewer(broadcast);
-const recorder = new Recorder(broadcast, "/Users/tybusby/Camera/recordings");
+const recorder = new Recording(loop, "/Users/tybusby/Camera/recordings", "mp4");
 
-application.register(broadcast, mpv, recorder);
+application.register(broadcast, loop, mpv);
 application.start();
+
+setTimeout(async () => {
+    await recorder.start();
+
+    setTimeout(async () => {
+        await recorder.stop();
+    }, 5_000);
+}, 10_000);

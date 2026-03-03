@@ -5,7 +5,7 @@ import path from "node:path";
 import { BufferedPipe } from "./pipe";
 import { Broadcast } from "../sources/broadcast";
 
-export class Recorder extends Ffmpeg {
+export class Recording extends Ffmpeg {
     private pipe: BufferedPipe | undefined;
 
     constructor(
@@ -54,6 +54,7 @@ export class Recorder extends Ffmpeg {
             this.broadcast.getStream(),
             this.child.stdin,
         );
+
         await this.pipe.start();
     }
 
