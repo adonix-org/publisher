@@ -6,13 +6,13 @@ import { Rtsp } from "./sources/rtsp";
 import { MpvViewer } from "./targets/viewers/mpv";
 
 import { Recording } from "./targets/recording";
-import { PreRollBuffer } from "./targets/preroll";
+import { PreRoll } from "./targets/preroll";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 const broadcast = new Rtsp(C121_RTSP_URL);
 
-const loop = new PreRollBuffer(broadcast);
+const loop = new PreRoll(broadcast);
 const mpv = new MpvViewer(broadcast);
 const recorder = new Recording(loop, "/Users/tybusby/Camera/recordings", "mp4");
 

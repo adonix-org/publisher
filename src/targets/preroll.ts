@@ -2,7 +2,7 @@ import { PassThrough, Readable } from "stream";
 import { Lifecycle } from "../lifecycle";
 import { Broadcast } from "../sources/broadcast";
 
-export class PreRollBuffer extends Lifecycle implements Broadcast {
+export class PreRoll extends Lifecycle implements Broadcast {
     private readonly stream = new PassThrough();
     private readonly buffer: Buffer[] = [];
     private size = 0;

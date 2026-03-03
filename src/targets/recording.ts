@@ -17,7 +17,7 @@ export class Recording extends Ffmpeg {
     }
 
     protected override args(): string[] {
-        const filename = new Filename(this.folder, "movie").getFilename();
+        const filename = new Filename(this.folder, "video").getFilename();
 
         const filepath = path.join(
             this.folder,
@@ -65,6 +65,6 @@ export class Recording extends Ffmpeg {
     }
 
     public override toString(): string {
-        return `${super.toString()}[Recorder]`;
+        return `${super.toString()}[Recording]`;
     }
 }
