@@ -14,15 +14,19 @@ const broadcast = new Rtsp(C121_RTSP_URL);
 
 const loop = new PreRoll(broadcast);
 const mpv = new MpvViewer(broadcast);
-const recorder = new Recording(loop, "/Users/tybusby/Camera/recordings", "mp4");
+const recording = new Recording(
+    loop,
+    "/Users/tybusby/Camera/recordings",
+    "mp4",
+);
 
 application.register(broadcast, loop, mpv);
 application.start();
 
 setTimeout(async () => {
-    await recorder.start();
+    await recording.start();
 
     setTimeout(async () => {
-        await recorder.stop();
+        await recording.stop();
     }, 5_000);
 }, 10_000);

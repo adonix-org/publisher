@@ -21,9 +21,7 @@ export class PreRoll extends Lifecycle implements Broadcast {
             out.write(chunk);
         }
 
-        this.stream.pipe(out);
-
-        return out;
+        return this.stream.pipe(out);
     }
 
     protected override async onstart(): Promise<void> {
