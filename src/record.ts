@@ -12,21 +12,21 @@ const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 const broadcast = new Rtsp(C121_RTSP_URL);
 
-const loop = new PreRoll(broadcast);
+const preroll = new PreRoll(broadcast);
 const mpv = new MpvViewer(broadcast);
 const recording = new Recording(
-    loop,
+    preroll,
     "/Users/tybusby/Camera/recordings",
     "mp4",
 );
 
-application.register(broadcast, loop, mpv);
+application.register(broadcast, preroll, mpv);
 application.start();
 
-setTimeout(async () => {
-    await recording.start();
-
-    setTimeout(async () => {
+setInterval(async () => {
+    if (!recording.running) {
+        await recording.start();
+    } else {
         await recording.stop();
-    }, 5_000);
-}, 10_000);
+    }
+}, 5_000);

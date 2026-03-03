@@ -17,11 +17,17 @@ export class PreRoll extends Lifecycle implements Broadcast {
     public getStream(): Readable {
         const out = new PassThrough();
 
+        this.stream.pause();
+
         for (const chunk of this.buffer) {
             out.write(chunk);
         }
 
-        return this.stream.pipe(out);
+        this.stream.pipe(out);
+
+        this.stream.resume();
+
+        return out;
     }
 
     protected override async onstart(): Promise<void> {
