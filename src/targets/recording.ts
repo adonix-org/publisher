@@ -52,6 +52,16 @@ export class Recording extends Ffmpeg {
 
         this.stream = this.broadcast.subscribe();
         this.stream.pipe(this.child.stdin);
+
+        const cleanup = () => {
+            if (this.stream) {
+                this.stream.destroy();
+                this.stream = undefined;
+            }
+        };
+
+        this.child.stdin.on("close", cleanup);
+        this.child.stdin.on("error", cleanup);
     }
 
     public override toString(): string {

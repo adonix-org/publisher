@@ -15,6 +15,16 @@ export abstract class Viewer extends Executable implements ImageTask {
 
         this.stream = this.broadcast.subscribe();
         this.stream.pipe(this.child.stdin);
+
+        const cleanup = () => {
+            if (this.stream) {
+                this.stream.destroy();
+                this.stream = undefined;
+            }
+        };
+
+        this.child.stdin.on("close", cleanup);
+        this.child.stdin.on("error", cleanup);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
