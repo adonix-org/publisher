@@ -13,25 +13,20 @@ export class PreRoll extends Lifecycle implements Broadcast {
         super();
     }
 
-    public getStream(): Readable {
+    private subscribers = new Set<PassThrough>();
+
+    public subscribe(): Readable {
         const out = new PassThrough();
 
-        // 1️⃣ Write preroll first
+        // send preroll
         for (const chunk of this.buffer) {
             out.write(chunk);
         }
 
-        // 2️⃣ Hook live upstream directly to this consumer
-        const upstream = this.broadcast.getStream();
-
-        const onData = (chunk: Buffer) => {
-            out.write(chunk);
-        };
-
-        upstream.on("data", onData);
+        this.subscribers.add(out);
 
         const cleanup = () => {
-            upstream.off("data", onData);
+            this.subscribers.delete(out);
             out.end();
         };
 
@@ -44,19 +39,26 @@ export class PreRoll extends Lifecycle implements Broadcast {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.buffer.length = 0;
-        this.size = 0;
-
-        const upstream = this.broadcast.getStream();
+        const upstream = this.broadcast.subscribe();
 
         upstream.on("data", (chunk: Buffer) => {
             // maintain preroll
             this.buffer.push(chunk);
             this.size += chunk.length;
-
             while (this.size > this.maxSize && this.buffer.length) {
                 const removed = this.buffer.shift()!;
                 this.size -= removed.length;
+            }
+
+            // fan out to all subscribers
+            for (const sub of this.subscribers) {
+                sub.write(chunk);
+            }
+        });
+
+        upstream.on("end", () => {
+            for (const sub of this.subscribers) {
+                sub.end();
             }
         });
     }

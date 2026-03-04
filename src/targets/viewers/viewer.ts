@@ -1,10 +1,10 @@
+import { Readable } from "node:stream";
 import { Broadcast } from "../../sources/broadcast";
 import { Executable } from "../../spawn/executable";
 import { ImageFrame, ImageTask } from "../../tasks";
-import { BufferedPipe } from "../pipe";
 
 export abstract class Viewer extends Executable implements ImageTask {
-    private pipe: BufferedPipe | undefined;
+    private stream: Readable | undefined;
 
     constructor(private readonly broadcast: Broadcast) {
         super();
@@ -13,22 +13,24 @@ export abstract class Viewer extends Executable implements ImageTask {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        this.pipe = new BufferedPipe(
-            this.broadcast.getStream(),
-            this.child.stdin,
-        );
-
-        await this.pipe.start();
+        this.stream = this.broadcast.subscribe();
+        this.stream.pipe(this.child.stdin);
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.stop();
+        if (this.stream) {
+            this.stream.unpipe(this.child.stdin);
+            this.child.stdin.end();
+
+            this.stream.destroy();
+            this.stream = undefined;
+        }
 
         await super.onstop();
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        if (!this.running) return frame;
+        this.child.stdin.write(frame.image.buffer);
 
         return frame;
     }

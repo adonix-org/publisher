@@ -2,11 +2,11 @@ import { ImageSource } from "..";
 import { ImageDecoder } from "./image";
 import { Ffmpeg } from "../../spawn/ffmpeg";
 import { ImageFrame } from "../../tasks";
-import { BufferedPipe } from "../../targets/pipe";
 import { Broadcast } from "../broadcast";
+import { Readable } from "node:stream";
 
 export class StreamDecoder extends Ffmpeg implements ImageSource {
-    private pipe: BufferedPipe | undefined;
+    private stream: Readable | undefined;
 
     constructor(
         private readonly broadcast: Broadcast,
@@ -48,16 +48,18 @@ export class StreamDecoder extends Ffmpeg implements ImageSource {
             this.decoder.ondata(chunk);
         });
 
-        this.pipe = new BufferedPipe(
-            this.broadcast.getStream(),
-            this.child.stdin,
-        );
-
-        await this.pipe.start();
+        this.stream = this.broadcast.subscribe();
+        this.stream.pipe(this.child.stdin);
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.stop();
+        if (this.stream) {
+            this.stream.unpipe(this.child.stdin);
+            this.child.stdin.end();
+
+            this.stream.destroy();
+            this.stream = undefined;
+        }
 
         await super.onstop();
     }

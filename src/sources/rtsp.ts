@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { PassThrough, Readable } from "node:stream";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { Broadcast } from "./broadcast";
 
@@ -31,11 +31,34 @@ export class Rtsp extends Ffmpeg implements Broadcast {
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
+        this.child.stdout.on("data", (chunk: Buffer) => {
+            for (const subscriber of this.subscribers) {
+                subscriber.write(chunk);
+            }
+        });
+
         this.child.stdout.resume();
     }
 
-    public getStream(): Readable {
-        return this.child.stdout;
+    private readonly subscribers: Set<PassThrough> = new Set();
+
+    public subscribe(): Readable {
+        const subscriber = new PassThrough({ highWaterMark: 128 * 1024 });
+
+        this.subscribers.add(subscriber);
+
+        const cleanup = () => {
+            this.subscribers.delete(subscriber);
+            subscriber.removeListener("end", cleanup);
+            subscriber.removeListener("close", cleanup);
+            subscriber.removeListener("error", cleanup);
+        };
+        subscriber.on("end", cleanup);
+        subscriber.on("close", cleanup);
+        subscriber.on("error", cleanup);
+        subscriber.on("data", () => {});
+
+        return subscriber;
     }
 
     public override toString(): string {

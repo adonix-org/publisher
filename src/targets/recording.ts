@@ -1,12 +1,12 @@
+import { Readable } from "node:stream";
 import { promises as fs } from "node:fs";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { Filename } from "../utils/filename";
 import path from "node:path";
-import { BufferedPipe } from "./pipe";
 import { Broadcast } from "../sources/broadcast";
 
 export class Recording extends Ffmpeg {
-    private pipe: BufferedPipe | undefined;
+    private stream: Readable | undefined;
 
     constructor(
         private readonly broadcast: Broadcast,
@@ -46,20 +46,22 @@ export class Recording extends Ffmpeg {
     }
 
     protected override async onstart(): Promise<void> {
-        await fs.mkdir(this.folder, { recursive: true });
-
         await super.onstart();
 
-        this.pipe = new BufferedPipe(
-            this.broadcast.getStream(),
-            this.child.stdin,
-        );
+        await fs.mkdir(this.folder, { recursive: true });
 
-        await this.pipe.start();
+        this.stream = this.broadcast.subscribe();
+        this.stream.pipe(this.child.stdin);
     }
 
     protected override async onstop(): Promise<void> {
-        await this.pipe?.stop();
+        if (this.stream) {
+            this.stream.unpipe(this.child.stdin);
+            this.child.stdin.end();
+
+            this.stream.destroy();
+            this.stream = undefined;
+        }
 
         await super.onstop();
     }
