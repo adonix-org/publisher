@@ -21,16 +21,12 @@ const recording = new Recording(
 application.register(broadcast, mpv);
 application.start();
 
-async function baselineLoop() {
-    while (true) {
-        await new Promise((r) => setTimeout(r, 3_000));
+while (true) {
+    await new Promise((r) => setTimeout(r, 3_000));
 
-        await recording.start();
+    await recording.start();
 
-        await new Promise((r) => setTimeout(r, 10_000));
+    await new Promise((r) => setTimeout(r, 10_000));
 
-        await recording.stop();
-    }
+    await recording.stop();
 }
-
-baselineLoop();

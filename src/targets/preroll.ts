@@ -1,8 +1,10 @@
-import { Readable, PassThrough } from "stream";
+import { Readable, PassThrough } from "node:stream";
 import { Lifecycle } from "../lifecycle";
 import { Broadcast } from "../sources/broadcast";
 
 export class PreRoll extends Lifecycle implements Broadcast {
+    private readonly subscribers = new Set<PassThrough>();
+
     private readonly buffer: Buffer[] = [];
     private size = 0;
 
@@ -12,8 +14,6 @@ export class PreRoll extends Lifecycle implements Broadcast {
     ) {
         super();
     }
-
-    private subscribers = new Set<PassThrough>();
 
     public subscribe(): Readable {
         const out = new PassThrough();
