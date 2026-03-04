@@ -55,6 +55,6 @@ export abstract class Executable extends Lifecycle {
     }
 
     public override toString(): string {
-        return `[Executable]`;
+        return `${super.toString()}[Executable]`;
     }
 }
