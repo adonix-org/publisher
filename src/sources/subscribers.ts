@@ -1,7 +1,7 @@
 import { PassThrough } from "node:stream";
 
 export class Subscribers {
-    private static readonly DEFAULT_HIGHWATER = 256 * 1024;
+    private static readonly DEFAULT_HIGHWATER = 2 * 1024 * 1024;
     private readonly subscribers: Set<PassThrough> = new Set();
 
     constructor(

@@ -12,7 +12,7 @@ const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
 const broadcast = new Rtsp(C121_RTSP_URL);
 
-const preroll = new PreRoll(broadcast);
+const preroll = new PreRoll(broadcast, 5);
 const mpv = new MpvViewer(broadcast);
 const recording = new Recording(
     preroll,
@@ -23,10 +23,13 @@ const recording = new Recording(
 application.register(broadcast, preroll, mpv);
 application.start();
 
-await new Promise((r) => setTimeout(r, 10_000));
+while (true) {
+    await new Promise((r) => setTimeout(r, 5_000));
+    console.info("size:", preroll.size, "duration:", preroll.duration);
 
-await recording.start();
+    await recording.start();
 
-await new Promise((r) => setTimeout(r, 5_000));
+    await new Promise((r) => setTimeout(r, 5_000));
 
-await recording.stop();
+    await recording.stop();
+}
