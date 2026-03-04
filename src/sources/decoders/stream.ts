@@ -6,7 +6,7 @@ import { Broadcast } from "../broadcast";
 import { Readable } from "node:stream";
 
 export class StreamDecoder extends Ffmpeg implements ImageSource {
-    private stream: Readable | undefined;
+    private stream: Readable | null = null;
 
     constructor(
         private readonly broadcast: Broadcast,
@@ -54,7 +54,7 @@ export class StreamDecoder extends Ffmpeg implements ImageSource {
         const cleanup = () => {
             if (this.stream) {
                 this.stream.destroy();
-                this.stream = undefined;
+                this.stream = null;
             }
         };
 

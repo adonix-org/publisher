@@ -3,7 +3,7 @@ import { Broadcast } from "../../sources/broadcast";
 import { Executable } from "../../spawn/executable";
 
 export abstract class Viewer extends Executable {
-    private stream: Readable | undefined;
+    private stream: Readable | null = null;
 
     constructor(private readonly broadcast: Broadcast) {
         super();
@@ -18,7 +18,7 @@ export abstract class Viewer extends Executable {
         const cleanup = () => {
             if (this.stream) {
                 this.stream.destroy();
-                this.stream = undefined;
+                this.stream = null;
             }
         };
 

@@ -8,7 +8,7 @@ import { Broadcast } from "../sources/broadcast";
 type SupportedFileFormat = "mp4" | "mkv" | "mov" | "ts";
 
 export class Recording extends Ffmpeg {
-    private stream: Readable | undefined;
+    private stream: Readable | null = null;
 
     constructor(
         private readonly broadcast: Broadcast,
@@ -55,7 +55,7 @@ export class Recording extends Ffmpeg {
         const cleanup = () => {
             if (this.stream) {
                 this.stream.destroy();
-                this.stream = undefined;
+                this.stream = null;
             }
         };
 
