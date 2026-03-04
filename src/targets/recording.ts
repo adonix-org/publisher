@@ -66,7 +66,7 @@ export class Recording extends Ffmpeg {
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
-        this.quit(3_000);
+        this.quit(5_000);
     }
 
     protected override async quit(afterMs?: number): Promise<void> {

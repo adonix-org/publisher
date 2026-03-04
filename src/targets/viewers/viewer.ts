@@ -29,7 +29,13 @@ export abstract class Viewer extends Executable {
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
+        await this.quit(5_000);
+    }
+
+    protected override async quit(afterMs?: number): Promise<void> {
         this.child.stdin.end();
+
+        await super.quit(afterMs);
     }
 
     public override toString(): string {
