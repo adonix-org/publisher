@@ -1,9 +1,10 @@
-import { PassThrough, Readable } from "node:stream";
+import { Readable } from "node:stream";
 import { Ffmpeg } from "../spawn/ffmpeg";
 import { Broadcast } from "./broadcast";
+import { Subscribers } from "./subscribers";
 
 export class Rtsp extends Ffmpeg implements Broadcast {
-    private readonly subscribers: Set<PassThrough> = new Set();
+    private readonly subscribers = new Subscribers();
 
     constructor(private readonly url: string) {
         super();
@@ -34,41 +35,14 @@ export class Rtsp extends Ffmpeg implements Broadcast {
         await super.onstart();
 
         this.child.stdout.on("data", (chunk) => {
-            for (const subscriber of this.subscribers) {
-                const free = subscriber.write(chunk);
-                if (!free) {
-                    const overflow =
-                        subscriber.writableLength -
-                        subscriber.writableHighWaterMark;
-                    console.warn(
-                        this.toString(),
-                        `subscriber buffer memory exceeded ${overflow} bytes`,
-                    );
-                }
-            }
+            this.subscribers.send(chunk);
         });
 
         this.child.stdout.resume();
     }
 
     public subscribe(): Readable {
-        const subscriber = new PassThrough({ highWaterMark: 256 * 1024 });
-
-        this.subscribers.add(subscriber);
-
-        const cleanup = () => {
-            this.subscribers.delete(subscriber);
-            subscriber.removeListener("end", cleanup);
-            subscriber.removeListener("close", cleanup);
-            subscriber.removeListener("error", cleanup);
-        };
-
-        subscriber.on("end", cleanup);
-        subscriber.on("close", cleanup);
-        subscriber.on("error", cleanup);
-        subscriber.resume();
-
-        return subscriber;
+        return this.subscribers.subscribe();
     }
 
     public override toString(): string {
