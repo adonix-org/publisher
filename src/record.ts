@@ -25,7 +25,6 @@ application.start();
 
 while (true) {
     await new Promise((r) => setTimeout(r, 5_000));
-    console.info("size:", preroll.size, "duration:", preroll.duration);
 
     await recording.start();
 

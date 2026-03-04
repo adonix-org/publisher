@@ -41,6 +41,12 @@ export class Rtsp extends Ffmpeg implements Broadcast {
         this.child.stdout.resume();
     }
 
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
+        await this.kill();
+    }
+
     public subscribe(): Readable {
         return this.subscribers.subscribe();
     }

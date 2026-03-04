@@ -1,8 +1,7 @@
 import { Broadcast } from "../../sources/broadcast";
-import { ImageTask } from "../../tasks";
 import { Viewer } from "./viewer";
 
-export class MpvViewer extends Viewer implements ImageTask {
+export class MpvViewer extends Viewer {
     constructor(
         broadcast: Broadcast,
         private readonly title: string = "Publisher",

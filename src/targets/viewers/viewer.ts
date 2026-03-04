@@ -1,9 +1,8 @@
 import { Readable } from "node:stream";
 import { Broadcast } from "../../sources/broadcast";
 import { Executable } from "../../spawn/executable";
-import { ImageFrame, ImageTask } from "../../tasks";
 
-export abstract class Viewer extends Executable implements ImageTask {
+export abstract class Viewer extends Executable {
     private stream: Readable | undefined;
 
     constructor(private readonly broadcast: Broadcast) {
@@ -27,10 +26,10 @@ export abstract class Viewer extends Executable implements ImageTask {
         this.child.stdin.on("error", cleanup);
     }
 
-    public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        this.child.stdin.write(frame.image.buffer);
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
 
-        return frame;
+        this.child.stdin.end();
     }
 
     public override toString(): string {

@@ -1,10 +1,9 @@
 import { Broadcast } from "../../sources/broadcast";
-import { ImageTask } from "../../tasks";
 import { Viewer } from "./viewer";
 
 type FfplayInputFormat = "mjpeg" | "mpegts";
 
-export class FfplayViewer extends Viewer implements ImageTask {
+export class FfplayViewer extends Viewer {
     constructor(
         broadcast: Broadcast,
         private readonly format: FfplayInputFormat,
