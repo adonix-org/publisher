@@ -1,65 +1,57 @@
-import { Readable, PassThrough } from "node:stream";
+import { Readable } from "node:stream";
 import { Lifecycle } from "../lifecycle";
 import { Broadcast } from "../sources/broadcast";
+import { Subscribers } from "../sources/subscribers";
 
 export class PreRoll extends Lifecycle implements Broadcast {
-    private readonly subscribers = new Set<PassThrough>();
+    private readonly subscribers = new Subscribers(1024 * 1024);
+    private upstream: Readable | undefined;
 
     private readonly buffer: Buffer[] = [];
     private size = 0;
 
     constructor(
         private readonly broadcast: Broadcast,
-        private readonly maxSize: number = 128 * 1024,
+        private readonly maxSize: number = 1024 * 1024,
     ) {
         super();
     }
 
     public subscribe(): Readable {
-        const out = new PassThrough();
+        const subscriber = this.subscribers.subscribe();
 
-        // send preroll
         for (const chunk of this.buffer) {
-            out.write(chunk);
+            const free = subscriber.write(chunk);
+            if (!free) {
+                console.warn(
+                    this.toString(),
+                    `backpressure detected sending preroll`,
+                );
+            }
         }
 
-        this.subscribers.add(out);
-
-        const cleanup = () => {
-            this.subscribers.delete(out);
-            out.end();
-        };
-
-        out.on("close", cleanup);
-        out.on("error", cleanup);
-
-        return out;
+        return subscriber;
     }
 
     protected override async onstart(): Promise<void> {
         await super.onstart();
 
-        const upstream = this.broadcast.subscribe();
+        this.upstream = this.broadcast.subscribe();
 
-        upstream.on("data", (chunk: Buffer) => {
-            // maintain preroll
+        this.upstream.on("data", (chunk: Buffer) => {
             this.buffer.push(chunk);
+
+            this.subscribers.send(chunk);
+
             this.size += chunk.length;
             while (this.size > this.maxSize && this.buffer.length) {
                 const removed = this.buffer.shift()!;
                 this.size -= removed.length;
             }
-
-            // fan out to all subscribers
-            for (const sub of this.subscribers) {
-                sub.write(chunk);
-            }
         });
+    }
 
-        upstream.on("end", () => {
-            for (const sub of this.subscribers) {
-                sub.end();
-            }
-        });
+    public override toString(): string {
+        return `${super.toString()}[PreRoll]`;
     }
 }

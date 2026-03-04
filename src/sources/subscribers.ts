@@ -1,4 +1,4 @@
-import { PassThrough, Readable } from "node:stream";
+import { PassThrough } from "node:stream";
 
 export class Subscribers {
     private static readonly DEFAULT_HIGHWATER = 256 * 1024;
@@ -8,7 +8,7 @@ export class Subscribers {
         private readonly highwater: number = Subscribers.DEFAULT_HIGHWATER,
     ) {}
 
-    public subscribe(): Readable {
+    public subscribe(): PassThrough {
         const subscriber = new PassThrough({ highWaterMark: this.highwater });
 
         this.subscribers.add(subscriber);
