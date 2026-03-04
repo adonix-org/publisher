@@ -32,6 +32,12 @@ export class PyServer extends Executable {
         });
     }
 
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
+        await this.quit();
+    }
+
     public override toString(): string {
         return `${super.toString()}[🐍 \x1b[32mPyServer\x1b[0m]`;
     }

@@ -66,7 +66,13 @@ export class Recording extends Ffmpeg {
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
+        this.quit(3_000);
+    }
+
+    protected override async quit(afterMs?: number): Promise<void> {
         this.child.stdin.end();
+
+        await super.quit(afterMs);
     }
 
     public override toString(): string {

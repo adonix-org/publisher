@@ -30,27 +30,38 @@ export abstract class Executable extends Lifecycle {
         });
     }
 
-    protected async kill(): Promise<void> {
+    protected async quit(afterMs = 0): Promise<void> {
         return new Promise<void>((resolve) => {
             if (this._child === null || this._child.exitCode !== null) {
                 resolve();
                 return;
             }
+
             const child = this._child;
 
             const cleanup = () => {
-                clearTimeout(forceTimer);
+                clearTimeout(sigterm);
+                clearTimeout(sigkill);
                 resolve();
             };
 
             child.once("exit", cleanup);
             child.once("error", cleanup);
-            child.kill("SIGTERM");
 
-            const forceTimer = setTimeout(() => {
-                console.warn(this.toString(), "terminating...");
-                child.kill("SIGKILL");
-            }, 3000);
+            let sigkill: NodeJS.Timeout;
+            const sigterm = setTimeout(() => {
+                if (child.exitCode !== null) return;
+
+                console.debug(this.toString(), "sending SIGTERM");
+                child.kill("SIGTERM");
+
+                sigkill = setTimeout(() => {
+                    if (child.exitCode !== null) return;
+
+                    console.warn(this.toString(), "forcefully terminating...");
+                    child.kill("SIGKILL");
+                }, 3000);
+            }, afterMs);
         });
     }
 
