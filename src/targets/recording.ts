@@ -74,7 +74,7 @@ export class Recording extends Ffmpeg {
 
         this.child.stdin.end();
 
-        this.quit(5_000);
+        await this.quit(5_000);
     }
 
     private waitForIFrame(stream: Readable): Promise<void> {

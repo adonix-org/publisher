@@ -20,10 +20,12 @@ const recording = new Recording(
     "mp4",
 );
 
-application.register(broadcast, preroll, mpv);
+broadcast.register(preroll, mpv);
+
+application.register(broadcast);
 await application.start();
 
-while (true) {
+while (application.running) {
     await new Promise((r) => setTimeout(r, 5_000));
 
     await recording.start();
@@ -32,3 +34,4 @@ while (true) {
 
     await recording.stop();
 }
+
