@@ -4,7 +4,7 @@ import { Broadcast } from "./broadcast";
 import { Subscribers } from "./subscribers";
 
 export class Rtsp extends Ffmpeg implements Broadcast {
-    private readonly subscribers = new Subscribers();
+    private readonly subscribers = new Subscribers(2 * 1024 * 1024);
 
     constructor(private readonly url: string) {
         super();
