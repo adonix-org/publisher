@@ -8,7 +8,7 @@ import { ViewerTask } from "../tasks/observe/viewer";
 
 export class MonitorLive extends Agent {
     constructor() {
-        const source = new C121(15);
+        const source = new C121(1);
         const live = new LiveImage(source.getName());
         const session = new PublisherSession(live);
         const monitor = new Monitor();
