@@ -35,7 +35,6 @@ export class Recording extends Ffmpeg {
             "pipe:0",
             "-avoid_negative_ts",
             "make_zero",
-            "-copyts",
             "-c",
             "copy",
             filepath,
@@ -63,6 +62,12 @@ export class Recording extends Ffmpeg {
 
     protected override async onstop(): Promise<void> {
         await super.onstop();
+
+        this.stream?.unpipe();
+        this.stream?.destroy();
+        this.stream = null;
+
+        this.child.stdin.end();
 
         this.quit(5_000);
     }
