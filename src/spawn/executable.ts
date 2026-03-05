@@ -32,10 +32,26 @@ export abstract class Executable extends Lifecycle {
         this._child.stderr.resume();
         this._child.stdout.resume();
 
-        this._child.once("exit", async () => {
-            this._child = null;
-        });
+        this._child.once("exit", this.watch);
     }
+
+    public override async stop(): Promise<void> {
+        this._child?.removeListener("exit", this.watch);
+
+        await super.stop();
+    }
+
+    private watch = (): void => {
+        if (this._child === null) return;
+
+        console.warn(
+            this.toString(),
+            `exited with code ${this._child.exitCode}`,
+        );
+
+        this.stop();
+        this._child = null;
+    };
 
     protected async quit(afterMs = 0): Promise<void> {
         return new Promise<void>((resolve) => {
