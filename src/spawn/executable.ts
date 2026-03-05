@@ -41,7 +41,7 @@ export abstract class Executable extends Lifecycle {
         await super.stop();
     }
 
-    private watch = (): void => {
+    private readonly watch = (): void => {
         if (this._child === null) return;
 
         console.warn(
