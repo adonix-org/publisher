@@ -20,6 +20,7 @@ export class ViewerTask extends Executable implements ImageTask {
             "mjpeg",
             "-i",
             "pipe:0",
+            "-autoexit",
             "-window_title",
             this.title,
         ];
@@ -35,9 +36,11 @@ export class ViewerTask extends Executable implements ImageTask {
     }
 
     protected override async onstop(): Promise<void> {
+        await super.onstop();
+
         this.child.stdin.end();
 
-        await super.onstop();
+        await this.quit(5_000);
     }
 
     public override toString(): string {
