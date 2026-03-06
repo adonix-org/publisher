@@ -18,7 +18,13 @@ export class SimpleWatermark implements ImageTask {
         ctx.font = `${this.fontSize}px sans-serif`;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "right";
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
+        ctx.shadowBlur = 6;
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
 
         const x = img.width - this.padding;
         const y = img.height - this.padding;

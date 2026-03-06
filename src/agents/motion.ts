@@ -21,7 +21,7 @@ export class Motion extends Agent {
         this.addTask(new Label("yellow", 36));
         this.addTask(new Trail("orange"));
         this.addTask(new Watermark("LiveImage", 80, "northwest"));
-        this.addTask(new SimpleWatermark("LiveImage", 512));
+        this.addTask(new SimpleWatermark("LiveImage"));
         this.addTask(viewer);
     }
 
