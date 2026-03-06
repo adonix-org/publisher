@@ -1,10 +1,10 @@
 import { SaveImage } from "../tasks/transfer/save";
 import { Workflow } from "./workflow";
 import { RequiredFilter } from "../tasks/filter/requried";
-import { Remote } from "../tasks/remote/remote";
 import { Watermark } from "../tasks/transform/watermark";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { CategoryPath } from "../paths/category";
+import { Label } from "../tasks/transform/label";
 
 export class ExportSubject extends Workflow {
     constructor(
@@ -18,9 +18,8 @@ export class ExportSubject extends Workflow {
 
         this.addTask(new ConfidenceFilter(threshold, label));
         this.addTask(new RequiredFilter(label));
+        this.addTask(new Label());
         this.addTask(new Watermark("ActiveImage"));
-        this.addTask(new Remote("outline"));
-        this.addTask(new Remote("label"));
         this.addTask(new SaveImage(target));
     }
 
