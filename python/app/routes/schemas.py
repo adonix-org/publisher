@@ -10,6 +10,9 @@ class Annotation(BaseModel):
     width: int
     height: int
     confidence: float = Field(ge=0.0, le=1.0)
+    model: str
+    active: bool = True
+    reason: str = "detected"
 
 class ImageBuffer(BaseModel):
     contentType: str

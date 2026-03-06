@@ -7,6 +7,7 @@ import { Label } from "../tasks/draw/label";
 import { Trail } from "../tasks/draw/trail";
 import { Watermark } from "../tasks/draw/watermark";
 import { Drawing } from "../tasks/draw";
+import { ConfidenceFilter } from "../tasks/filter/confidence";
 
 export class Motion extends Agent {
     constructor() {
@@ -19,12 +20,13 @@ export class Motion extends Agent {
         this.register(viewer);
 
         const drawing = new Drawing(
-            new Label(),
-            new Trail(),
+            new Label("yellow", 36, "red"),
+            new Trail("yellow"),
             new Watermark("LiveMotion"),
         );
 
         this.addTask(new Remote("mega"));
+        this.addTask(new ConfidenceFilter(0.5, "animal"));
         this.addTask(drawing);
         this.addTask(viewer);
     }

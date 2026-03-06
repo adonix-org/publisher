@@ -36,6 +36,7 @@ def run_model(frame: ImageFrame, model_name: Literal["mega", "yolo"]) -> ImageFr
                     y=int(y1),
                     width=int(x2 - x1),
                     height=int(y2 - y1),
+                    model=model_name,
                     confidence=float(box.conf[0])
                 )
             )

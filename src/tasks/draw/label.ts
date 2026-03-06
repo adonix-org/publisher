@@ -5,29 +5,29 @@ import { Canvas } from "canvas";
 export class Label implements Stage {
     private readonly lineWidth = 2;
     private readonly textFont: string;
-    private readonly textAlign: CanvasTextAlign = "left";
-    private readonly textBaseline: CanvasTextBaseline = "top";
     private readonly textStrokeColor = "black";
     private readonly textFillColor = "white";
 
     constructor(
-        private readonly boxColor: string = "yellow",
+        private readonly color: string = "yellow",
         private readonly fontSize: number = 36,
+        private readonly inactiveColor?: string,
     ) {
         this.textFont = `${this.fontSize}px sans-serif`;
     }
 
     public async draw(frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
         const ctx = canvas.getContext("2d");
-
-        ctx.strokeStyle = this.boxColor;
-        ctx.lineWidth = this.lineWidth;
         ctx.font = this.textFont;
-        ctx.textAlign = this.textAlign;
-        ctx.textBaseline = this.textBaseline;
 
         for (const ann of frame.annotations) {
-            ctx.strokeStyle = this.boxColor;
+            const isActive = ann.active;
+            if (!isActive && !this.inactiveColor) continue;
+
+            const borderColor = isActive ? this.color : this.inactiveColor!;
+            const fillColor = this.textFillColor;
+
+            ctx.strokeStyle = borderColor;
             ctx.lineWidth = this.lineWidth;
             ctx.strokeRect(ann.x, ann.y, ann.width, ann.height);
 
@@ -43,15 +43,27 @@ export class Label implements Stage {
             ctx.textAlign = "center";
             ctx.textBaseline = "bottom";
             ctx.strokeText(text, centerX, topY);
-
-            ctx.fillStyle = this.textFillColor;
+            ctx.fillStyle = fillColor;
             ctx.fillText(text, centerX, topY);
+
+            ctx.font = `${this.fontSize}px sans-serif`;
+            ctx.textBaseline = "top";
+            ctx.textAlign = "center";
+            ctx.strokeStyle = this.textStrokeColor;
+            ctx.fillStyle = isActive ? borderColor : fillColor;
+
+            const infoText = isActive ? ann.model : ann.reason;
+            const infoY = ann.y + ann.height + 2;
+            ctx.strokeText(infoText, centerX, infoY);
+            ctx.fillText(infoText, centerX, infoY);
+
+            ctx.font = this.textFont;
         }
 
         return canvas;
     }
 
     public toString(): string {
-        return `[Label]`;
+        return `[Label: color=${this.color}${this.inactiveColor ? `, inactiveColor=${this.inactiveColor}` : ""}]`;
     }
 }

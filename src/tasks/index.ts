@@ -1,12 +1,15 @@
 type IMAGE_FRAME_SCHEMA_VERSION = 1;
 
 export interface Annotation {
-    label: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    confidence?: number;
+    readonly label: string;
+    readonly x: number;
+    readonly y: number;
+    readonly width: number;
+    readonly height: number;
+    readonly confidence?: number;
+    readonly model: string;
+    active: boolean;
+    reason: string;
 }
 
 export interface ImageBuffer<T extends Buffer | string = Buffer> {

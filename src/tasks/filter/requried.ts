@@ -8,8 +8,9 @@ export class RequiredFilter implements ImageTask {
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
-        const present = frame.annotations.some((annotation) =>
-            this.labels.has(annotation.label),
+        const present = frame.annotations.some(
+            (annotation) =>
+                annotation.active && this.labels.has(annotation.label),
         );
 
         return present ? frame : null;
