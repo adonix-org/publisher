@@ -5,7 +5,7 @@ import { Watermark } from "../tasks/transform/watermark";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { CategoryPath } from "../paths/category";
 import { Label } from "../tasks/transform/label";
-import { Transform } from "../tasks/transform";
+import { Drawing } from "../tasks/transform";
 
 export class ExportSubject extends Workflow {
     constructor(
@@ -17,13 +17,13 @@ export class ExportSubject extends Workflow {
 
         const target = new CategoryPath(folder, label, label);
 
-        const transform = new Transform();
-        transform.add(new Label());
-        transform.add(new Watermark("ActiveImage"));
+        const drawing = new Drawing();
+        drawing.add(new Label());
+        drawing.add(new Watermark("ActiveImage"));
 
         this.addTask(new ConfidenceFilter(threshold, label));
         this.addTask(new RequiredFilter(label));
-        this.addTask(transform);
+        this.addTask(drawing);
         this.addTask(new SaveImage(target));
     }
 

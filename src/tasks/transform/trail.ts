@@ -11,7 +11,7 @@ export class Trail implements Stage {
         private readonly maxPoints: number = 500,
     ) {}
 
-    public async transform(frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
+    public async draw(frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
         const ctx = canvas.getContext("2d");
 
         if (frame.annotations && frame.annotations.length > 0) {

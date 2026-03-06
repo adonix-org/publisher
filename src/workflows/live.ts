@@ -3,7 +3,7 @@ import { MaxSize } from "../tasks/filter/maxsize";
 import { Throttle } from "../tasks/filter/throttle";
 import { Workflow } from "./workflow";
 import { Watermark } from "../tasks/transform/watermark";
-import { Transform } from "../tasks/transform";
+import { Drawing } from "../tasks/transform";
 
 export class LiveImage extends Workflow {
     constructor(name: string) {
@@ -12,10 +12,10 @@ export class LiveImage extends Workflow {
         this.addTask(new Throttle(0.2));
         this.addTask(new MaxSize());
 
-        const transform = new Transform();
-        transform.add(new Watermark("ActiveImage"));
+        const drawing = new Drawing();
+        drawing.add(new Watermark("ActiveImage"));
 
-        this.addTask(transform);
+        this.addTask(drawing);
         this.addTask(new Publish(name));
     }
 

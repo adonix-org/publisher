@@ -2,16 +2,16 @@ import { Canvas, createCanvas, loadImage } from "canvas";
 import { ImageFrame, ImageTask } from "..";
 
 export interface Stage {
-    transform(frame: ImageFrame, canvas: Canvas): Promise<Canvas>;
+    draw(frame: ImageFrame, canvas: Canvas): Promise<Canvas>;
 
     toString(): string;
 }
 
-export class Transform implements ImageTask {
+export class Drawing implements ImageTask {
     private readonly stages: Stage[] = [];
 
-    public add(transformer: Stage): void {
-        this.stages.push(transformer);
+    public add(stage: Stage): void {
+        this.stages.push(stage);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
@@ -22,7 +22,7 @@ export class Transform implements ImageTask {
         ctx.drawImage(image, 0, 0);
 
         for (const stage of this.stages) {
-            canvas = await stage.transform(frame, canvas);
+            canvas = await stage.draw(frame, canvas);
         }
 
         frame.image.buffer = canvas.toBuffer("image/jpeg", { quality: 0.95 });
@@ -31,6 +31,6 @@ export class Transform implements ImageTask {
     }
 
     public toString(): string {
-        return "Transform";
+        return "Draw";
     }
 }

@@ -9,10 +9,7 @@ export class Watermark implements Stage {
         private readonly padding: number = 20,
     ) {}
 
-    public async transform(
-        _frame: ImageFrame,
-        canvas: Canvas,
-    ): Promise<Canvas> {
+    public async draw(_frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
         const ctx = canvas.getContext("2d");
 
         ctx.font = `${this.fontSize}px sans-serif`;

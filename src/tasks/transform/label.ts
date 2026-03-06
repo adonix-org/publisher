@@ -17,7 +17,7 @@ export class Label implements Stage {
         this.textFont = `${this.fontSize}px sans-serif`;
     }
 
-    public async transform(frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
+    public async draw(frame: ImageFrame, canvas: Canvas): Promise<Canvas> {
         const ctx = canvas.getContext("2d");
 
         ctx.strokeStyle = this.boxColor;
