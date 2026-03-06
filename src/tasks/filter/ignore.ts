@@ -1,10 +1,9 @@
 import { ImageFrame, ImageTask } from "..";
 
-type Point = { x: number; y: number };
-
 export class Ignore implements ImageTask {
     constructor(
-        private readonly point: Point,
+        private readonly x: number,
+        private readonly y: number,
         private readonly radius: number,
     ) {}
 
@@ -15,8 +14,8 @@ export class Ignore implements ImageTask {
             const centerX = annotation.x + annotation.width / 2;
             const centerY = annotation.y + annotation.height / 2;
 
-            const dx = centerX - this.point.x;
-            const dy = centerY - this.point.y;
+            const dx = centerX - this.x;
+            const dy = centerY - this.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance <= this.radius) {

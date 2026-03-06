@@ -7,7 +7,10 @@ import { Label } from "../tasks/draw/label";
 import { Trail } from "../tasks/draw/trail";
 import { Watermark } from "../tasks/draw/watermark";
 import { Drawing } from "../tasks/draw";
-import { ConfidenceFilter } from "../tasks/filter/confidence";
+import { Throttle } from "../tasks/filter/throttle";
+import { SaveImage } from "../tasks/transfer/save";
+import { DatePath } from "../paths/date";
+import { Ignore } from "../tasks/filter/ignore";
 
 export class Motion extends Agent {
     constructor() {
@@ -26,9 +29,13 @@ export class Motion extends Agent {
         );
 
         this.addTask(new Remote("mega"));
-        this.addTask(new ConfidenceFilter(0.5, "animal"));
+        this.addTask(new Ignore(1740, 562, 20));
         this.addTask(drawing);
         this.addTask(viewer);
+
+        const filepath = new DatePath("/Users/tybusby/Camera/live", "motion");
+        this.addTask(new Throttle(0.1));
+        this.addTask(new SaveImage(filepath));
     }
 
     public override toString(): string {
