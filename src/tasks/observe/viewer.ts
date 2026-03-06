@@ -46,6 +46,18 @@ export class ViewerTask extends Executable implements ImageTask {
         return frame;
     }
 
+    protected override async onstart(): Promise<void> {
+        await super.onstart();
+
+        this.child.stdin.on("error", (err) => {
+            if ("code" in err && err.code === "EPIPE") {
+                console.warn(this.toString(), err.message);
+            } else {
+                console.error(this.toString(), err);
+            }
+        });
+    }
+
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
