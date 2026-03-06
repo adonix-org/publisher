@@ -9,9 +9,10 @@ import { Watermark } from "../tasks/transform/watermark";
 
 export class Motion extends Agent {
     constructor() {
-        const source = new C121(6);
-        const viewer = new ViewerTask("LiveMotion!");
-        super(source);
+        const camera = new C121(6);
+        const viewer = new ViewerTask("LiveMotion");
+
+        super(camera);
 
         this.register(new PyServer());
         this.register(viewer);
