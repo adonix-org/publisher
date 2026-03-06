@@ -3,8 +3,8 @@ import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { Workflow } from "./workflow";
 import { Throttle } from "../tasks/filter/throttle";
 import { ExportSubject } from "./export";
-import { Trail } from "../tasks/transform/trail";
-import { Drawing } from "../tasks/transform";
+import { Trail } from "../tasks/draw/trail";
+import { Drawing } from "../tasks/draw";
 
 export class Monitor extends Workflow {
     constructor() {

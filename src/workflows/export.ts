@@ -1,11 +1,11 @@
 import { SaveImage } from "../tasks/transfer/save";
 import { Workflow } from "./workflow";
 import { RequiredFilter } from "../tasks/filter/requried";
-import { Watermark } from "../tasks/transform/watermark";
+import { Watermark } from "../tasks/draw/watermark";
 import { ConfidenceFilter } from "../tasks/filter/confidence";
 import { CategoryPath } from "../paths/category";
-import { Label } from "../tasks/transform/label";
-import { Drawing } from "../tasks/transform";
+import { Label } from "../tasks/draw/label";
+import { Drawing } from "../tasks/draw";
 
 export class ExportSubject extends Workflow {
     constructor(

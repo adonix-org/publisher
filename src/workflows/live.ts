@@ -2,8 +2,8 @@ import { Publish } from "../tasks/transfer/publish";
 import { MaxSize } from "../tasks/filter/maxsize";
 import { Throttle } from "../tasks/filter/throttle";
 import { Workflow } from "./workflow";
-import { Watermark } from "../tasks/transform/watermark";
-import { Drawing } from "../tasks/transform";
+import { Watermark } from "../tasks/draw/watermark";
+import { Drawing } from "../tasks/draw";
 
 export class LiveImage extends Workflow {
     constructor(name: string) {

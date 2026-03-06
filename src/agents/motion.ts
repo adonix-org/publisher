@@ -3,10 +3,10 @@ import { Agent } from "./agent";
 import { Remote } from "../tasks/remote/remote";
 import { PyServer } from "../spawn/pyserver";
 import { ViewerTask } from "../tasks/observe/viewer";
-import { Label } from "../tasks/transform/label";
-import { Trail } from "../tasks/transform/trail";
-import { Watermark } from "../tasks/transform/watermark";
-import { Drawing } from "../tasks/transform";
+import { Label } from "../tasks/draw/label";
+import { Trail } from "../tasks/draw/trail";
+import { Watermark } from "../tasks/draw/watermark";
+import { Drawing } from "../tasks/draw";
 
 export class Motion extends Agent {
     constructor() {
