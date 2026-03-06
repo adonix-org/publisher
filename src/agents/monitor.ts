@@ -13,6 +13,7 @@ export class MonitorLive extends Agent {
         const monitor = new Monitor();
 
         super(source);
+        
         this.register(new PyServer());
         this.register(session);
         this.register(monitor);
