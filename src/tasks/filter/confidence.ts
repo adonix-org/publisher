@@ -18,7 +18,7 @@ export class ConfidenceFilter implements ImageTask {
                 return {
                     ...annotation,
                     active: false,
-                    reason: `confidence < ${this.threshold}`,
+                    reason: `confidence < ${Math.round(this.threshold * 100)}%`,
                 };
             }
             return annotation;

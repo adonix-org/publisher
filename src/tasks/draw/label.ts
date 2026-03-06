@@ -32,8 +32,9 @@ export class Label implements Stage {
             ctx.lineWidth = this.lineWidth;
             ctx.strokeRect(ann.x, ann.y, ann.width, ann.height);
 
+            const confidence = ann.confidence ?? 0;
             const text = ann.confidence
-                ? `${ann.label} (${(ann.confidence * 100).toFixed(1)}%)`
+                ? `${ann.label} • ${Math.round(confidence * 100)}%`
                 : ann.label;
 
             const centerX = ann.x + ann.width / 2;

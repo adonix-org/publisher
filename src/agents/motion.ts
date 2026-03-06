@@ -34,7 +34,7 @@ export class Motion extends Agent {
 
         this.addTask(new Throttle(1));
         this.addTask(new Remote("mega"));
-        this.addTask(new ConfidenceFilter(0.4));
+        this.addTask(new ConfidenceFilter(0.3));
         this.addTask(new CenterPointFilter(1740, 562, 20));
         this.addTask(drawing);
         this.addTask(viewer);
