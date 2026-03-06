@@ -21,8 +21,8 @@ export class C121 extends Lifecycle implements AgentSource {
         super();
 
         this.register(this.camera);
-        this.register(this.viewer);
-        this.register(this.decoder);
+        this.camera.register(this.decoder);
+        this.camera.register(this.viewer);
     }
 
     public async next(): Promise<ImageFrame | null> {
