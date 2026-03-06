@@ -49,7 +49,7 @@ export class ViewerTask extends Executable implements ImageTask {
     protected override async onstop(): Promise<void> {
         await super.onstop();
 
-        this.child.stdin.end();
+        this.end();
 
         await this.quit(5_000);
     }
