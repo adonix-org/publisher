@@ -51,7 +51,6 @@ export class Label implements Stage {
             ctx.textBaseline = "top";
             ctx.textAlign = "center";
             ctx.strokeStyle = this.textStrokeColor;
-            ctx.fillStyle = isActive ? borderColor : fillColor;
 
             const infoText = isActive ? ann.model : ann.reason;
             const infoY = ann.y + ann.height + 2;
