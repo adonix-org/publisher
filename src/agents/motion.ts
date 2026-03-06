@@ -7,7 +7,6 @@ import { Label } from "../tasks/transform/label";
 import { Trail } from "../tasks/transform/trail";
 import { Watermark } from "../tasks/transform/watermark";
 import { Drawing } from "../tasks/transform";
-import { Timer } from "../tasks/observe/timer";
 
 export class Motion extends Agent {
     constructor() {
@@ -19,14 +18,14 @@ export class Motion extends Agent {
         this.register(new PyServer());
         this.register(viewer);
 
+        const drawing = new Drawing(
+            new Label(),
+            new Trail(),
+            new Watermark("LiveMotion"),
+        );
+
         this.addTask(new Remote("mega"));
-
-        const drawing = new Drawing();
-        drawing.add(new Label());
-        drawing.add(new Trail());
-        drawing.add(new Watermark("LiveImage"));
-
-        this.addTask(new Timer(drawing, 10_000));
+        this.addTask(drawing);
         this.addTask(viewer);
     }
 

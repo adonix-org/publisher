@@ -17,9 +17,7 @@ export class ExportSubject extends Workflow {
 
         const target = new CategoryPath(folder, label, label);
 
-        const drawing = new Drawing();
-        drawing.add(new Label());
-        drawing.add(new Watermark("ActiveImage"));
+        const drawing = new Drawing(new Label(), new Watermark("ActiveImage"));
 
         this.addTask(new ConfidenceFilter(threshold, label));
         this.addTask(new RequiredFilter(label));

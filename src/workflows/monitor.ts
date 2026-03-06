@@ -22,11 +22,7 @@ export class Monitor extends Workflow {
 
         this.addTask(new Throttle(1));
         this.addTask(new Remote("mega"));
-
-        const drawing = new Drawing();
-        drawing.add(new Trail("orange"));
-        this.addTask(drawing);
-
+        this.addTask(new Drawing(new Trail()));
         this.addTask(new ConfidenceFilter(0.4));
         this.addTask(animal);
         this.addTask(person);

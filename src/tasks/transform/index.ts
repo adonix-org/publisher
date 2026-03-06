@@ -10,8 +10,12 @@ export interface Stage {
 export class Drawing implements ImageTask {
     private readonly stages: Stage[] = [];
 
-    public add(stage: Stage): void {
-        this.stages.push(stage);
+    constructor(...stages: Stage[]) {
+        this.stages.push(...stages);
+    }
+
+    public add(stage: Stage, ...stages: Stage[]): void {
+        this.stages.push(stage, ...stages);
     }
 
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
