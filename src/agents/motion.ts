@@ -6,7 +6,6 @@ import { ViewerTask } from "../tasks/observe/viewer";
 import { Label } from "../tasks/transform/label";
 import { Trail } from "../tasks/transform/trail";
 import { Watermark } from "../tasks/transform/watermark";
-import { SimpleWatermark } from "../tasks/transform/watermark2";
 
 export class Motion extends Agent {
     constructor() {
@@ -20,8 +19,7 @@ export class Motion extends Agent {
         this.addTask(new Remote("mega"));
         this.addTask(new Label("yellow", 36));
         this.addTask(new Trail("orange"));
-        this.addTask(new Watermark("LiveImage", 80, "northwest"));
-        this.addTask(new SimpleWatermark("LiveImage"));
+        this.addTask(new Watermark("LiveImage"));
         this.addTask(viewer);
     }
 
