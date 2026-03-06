@@ -1,6 +1,8 @@
 import { ImageFrame, ImageTask } from "..";
 
 export class Ignore implements ImageTask {
+    private readonly r2 = this.radius * this.radius;
+
     constructor(
         private readonly x: number,
         private readonly y: number,
@@ -16,15 +18,16 @@ export class Ignore implements ImageTask {
 
             const dx = centerX - this.x;
             const dy = centerY - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const d2 = dx * dx + dy * dy;
 
-            if (distance <= this.radius) {
+            if (d2 <= this.r2) {
                 return {
                     ...annotation,
                     active: false,
                     reason: "inside ignore radius",
                 };
             }
+
             return annotation;
         });
 
@@ -33,6 +36,7 @@ export class Ignore implements ImageTask {
             annotations,
         };
     }
+
     public toString(): string {
         return "[Ignore]";
     }
