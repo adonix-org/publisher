@@ -31,7 +31,7 @@ export class Record implements ImageTask {
         );
 
         if (activity) {
-            await this.recording.start();
+            if (!this.recording.running) await this.recording.start();
 
             if (this.timerId) clearTimeout(this.timerId);
 
