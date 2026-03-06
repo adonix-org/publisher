@@ -16,7 +16,7 @@ export class Motion extends Agent {
     constructor() {
         const camera = new C121(1);
         const viewer = new ViewerTask("LiveMotion");
-        const preroll = new PreRoll(camera, 3, 256);
+        const preroll = new PreRoll(camera, 4, 256);
         const filepath = process.env.LOCAL_IMAGE_FOLDER!;
 
         super(camera);
@@ -37,7 +37,7 @@ export class Motion extends Agent {
         this.addTask(drawing);
         this.addTask(viewer);
 
-        this.addTask(new Record(preroll, filepath, 3, "vehicle"));
+        this.addTask(new Record(preroll, filepath, 2, "vehicle"));
     }
 
     public override toString(): string {
