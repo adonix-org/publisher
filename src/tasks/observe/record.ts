@@ -1,3 +1,4 @@
+import { promises as fs } from "fs";
 import { ImageFrame, ImageTask } from "..";
 import { CategoryPath } from "../../paths/category";
 import { Broadcast } from "../../sources/broadcast";
@@ -31,7 +32,15 @@ export class Record implements ImageTask {
         );
 
         if (activity) {
-            if (!this.recording.running) await this.recording.start();
+            if (!this.recording.running) {
+                await fs.mkdir(this.filepath.dirname, { recursive: true });
+                await fs.writeFile(
+                    `${this.filepath.path}.jpg`,
+                    frame.image.buffer,
+                );
+
+                await this.recording.start();
+            }
 
             if (this.timerId) clearTimeout(this.timerId);
 
