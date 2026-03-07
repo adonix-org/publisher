@@ -7,7 +7,7 @@ import { Trail } from "../tasks/draw/trail";
 import { Watermark } from "../tasks/draw/watermark";
 import { Drawing } from "../tasks/draw";
 import { Throttle } from "../tasks/filter/throttle";
-import { Record } from "../tasks/observe/record";
+import { Record } from "../tasks/transfer/record";
 import { PreRoll } from "../targets/preroll";
 import { CenterPointFilter } from "../tasks/filter/centerpoint";
 import { Broadcast } from "../sources/broadcast";
