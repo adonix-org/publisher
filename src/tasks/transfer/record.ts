@@ -26,6 +26,10 @@ export class Record implements ImageTask {
         private readonly category: string,
     ) {}
 
+    public async stop(): Promise<void> {
+        await this.recording.stop();
+    }
+
     public async process(frame: ImageFrame): Promise<ImageFrame | null> {
         const activity = frame.annotations.some(
             (ann) => ann.active && ann.label === this.category,

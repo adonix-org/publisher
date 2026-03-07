@@ -15,6 +15,8 @@ import { StreamDecoder } from "../sources/decoders/stream";
 import { LiveDecoder } from "../sources/decoders/live";
 
 export class Motion extends Agent {
+    private readonly recordTasks: Record[] = [];
+
     constructor(broadcast: Broadcast, folder: string, fps: number) {
         const viewer = new ViewerTask("LiveMotion");
         const preroll = new PreRoll(broadcast, 10.5, 256);
@@ -38,8 +40,21 @@ export class Motion extends Agent {
         this.addTask(drawing);
         this.addTask(viewer);
 
-        this.addTask(new Record(preroll, folder, 5, "person"));
-        this.addTask(new Record(preroll, folder, 10.5, "animal"));
+        this.recordTasks.push(new Record(preroll, folder, 10.5, "animal"));
+        this.recordTasks.push(new Record(preroll, folder, 5, "person"));
+        this.recordTasks.push(new Record(preroll, folder, 3, "vehicle"));
+
+        for (const task of this.recordTasks) {
+            this.addTask(task);
+        }
+    }
+
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
+        for (const task of this.recordTasks) {
+            await task.stop();
+        }
     }
 
     public override toString(): string {
