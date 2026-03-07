@@ -3,8 +3,9 @@ import { ImageFrame, ImageTask } from "..";
 import { CategoryPath } from "../../paths/category";
 import { Broadcast } from "../../sources/broadcast";
 import { Recording } from "../../targets/recording";
+import { Lifecycle } from "../../lifecycle";
 
-export class Record implements ImageTask {
+export class Record extends Lifecycle implements ImageTask {
     private timerId: NodeJS.Timeout | undefined;
 
     private readonly filepath = new CategoryPath(
@@ -24,9 +25,13 @@ export class Record implements ImageTask {
         private readonly folder: string,
         private readonly seconds: number,
         private readonly category: string,
-    ) {}
+    ) {
+        super();
+    }
 
-    public async stop(): Promise<void> {
+    protected override async onstop(): Promise<void> {
+        await super.onstop();
+
         await this.recording.stop();
     }
 
@@ -57,7 +62,7 @@ export class Record implements ImageTask {
         return frame;
     }
 
-    public toString(): string {
-        return "[Record]";
+    public override toString(): string {
+        return `[Record-${this.category}]`;
     }
 }
