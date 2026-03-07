@@ -2,16 +2,16 @@ import "dotenv/config";
 import "./logging";
 
 import { application } from "./application";
-import { Rtsp } from "./sources/rtsp";
 import { MpvViewer } from "./targets/viewers/mpv";
 
 import { Recording } from "./targets/recording";
 import { PreRoll } from "./targets/preroll";
 import { DatePath } from "./paths/date";
+import { Camera } from "./sources/camera";
 
 const C121_RTSP_URL = process.env.C121_RTSP_URL!;
 
-const broadcast = new Rtsp(C121_RTSP_URL);
+const broadcast = new Camera("c121", C121_RTSP_URL);
 
 const preroll = new PreRoll(broadcast, 10);
 const mpv = new MpvViewer(broadcast);

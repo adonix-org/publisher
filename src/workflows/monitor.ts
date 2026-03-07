@@ -7,10 +7,8 @@ import { Trail } from "../tasks/draw/trail";
 import { Drawing } from "../tasks/draw";
 
 export class Monitor extends Workflow {
-    constructor() {
+    constructor(folder: string) {
         super();
-
-        const folder = process.env.LOCAL_IMAGE_FOLDER!;
 
         const animal = new ExportSubject(folder, "animal", 0.75);
         const person = new ExportSubject(folder, "person", 0.55);

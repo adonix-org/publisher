@@ -3,12 +3,21 @@ import { Ffmpeg } from "../spawn/ffmpeg";
 import { Broadcast } from "./broadcast";
 import { Subscribers } from "./subscribers";
 
-export class Rtsp extends Ffmpeg implements Broadcast {
-    private readonly subscribers = new Subscribers(2 * 1024 * 1024);
+export abstract class Rtsp extends Ffmpeg implements Broadcast {
+    private static readonly DEFAULT_HIGHWATER = 2 * 1024 * 1024;
 
-    constructor(private readonly url: string) {
+    private readonly subscribers: Subscribers;
+
+    constructor(
+        private readonly url: string,
+        highwater = Rtsp.DEFAULT_HIGHWATER,
+    ) {
         super();
+
+        this.subscribers = new Subscribers(highwater);
     }
+
+    public abstract get name(): string;
 
     protected override args(): string[] {
         const args = [

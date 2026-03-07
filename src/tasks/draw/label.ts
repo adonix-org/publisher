@@ -30,7 +30,9 @@ export class Label implements Stage {
 
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = this.lineWidth;
-            ctx.strokeRect(ann.x, ann.y, ann.width, ann.height);
+            ctx.beginPath();
+            ctx.roundRect(ann.x, ann.y, ann.width, ann.height, 5);
+            ctx.stroke();
 
             const confidence = ann.confidence ?? 0;
             const text = ann.confidence

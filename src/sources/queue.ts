@@ -16,10 +16,10 @@ export class ImageQueue extends Lifecycle implements ImageSource {
         this.dropped = 0;
     }
 
-    constructor(private readonly bufferSize = Infinity) {
+    constructor(private readonly queueSize = Infinity) {
         super();
 
-        if (this.bufferSize === Infinity) return;
+        if (this.queueSize === Infinity) return;
 
         this.intervalId = setInterval(() => this.report(), 5000);
     }
@@ -55,7 +55,7 @@ export class ImageQueue extends Lifecycle implements ImageSource {
             return;
         }
 
-        if (this.frames.length >= this.bufferSize) {
+        if (this.frames.length >= this.queueSize) {
             this.frames.shift();
             this.dropped++;
         }

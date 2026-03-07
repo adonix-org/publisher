@@ -1,19 +1,21 @@
-import { C121 } from "../sources/c121";
 import { Monitor } from "../workflows/monitor";
 import { Agent } from "./agent";
 import { LiveImage } from "../workflows/live";
 import { PublisherSession } from "../ws/publisher";
 import { PyServer } from "../spawn/pyserver";
+import { Broadcast } from "../sources/broadcast";
+import { StreamDecoder } from "../sources/decoders/stream";
+import { LiveDecoder } from "../sources/decoders/live";
 
 export class MonitorLive extends Agent {
-    constructor() {
-        const source = new C121(1);
-        const live = new LiveImage(source.getName());
+    constructor(broadcast: Broadcast, folder: string, fps: number) {
+        const decoder = new StreamDecoder(broadcast, new LiveDecoder(15), fps);
+        const live = new LiveImage(broadcast.name);
         const session = new PublisherSession(live);
-        const monitor = new Monitor();
+        const monitor = new Monitor(folder);
 
-        super(source);
-        
+        super(decoder);
+
         this.register(new PyServer());
         this.register(session);
         this.register(monitor);

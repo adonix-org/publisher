@@ -1,4 +1,3 @@
-import { C121 } from "../sources/c121";
 import { Agent } from "./agent";
 import { Remote } from "../tasks/remote/remote";
 import { PyServer } from "../spawn/pyserver";
@@ -11,19 +10,20 @@ import { Throttle } from "../tasks/filter/throttle";
 import { Record } from "../tasks/observe/record";
 import { PreRoll } from "../targets/preroll";
 import { CenterPointFilter } from "../tasks/filter/centerpoint";
-import { ConfidenceFilter } from "../tasks/filter/confidence";
+import { Broadcast } from "../sources/broadcast";
+import { StreamDecoder } from "../sources/decoders/stream";
+import { LiveDecoder } from "../sources/decoders/live";
 
 export class Motion extends Agent {
-    constructor() {
-        const camera = new C121(1);
+    constructor(broadcast: Broadcast, folder: string, fps: number) {
         const viewer = new ViewerTask("LiveMotion");
-        const preroll = new PreRoll(camera, 10.5, 256);
-        const filepath = process.env.LOCAL_IMAGE_FOLDER!;
+        const preroll = new PreRoll(broadcast, 10.5, 256);
+        const decoder = new StreamDecoder(broadcast, new LiveDecoder(15), fps);
 
-        super(camera);
-        camera.register(preroll);
+        super(decoder);
 
         this.register(new PyServer());
+        this.register(preroll);
         this.register(viewer);
 
         const drawing = new Drawing(
@@ -32,15 +32,14 @@ export class Motion extends Agent {
             new Watermark("LiveMotion"),
         );
 
-        this.addTask(new Throttle(1));
+        this.addTask(new Throttle(fps));
         this.addTask(new Remote("mega"));
-        this.addTask(new ConfidenceFilter(0.3));
         this.addTask(new CenterPointFilter(1740, 562, 20));
         this.addTask(drawing);
         this.addTask(viewer);
 
-        this.addTask(new Record(preroll, filepath, 5, "person"));
-        this.addTask(new Record(preroll, filepath, 10.5, "animal"));
+        this.addTask(new Record(preroll, folder, 5, "person"));
+        this.addTask(new Record(preroll, folder, 10.5, "animal"));
     }
 
     public override toString(): string {

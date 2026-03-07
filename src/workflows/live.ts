@@ -11,7 +11,7 @@ export class LiveImage extends Workflow {
 
         this.addTask(new Throttle(0.2));
         this.addTask(new MaxSize());
-        this.addTask(new Drawing(new Watermark("ActiveImage")));
+        this.addTask(new Drawing(new Watermark("LiveImage")));
         this.addTask(new Publish(name));
     }
 

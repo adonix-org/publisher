@@ -26,6 +26,10 @@ export class PreRoll extends Lifecycle implements Broadcast {
         this.subscribers = new Subscribers(seconds * kbps * 1024);
     }
 
+    public get name(): string {
+        return `${this.broadcast.name}:preroll`;
+    }
+
     public subscribe(): Readable {
         const subscriber = this.subscribers.subscribe();
 
