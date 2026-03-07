@@ -3,7 +3,7 @@ import { Broadcast } from "../sources/broadcast";
 import { StreamDecoder } from "../sources/decoders/stream";
 import { LiveDecoder } from "../sources/decoders/live";
 import { EncoderTask } from "../tasks/transfer/encoder";
-import { FfplayTask } from "../tasks/observe/ffplay";
+import { ImageViewer } from "../tasks/observe/ffplay";
 import { FfplayViewer } from "../targets/ffplay";
 import { MpvViewer } from "../targets/mpv";
 
@@ -14,7 +14,7 @@ export class EncoderTest extends Agent {
 
         const viewerA = new MpvViewer(encoder, "Encoder");
         const viewerB = new FfplayViewer(broadcast, "Broadcast");
-        const viewerC = new FfplayTask();
+        const viewerC = new ImageViewer();
 
         super(decoder);
         this.register(viewerA);

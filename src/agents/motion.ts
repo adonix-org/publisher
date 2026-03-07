@@ -1,7 +1,7 @@
 import { Agent } from "./agent";
 import { Remote } from "../tasks/remote/remote";
 import { PyServer } from "../spawn/pyserver";
-import { FfplayTask } from "../tasks/observe/ffplay";
+import { ImageViewer } from "../tasks/observe/ffplay";
 import { Label } from "../tasks/draw/label";
 import { Trail } from "../tasks/draw/trail";
 import { Watermark } from "../tasks/draw/watermark";
@@ -17,7 +17,7 @@ import { ConfidenceFilter } from "../tasks/filter/confidence";
 
 export class Motion extends Agent {
     constructor(broadcast: Broadcast, folder: string, fps: number) {
-        const viewer = new FfplayTask("LiveMotion");
+        const viewer = new ImageViewer("LiveMotion");
         const long = new PreRoll(broadcast, 10.5);
         const short = new PreRoll(broadcast, 3);
 

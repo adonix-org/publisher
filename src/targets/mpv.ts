@@ -17,7 +17,6 @@ export class MpvViewer extends Viewer {
         const args = [
             "--cache=no",
             "--osc=no",
-            "--untimed",
             "--input-terminal=no",
             "--no-input-default-bindings",
             `--title=${this.title}`,

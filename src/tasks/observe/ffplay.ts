@@ -1,8 +1,8 @@
 import { ImageFrame, ImageTask } from "..";
 import { Executable } from "../../spawn/executable";
 
-export class FfplayTask extends Executable implements ImageTask {
-    constructor(private readonly title = "Ffplay Viewer") {
+export class ImageViewer extends Executable implements ImageTask {
+    constructor(private readonly title = "Image Viewer") {
         super();
     }
 
@@ -65,6 +65,6 @@ export class FfplayTask extends Executable implements ImageTask {
     }
 
     public override toString(): string {
-        return `${super.toString()}[ViewerTask]`;
+        return `${super.toString()}[ImageViewer]`;
     }
 }
